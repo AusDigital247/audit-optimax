@@ -96,6 +96,7 @@ const Index = () => {
                 keyword={currentKeyword}
                 score={results.score}
                 categories={results.categories}
+                contentFetched={results.contentFetched}
                 onReset={handleReset}
               />
             )}

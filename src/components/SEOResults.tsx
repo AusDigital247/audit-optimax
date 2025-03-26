@@ -23,6 +23,7 @@ interface SEOResultsProps {
   keyword?: string;
   score: number;
   categories: SEOCategory[];
+  contentFetched?: boolean;
   onReset: () => void;
   className?: string;
 }
@@ -32,6 +33,7 @@ const SEOResults = ({
   keyword, 
   score, 
   categories, 
+  contentFetched = false,
   onReset,
   className 
 }: SEOResultsProps) => {
@@ -155,15 +157,16 @@ const SEOResults = ({
         </motion.div>
       </div>
       
-      <Alert className="mb-6 border-teal/30 bg-navy-light">
-        <AlertCircle className="h-4 w-4 text-teal" />
-        <AlertTitle className="text-teal">Disclaimer</AlertTitle>
-        <AlertDescription className="text-sm">
-          This tool provides an estimated SEO assessment based only on the URL structure and domain name. 
-          For a complete SEO analysis, we would need to analyze the actual page content, which is not possible without accessing the site directly. 
-          Many checks are marked as "warnings" because we cannot verify them without analyzing your page content.
-        </AlertDescription>
-      </Alert>
+      {!contentFetched && (
+        <Alert className="mb-6 border-teal/30 bg-navy-light">
+          <AlertCircle className="h-4 w-4 text-amber-400" />
+          <AlertTitle className="text-amber-400">Limited Analysis</AlertTitle>
+          <AlertDescription className="text-sm">
+            We were unable to access your page content directly due to security restrictions. Our analysis is based on URL structure only.
+            For a more accurate analysis, we recommend using Google Search Console, Screaming Frog, or other SEO tools that can directly access your page content.
+          </AlertDescription>
+        </Alert>
+      )}
       
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
         <SEOScoreCard score={score} className="lg:col-span-1" />
