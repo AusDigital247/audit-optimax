@@ -84,35 +84,49 @@ export const analyzeImages = (content: string, keyword: string) => {
   let lazyLoaded = 0;
   let optimizedFormats = 0;
   
-  imgTags.forEach(img => {
-    // Check for alt attribute with improved detection
+  // Store more detailed info about images
+  const imagesInfo = imgTags.map(img => {
+    const srcMatch = img.match(/src\s*=\s*["']([^"']*)["']/i);
     const altMatch = img.match(/alt\s*=\s*["']([^"']*)["']/i);
-    if (altMatch && altMatch[1].trim()) {
+    const widthMatch = img.match(/width\s*=\s*["']([^"']*)["']/i);
+    const heightMatch = img.match(/height\s*=\s*["']([^"']*)["']/i);
+    const lazyMatch = img.match(/loading\s*=\s*["']lazy["']/i);
+    
+    return {
+      src: srcMatch ? srcMatch[1] : "unknown",
+      alt: altMatch ? altMatch[1] : "",
+      hasWidth: !!widthMatch,
+      hasHeight: !!heightMatch,
+      isLazy: !!lazyMatch || img.includes('data-src') || img.includes('data-lazy'),
+      isOptimized: /\.(webp|avif|jxl)/i.test(img) || /type\s*=\s*["']image\/(webp|avif|jxl)["']/i.test(img)
+    };
+  });
+  
+  imgTags.forEach((img, index) => {
+    const imageInfo = imagesInfo[index];
+    
+    // Check for alt attribute with improved detection
+    if (imageInfo.alt !== "") {
       withAlt++;
       
       // Check if keyword is in alt text
-      if (isKeywordPresent(altMatch[1], keyword)) {
+      if (isKeywordPresent(imageInfo.alt, keyword)) {
         withKeywordInAlt++;
       }
     }
     
     // Check for dimensions with improved detection
-    if ((img.match(/width\s*=\s*["'][^"']*["']/i) || img.match(/width\s*:\s*[^;]*/i)) && 
-        (img.match(/height\s*=\s*["'][^"']*["']/i) || img.match(/height\s*:\s*[^;]*/i))) {
+    if (imageInfo.hasWidth && imageInfo.hasHeight) {
       withDimensions++;
     }
     
     // Check for lazy loading with improved detection
-    if (img.match(/loading\s*=\s*["']lazy["']/i) || 
-        img.match(/data-src/i) || 
-        img.match(/data-lazy/i) ||
-        img.match(/class\s*=\s*["'][^"']*lazy[^"']*["']/i)) {
+    if (imageInfo.isLazy) {
       lazyLoaded++;
     }
     
     // Check for optimized image formats with improved detection
-    if (img.match(/\.(webp|avif|jxl)/i) || 
-        img.match(/type\s*=\s*["']image\/(webp|avif|jxl)["']/i)) {
+    if (imageInfo.isOptimized) {
       optimizedFormats++;
     }
   });
@@ -123,7 +137,8 @@ export const analyzeImages = (content: string, keyword: string) => {
     withKeywordInAlt,
     withDimensions, 
     lazyLoaded,
-    optimizedFormats
+    optimizedFormats,
+    imagesInfo
   };
 };
 
@@ -253,6 +268,10 @@ export const calculateKeywordDensity = (content: string, keyword: string) => {
     importance = 'high';
   }
   
+  // Sample occurrences for the details view
+  const keywordPattern = new RegExp(`(.{0,30}\\b${keywordLower.replace(/\s+/g, '\\s+')}\\b.{0,30})`, 'gi');
+  const occurrencesInContext = Array.from(plainText.matchAll(keywordPattern)).map(m => `...${m[1]}...`).slice(0, 5);
+  
   return {
     density,
     count: Math.round(totalMatches),
@@ -260,6 +279,7 @@ export const calculateKeywordDensity = (content: string, keyword: string) => {
     exactMatchCount: exactMatches,
     partialMatchCount: partialMatches,
     synonymMatchCount: synonymMatches,
-    importance
+    importance,
+    occurrencesInContext
   };
 };

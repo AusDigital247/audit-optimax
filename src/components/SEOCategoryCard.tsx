@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Check, X, AlertTriangle, Info, ChevronDown, ChevronUp } from 'lucide-react';
+import { Check, X, AlertTriangle, Info, ChevronDown, ChevronUp, Plus, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 
@@ -9,6 +10,11 @@ export interface SEOCheckItem {
   status: 'pass' | 'fail' | 'warning' | 'info';
   message: string;
   points?: number; // Points value for this check
+  details?: {
+    found?: string | string[];
+    expected?: string;
+    explanation?: string;
+  };
 }
 
 interface SEOCategoryCardProps {
@@ -162,36 +168,93 @@ const SEOCategoryCard = ({
       
       {isExpanded && (
         <div className="divide-y divide-border">
-          {items.map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3, delay: delay * 0.1 + index * 0.05 }}
-              className="p-4 hover:bg-muted/20 transition-colors"
-            >
-              <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 mt-0.5">
-                  {getStatusIcon(item.status)}
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{item.name}</p>
-                  <p className={cn(
-                    "text-xs mt-1 px-2 py-1.5 rounded-md border",
-                    getStatusColor(item.status),
-                    getTextColor(item.status)
-                  )}>
-                    {item.message}
-                  </p>
-                  {item.points && item.status === 'pass' && (
-                    <p className="text-xs mt-1 text-green-600 dark:text-green-400">
-                      +{item.points} points
+          {items.map((item, index) => {
+            const [showDetails, setShowDetails] = useState(false);
+            
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3, delay: delay * 0.1 + index * 0.05 }}
+                className="p-4 hover:bg-muted/20 transition-colors"
+              >
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 mt-0.5">
+                    {getStatusIcon(item.status)}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium">{item.name}</p>
+                      {(item.details || item.status !== 'pass') && (
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowDetails(!showDetails);
+                          }}
+                          className="flex items-center text-xs text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          {showDetails ? <Minus className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
+                          <span className="ml-1">{showDetails ? 'Less' : 'More'}</span>
+                        </button>
+                      )}
+                    </div>
+                    <p className={cn(
+                      "text-xs mt-1 px-2 py-1.5 rounded-md border",
+                      getStatusColor(item.status),
+                      getTextColor(item.status)
+                    )}>
+                      {item.message}
                     </p>
-                  )}
+                    
+                    {showDetails && item.details && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        transition={{ duration: 0.2 }}
+                        className="mt-2 text-xs space-y-2 bg-muted/30 p-2 rounded-md border border-border"
+                      >
+                        {item.details.found && (
+                          <div>
+                            <span className="font-medium">Found:</span> 
+                            {Array.isArray(item.details.found) ? (
+                              <ul className="list-disc pl-4 mt-1">
+                                {item.details.found.map((text, i) => (
+                                  <li key={i} className="break-words">{text || <em>(empty)</em>}</li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <div className="pl-2 mt-1 break-words">{item.details.found || <em>(empty)</em>}</div>
+                            )}
+                          </div>
+                        )}
+                        
+                        {item.details.expected && (
+                          <div>
+                            <span className="font-medium">Expected:</span> 
+                            <div className="pl-2 mt-1 break-words">{item.details.expected}</div>
+                          </div>
+                        )}
+                        
+                        {item.details.explanation && (
+                          <div>
+                            <span className="font-medium">Explanation:</span>
+                            <div className="pl-2 mt-1 break-words">{item.details.explanation}</div>
+                          </div>
+                        )}
+                      </motion.div>
+                    )}
+                    
+                    {item.points && item.status === 'pass' && (
+                      <p className="text-xs mt-1 text-green-600 dark:text-green-400">
+                        +{item.points} points
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
       )}
     </motion.div>

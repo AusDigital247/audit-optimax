@@ -2,12 +2,15 @@
 import { analyzePageSEO } from './analyzePageSEO';
 import { SEOCategory } from '@/components/SEOResults';
 
-// Main function to analyze a URL for SEO issues
-export const analyzeSEO = async (url: string, keyword?: string): Promise<{
+// Define and export the analysis result interface
+export interface AnalysisResult {
   score: number;
   categories: SEOCategory[];
   contentFetched: boolean;
-}> => {
+}
+
+// Main function to analyze a URL for SEO issues
+export const analyzeSEO = async (url: string, keyword?: string): Promise<AnalysisResult> => {
   try {
     console.log(`Analyzing SEO for ${url}${keyword ? ` with keyword "${keyword}"` : ''}`);
     
@@ -41,5 +44,3 @@ export const analyzeSEO = async (url: string, keyword?: string): Promise<{
     };
   }
 };
-
-// No need for AnalysisResult type anymore - this is what was causing the error

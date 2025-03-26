@@ -64,7 +64,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       message: urlHasKeyword 
         ? `Your URL contains the target keyword "${keyword}".` 
         : `Your URL does not contain the target keyword "${keyword}". Consider including it for better SEO.`,
-      points: seoPointValues.urlKeyword
+      points: seoPointValues.urlKeyword,
+      details: {
+        found: url,
+        expected: `URL should contain the keyword "${keyword}"`,
+        explanation: "URLs that contain relevant keywords can help with SEO ranking."
+      }
     });
   }
   
@@ -80,7 +85,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       : urlPath.length > 75 
         ? "Your URL is too long. Consider shortening it to under 75 characters." 
         : "Your URL path is empty. Consider adding descriptive path segments.",
-    points: seoPointValues.urlLength
+    points: seoPointValues.urlLength,
+    details: {
+      found: `${urlPath} (${urlPath.length} characters)`,
+      expected: "URL path should be between 1 and 75 characters",
+      explanation: "Shorter URLs are easier to share, remember and tend to perform better in search results."
+    }
   });
   
   // Check URL readability
@@ -92,7 +102,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     message: isUrlReadable 
       ? "Your URL is human-readable and well-structured." 
       : "Your URL contains special characters or double hyphens. Consider using only lowercase letters, numbers, and single hyphens.",
-    points: seoPointValues.urlReadable
+    points: seoPointValues.urlReadable,
+    details: {
+      found: urlPath,
+      expected: "URL should contain only lowercase letters, numbers, and hyphens",
+      explanation: "Clean, readable URLs improve user experience and can help with SEO."
+    }
   });
   
   categories.push({
@@ -119,7 +134,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       name: "Title tag",
       status: "pass",
       message: `Your page has a title tag: "${title}"`,
-      points: seoPointValues.titleTag
+      points: seoPointValues.titleTag,
+      details: {
+        found: title,
+        expected: "Page should have a title tag",
+        explanation: "The title tag is one of the most important on-page SEO elements."
+      }
     });
     
     // Check title length
@@ -134,7 +154,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
         : titleLength < 30 
           ? `Your title is too short (${titleLength} characters). Aim for 30-60 characters.` 
           : `Your title is too long (${titleLength} characters). Search engines may truncate titles longer than 60 characters.`,
-      points: seoPointValues.titleLength
+      points: seoPointValues.titleLength,
+      details: {
+        found: `"${title}" (${titleLength} characters)`,
+        expected: "Title should be between 30 and 60 characters",
+        explanation: "Titles that are too long may get cut off in search results, while titles that are too short may not be descriptive enough."
+      }
     });
     
     // Check if keyword is in title
@@ -147,7 +172,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
         message: keywordInTitle 
           ? `Your title contains the target keyword "${keyword}".` 
           : `Your title does not contain the target keyword "${keyword}". Consider adding it for better SEO.`,
-        points: seoPointValues.titleKeyword
+        points: seoPointValues.titleKeyword,
+        details: {
+          found: title,
+          expected: `Title should contain the keyword "${keyword}"`,
+          explanation: "Including your target keyword in the title helps search engines understand what your page is about."
+        }
       });
       
       // Check keyword position in title
@@ -162,7 +192,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
           message: keywordAtBeginning 
             ? "Your keyword is at the beginning of the title, which is optimal." 
             : "Your keyword is not at the beginning of the title. Consider moving it closer to the start for better SEO.",
-          points: seoPointValues.titleKeywordPosition
+          points: seoPointValues.titleKeywordPosition,
+          details: {
+            found: title,
+            expected: `Title should have "${keyword}" near the beginning`,
+            explanation: "Keywords placed at the beginning of the title may have more weight in search algorithms."
+          }
         });
       }
     }
@@ -171,7 +206,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       name: "Add a title tag",
       status: "fail",
       message: "Your page is missing a title tag. Add a descriptive title with your main keyword.",
-      points: seoPointValues.titleTag
+      points: seoPointValues.titleTag,
+      details: {
+        found: "No title tag found",
+        expected: "Page should have a title tag",
+        explanation: "The title tag is crucial for SEO and is displayed in search engine results."
+      }
     });
     
     if (keyword) {
@@ -179,7 +219,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
         name: "Use the target keyword in the title tag",
         status: "fail",
         message: `Your page is missing a title tag. Add one that includes your keyword "${keyword}".`,
-        points: seoPointValues.titleKeyword
+        points: seoPointValues.titleKeyword,
+        details: {
+          found: "No title tag found",
+          expected: `Title should contain the keyword "${keyword}"`,
+          explanation: "Including your target keyword in the title helps search engines understand what your page is about."
+        }
       });
     }
   }
@@ -190,7 +235,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       name: "Meta description",
       status: "pass",
       message: `Your page has a meta description: "${metaDescription}"`,
-      points: seoPointValues.metaDescription
+      points: seoPointValues.metaDescription,
+      details: {
+        found: metaDescription,
+        expected: "Page should have a meta description",
+        explanation: "Meta descriptions provide a summary of the page content and can impact click-through rates from search results."
+      }
     });
     
     // Check meta description length
@@ -205,7 +255,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
         : descriptionLength < 120 
           ? `Your meta description is too short (${descriptionLength} characters). Aim for 120-160 characters.` 
           : `Your meta description is too long (${descriptionLength} characters). Search engines may truncate descriptions longer than 160 characters.`,
-      points: seoPointValues.metaDescriptionLength
+      points: seoPointValues.metaDescriptionLength,
+      details: {
+        found: `"${metaDescription}" (${descriptionLength} characters)`,
+        expected: "Meta description should be between 120 and 160 characters",
+        explanation: "Descriptions that are too long may get truncated in search results, while those that are too short may not provide enough information."
+      }
     });
     
     // Check if keyword is in meta description
@@ -218,7 +273,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
         message: keywordInDescription 
           ? `Your meta description contains the target keyword "${keyword}".` 
           : `Your meta description does not contain the target keyword "${keyword}". Consider adding it for better SEO.`,
-        points: seoPointValues.metaDescriptionKeyword
+        points: seoPointValues.metaDescriptionKeyword,
+        details: {
+          found: metaDescription,
+          expected: `Meta description should contain the keyword "${keyword}"`,
+          explanation: "Including your target keyword in the meta description can improve relevance for search engines."
+        }
       });
     }
   } else {
@@ -226,7 +286,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       name: "Add a meta description",
       status: "fail",
       message: "Your page is missing a meta description. Add one with 120-160 characters including your target keyword.",
-      points: seoPointValues.metaDescription
+      points: seoPointValues.metaDescription,
+      details: {
+        found: "No meta description found",
+        expected: "Page should have a meta description",
+        explanation: "A meta description helps search engines understand your page content and can improve click-through rates."
+      }
     });
     
     if (keyword) {
@@ -234,7 +299,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
         name: "Include keyword in meta description",
         status: "fail",
         message: `You need to add a meta description that includes your keyword "${keyword}".`,
-        points: seoPointValues.metaDescriptionKeyword
+        points: seoPointValues.metaDescriptionKeyword,
+        details: {
+          found: "No meta description found",
+          expected: `Meta description should include the keyword "${keyword}"`,
+          explanation: "Including your target keyword in the meta description can improve relevance for search engines."
+        }
       });
     }
   }
@@ -262,7 +332,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       name: "Page has an H1 tag",
       status: "pass",
       message: `Your page has ${headingsResult.h1Count} H1 tag(s)`,
-      points: seoPointValues.h1Tag
+      points: seoPointValues.h1Tag,
+      details: {
+        found: headingsResult.headings.h1,
+        expected: "Page should have at least one H1 tag",
+        explanation: "The H1 tag is typically the main headline of the page and helps establish topic relevance."
+      }
     });
     
     // Check if there's only one H1
@@ -272,7 +347,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       message: headingsResult.h1Count === 1 
         ? "Your page correctly has exactly one H1 tag" 
         : `Your page has ${headingsResult.h1Count} H1 tags. It's best practice to have only one H1 tag per page.`,
-      points: seoPointValues.singleH1
+      points: seoPointValues.singleH1,
+      details: {
+        found: headingsResult.headings.h1,
+        expected: "Page should have exactly one H1 tag",
+        explanation: "Having multiple H1 tags can dilute the importance of your main heading and confuse search engines about the page's main topic."
+      }
     });
     
     // Check if keyword is in H1
@@ -283,7 +363,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
         message: headingsResult.h1WithKeyword 
           ? `Your H1 tag contains your keyword "${keyword}".` 
           : `Your H1 tag does not contain your keyword "${keyword}". Add it for better SEO.`,
-        points: seoPointValues.h1Keyword
+        points: seoPointValues.h1Keyword,
+        details: {
+          found: headingsResult.headings.h1,
+          expected: `H1 should contain the keyword "${keyword}"`,
+          explanation: "Including your target keyword in the H1 heading helps establish relevance for search engines."
+        }
       });
     }
   } else {
@@ -291,7 +376,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       name: "Add an H1 tag",
       status: "fail",
       message: "Your page is missing an H1 tag. Add one that includes your main keyword.",
-      points: seoPointValues.h1Tag
+      points: seoPointValues.h1Tag,
+      details: {
+        found: "No H1 tags found",
+        expected: "Page should have an H1 tag",
+        explanation: "The H1 tag is an important signal to search engines about the main topic of your page."
+      }
     });
     
     if (keyword) {
@@ -299,7 +389,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
         name: "Include keyword in H1 tag",
         status: "fail",
         message: `Add an H1 tag with your keyword "${keyword}".`,
-        points: seoPointValues.h1Keyword
+        points: seoPointValues.h1Keyword,
+        details: {
+          found: "No H1 tags found",
+          expected: `H1 tag should include the keyword "${keyword}"`,
+          explanation: "Including your target keyword in the H1 heading helps establish relevance for search engines."
+        }
       });
     }
   }
@@ -310,7 +405,15 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       name: "Use H2 and H3 headings for content structure",
       status: headingsResult.h2Count > 0 && headingsResult.h3Count > 0 ? "pass" : "warning",
       message: `Your page has ${headingsResult.h2Count} H2 tags and ${headingsResult.h3Count} H3 tags.`,
-      points: seoPointValues.h2Tags
+      points: seoPointValues.h2Tags,
+      details: {
+        found: {
+          h2: headingsResult.headings.h2,
+          h3: headingsResult.headings.h3
+        },
+        expected: "Page should use both H2 and H3 tags to structure content",
+        explanation: "Using proper heading hierarchy helps both users and search engines understand your content structure."
+      }
     });
     
     // Check heading hierarchy
@@ -320,7 +423,16 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       message: headingsResult.hasProperHierarchy 
         ? "Your page maintains proper heading hierarchy." 
         : "Your heading structure may not follow proper hierarchy. Ensure H1 comes before H2, and H2 before H3.",
-      points: seoPointValues.headingStructure
+      points: seoPointValues.headingStructure,
+      details: {
+        found: {
+          h1: headingsResult.headings.h1,
+          h2: headingsResult.headings.h2,
+          h3: headingsResult.headings.h3
+        },
+        expected: "Headings should follow proper hierarchy (H1 → H2 → H3)",
+        explanation: "A logical heading structure improves accessibility and helps search engines understand your content organization."
+      }
     });
     
     // Check if keyword is in H2
@@ -331,7 +443,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
         message: headingsResult.h2WithKeyword 
           ? `At least one of your H2 tags contains your keyword "${keyword}".` 
           : `None of your H2 tags contain your keyword "${keyword}". Consider adding it to at least one H2 for better SEO.`,
-        points: seoPointValues.h2Keyword
+        points: seoPointValues.h2Keyword,
+        details: {
+          found: headingsResult.headings.h2,
+          expected: `At least one H2 tag should contain the keyword "${keyword}"`,
+          explanation: "Using your target keyword in subheadings reinforces the topic relevance for search engines."
+        }
       });
     }
   } else {
@@ -339,7 +456,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       name: "Use H2 and H3 headings for content structure",
       status: "fail",
       message: "Your page is missing H2 and H3 tags. Use them to structure your content and include relevant keywords.",
-      points: seoPointValues.h2Tags
+      points: seoPointValues.h2Tags,
+      details: {
+        found: "No H2 or H3 tags found",
+        expected: "Page should use H2 and H3 tags to structure content",
+        explanation: "Using proper heading hierarchy helps both users and search engines understand your content structure."
+      }
     });
   }
   
@@ -362,7 +484,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       message: imageResults.withAlt === imageResults.totalImages 
         ? `All ${imageResults.totalImages} images have alt attributes.` 
         : `${imageResults.withAlt} out of ${imageResults.totalImages} images have alt attributes. Add alt text to all images.`,
-      points: seoPointValues.imageAltTags
+      points: seoPointValues.imageAltTags,
+      details: {
+        found: `${imageResults.withAlt} out of ${imageResults.totalImages} images have alt text`,
+        expected: "All images should have alt attributes",
+        explanation: "Alt text helps search engines understand image content and improves accessibility."
+      }
     });
     
     if (keyword) {
@@ -372,7 +499,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
         message: imageResults.withKeywordInAlt > 0 
           ? `${imageResults.withKeywordInAlt} image(s) have alt text with your keyword "${keyword}".` 
           : `None of your images have alt text with your keyword "${keyword}". Add it to relevant images.`,
-        points: seoPointValues.imageAltKeyword
+        points: seoPointValues.imageAltKeyword,
+        details: {
+          found: `${imageResults.withKeywordInAlt} images have alt text with keyword`,
+          expected: "At least one relevant image should have alt text containing the target keyword",
+          explanation: "Including your target keyword in image alt text can help with image SEO."
+        }
       });
     }
     
@@ -383,7 +515,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       message: imageResults.withDimensions === imageResults.totalImages 
         ? "All images have explicit width and height attributes, which improves page loading." 
         : `${imageResults.withDimensions} out of ${imageResults.totalImages} images have explicit dimensions. Adding dimensions helps prevent layout shifts.`,
-      points: seoPointValues.imageDimensions
+      points: seoPointValues.imageDimensions,
+      details: {
+        found: `${imageResults.withDimensions} out of ${imageResults.totalImages} images have explicit dimensions`,
+        expected: "All images should have width and height attributes",
+        explanation: "Specifying image dimensions helps browsers allocate space before the image loads, reducing layout shifts."
+      }
     });
     
     imageItems.push({
@@ -392,7 +529,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       message: imageResults.lazyLoaded > 0 
         ? `${imageResults.lazyLoaded} images use lazy loading, which improves page performance.` 
         : "None of your images use lazy loading. Consider adding loading='lazy' to improve page performance.",
-      points: seoPointValues.imageLazyLoading
+      points: seoPointValues.imageLazyLoading,
+      details: {
+        found: `${imageResults.lazyLoaded} out of ${imageResults.totalImages} images use lazy loading`,
+        expected: "Images should use lazy loading for better performance",
+        explanation: "Lazy loading defers loading images until they're about to enter the viewport, improving initial page load time."
+      }
     });
     
     imageItems.push({
@@ -401,14 +543,23 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       message: imageResults.optimizedFormats > 0 
         ? `${imageResults.optimizedFormats} images use modern formats like WebP or AVIF.` 
         : "None of your images use modern formats like WebP or AVIF. Consider converting images to these formats for better performance.",
-      points: seoPointValues.imageOptimizedFormat
+      points: seoPointValues.imageOptimizedFormat,
+      details: {
+        found: `${imageResults.optimizedFormats} out of ${imageResults.totalImages} images use modern formats`,
+        expected: "Images should use optimized formats like WebP or AVIF",
+        explanation: "Modern image formats provide better compression and quality, improving page load speed."
+      }
     });
   } else {
     imageItems.push({
       name: "Page images",
       status: "info",
       message: "No images were detected on your page.",
-      points: 0
+      points: 0,
+      details: {
+        found: "No images found on the page",
+        explanation: "Images can help engage users and provide visual context for your content."
+      }
     });
   }
   
@@ -428,7 +579,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     message: isHttps 
       ? "Your site correctly uses HTTPS for secure connections." 
       : "Your site is not using HTTPS. Implement SSL for better security and SEO.",
-    points: seoPointValues.https
+    points: seoPointValues.https,
+    details: {
+      found: url,
+      expected: "URL should start with https://",
+      explanation: "HTTPS is a ranking factor and provides a secure connection for your visitors."
+    }
   });
   
   // Check canonical tag
@@ -441,7 +597,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     message: canonical.has 
       ? `Your page has a canonical tag pointing to: ${canonical.url}` 
       : "Your page is missing a canonical tag. Add one to prevent duplicate content issues.",
-    points: seoPointValues.canonicalTag
+    points: seoPointValues.canonicalTag,
+    details: {
+      found: canonical.has ? canonical.url : "No canonical tag found",
+      expected: "Page should have a canonical tag",
+      explanation: "Canonical tags help prevent duplicate content issues by telling search engines which version of a page is the preferred one."
+    }
   });
   
   // Check schema markup
@@ -454,7 +615,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     message: hasSchema 
       ? "Your page implements schema markup, which helps search engines understand your content." 
       : "Your page doesn't use schema markup. Consider adding structured data to help search engines better understand your content.",
-    points: seoPointValues.schemaMarkup
+    points: seoPointValues.schemaMarkup,
+    details: {
+      found: hasSchema ? "Schema markup detected" : "No schema markup found",
+      expected: "Page should use structured data/schema markup",
+      explanation: "Schema markup helps search engines understand your content and can enable rich results in search listings."
+    }
   });
   
   // Check robots meta tag
@@ -471,7 +637,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       : !hasRobotsMeta 
         ? "No robots meta tag found. By default, search engines can index your page." 
         : "Your page has a robots meta tag that may prevent indexing (noindex or none directive found).",
-    points: hasRobotsMeta && !robotsNoindex ? seoPointValues.robots : 0
+    points: hasRobotsMeta && !robotsNoindex ? seoPointValues.robots : 0,
+    details: {
+      found: hasRobotsMeta ? (robotsNoindex ? "Robots meta tag with noindex directive" : "Robots meta tag allowing indexing") : "No robots meta tag found",
+      expected: "Page should allow indexing if it's meant to be found in search results",
+      explanation: "The robots meta tag controls how search engines crawl and index your page."
+    }
   });
   
   categories.push({
@@ -494,7 +665,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     message: socialResults.openGraph.has 
       ? `Your page has Open Graph tags (${Object.keys(socialResults.openGraph.tags).length} found).` 
       : "Your page is missing Open Graph tags. Add og:title, og:description, and og:image.",
-    points: seoPointValues.openGraphTags
+    points: seoPointValues.openGraphTags,
+    details: {
+      found: socialResults.openGraph.has ? Object.entries(socialResults.openGraph.tags).map(([key, value]) => `og:${key}: ${value}`).join('\n') : "No Open Graph tags found",
+      expected: "Page should have Open Graph tags (og:title, og:description, og:image)",
+      explanation: "Open Graph tags control how your content appears when shared on social media platforms like Facebook."
+    }
   });
   
   socialItems.push({
@@ -503,7 +679,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     message: socialResults.twitter.has 
       ? `Your page has Twitter Card tags (${Object.keys(socialResults.twitter.tags).length} found).` 
       : "Your page is missing Twitter Card tags. Add twitter:card, twitter:title, and twitter:description.",
-    points: seoPointValues.twitterCards
+    points: seoPointValues.twitterCards,
+    details: {
+      found: socialResults.twitter.has ? Object.entries(socialResults.twitter.tags).map(([key, value]) => `twitter:${key}: ${value}`).join('\n') : "No Twitter Card tags found",
+      expected: "Page should have Twitter Card tags (twitter:card, twitter:title, twitter:description)",
+      explanation: "Twitter Card tags control how your content appears when shared on Twitter."
+    }
   });
   
   categories.push({
@@ -525,7 +706,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     message: hasResourceHints 
       ? "Your page uses resource hints like preload, prefetch, or dns-prefetch for faster loading." 
       : "Your page doesn't use resource hints. Consider adding preload, prefetch, or dns-prefetch for critical resources.",
-    points: seoPointValues.resourceHints
+    points: seoPointValues.resourceHints,
+    details: {
+      found: hasResourceHints ? "Resource hints detected" : "No resource hints found",
+      expected: "Page should use resource hints like preload, prefetch, or dns-prefetch",
+      explanation: "Resource hints help browsers prioritize loading critical resources, improving performance."
+    }
   });
   
   // Check for minified resources
@@ -538,7 +724,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     message: hasMinifiedJs && hasMinifiedCss 
       ? "Your page appears to use minified JavaScript and CSS." 
       : "Your page may have unminified resources. Consider minifying JavaScript and CSS files.",
-    points: seoPointValues.minifiedResources
+    points: seoPointValues.minifiedResources,
+    details: {
+      found: `JavaScript: ${hasMinifiedJs ? 'Minified' : 'Possibly unminified'}, CSS: ${hasMinifiedCss ? 'Minified' : 'Possibly unminified'}`,
+      expected: "JavaScript and CSS files should be minified",
+      explanation: "Minified resources load faster and consume less bandwidth, improving page speed."
+    }
   });
   
   // Check for mobile-friendly indicators
@@ -550,7 +741,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     message: hasViewport 
       ? "Your page has a proper viewport meta tag for mobile devices." 
       : "Your page is missing a proper viewport meta tag. Add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">.",
-    points: seoPointValues.viewport
+    points: seoPointValues.viewport,
+    details: {
+      found: hasViewport ? "Viewport meta tag found" : "No viewport meta tag found",
+      expected: "Page should have a viewport meta tag with width=device-width",
+      explanation: "The viewport meta tag ensures your page displays properly on mobile devices, which is important for mobile SEO."
+    }
   });
   
   categories.push({
@@ -579,7 +775,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
             ? `High keyword density (${keywordDensity.density.toFixed(2)}%). This might appear as keyword stuffing. Aim for 0.5% to 2.5%.` 
             : `Your keyword was not found in the page content. Make sure to use your target keyword naturally throughout the content.`,
       points: keywordDensity.importance === 'medium' ? seoPointValues.keywordDensityGood : 
-              keywordDensity.importance === 'low' ? seoPointValues.keywordDensityOk : 0
+              keywordDensity.importance === 'low' ? seoPointValues.keywordDensityOk : 0,
+      details: {
+        found: `Keyword "${keyword}" appears ${keywordDensity.count} times in ${keywordDensity.totalWords} words (${keywordDensity.density.toFixed(2)}%)`,
+        expected: "Keyword density should be between 0.5% and 2.5%",
+        explanation: "A balanced keyword density helps establish relevance without appearing as keyword stuffing."
+      }
     });
     
     // Content quality indicators
@@ -595,7 +796,12 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
         : contentLength >= 300 
           ? `Your page has ${contentLength} words. Consider adding more comprehensive content (aim for 800+ words).` 
           : `Your page has insufficient content (${contentLength} words). Search engines prefer pages with substantial, valuable content.`,
-      points: seoPointValues.contentLength
+      points: seoPointValues.contentLength,
+      details: {
+        found: `${contentLength} words`,
+        expected: "Page should have at least 800 words of content for comprehensive topic coverage",
+        explanation: "Longer, comprehensive content typically ranks better in search results as it provides more value to users."
+      }
     });
   }
   
