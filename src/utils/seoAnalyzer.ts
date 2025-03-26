@@ -14,7 +14,7 @@ export const analyzeSEO = async (url: string, keyword?: string): Promise<{
     // Normalize URL if missing protocol
     const normalizedUrl = url.startsWith('http') ? url : `https://${url}`;
     
-    // Use our new comprehensive analyzer
+    // Use our comprehensive analyzer
     const result = await analyzePageSEO(normalizedUrl, keyword);
     
     return {
@@ -41,3 +41,5 @@ export const analyzeSEO = async (url: string, keyword?: string): Promise<{
     };
   }
 };
+
+// No need for AnalysisResult type anymore - this is what was causing the error

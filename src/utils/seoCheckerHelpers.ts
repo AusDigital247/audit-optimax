@@ -1,7 +1,7 @@
 
-import { fetchPageContent, extractTitle, extractMetaTags, extractHeadContent, extractTags, extractOpenGraphTags } from './fetchPageContent';
+import { extractHeadContent, extractTags, extractOpenGraphTags } from './fetchPageContent';
 
-// Analyze if a keyword is present in text
+// Analyze if a keyword is present in text - improved with more flexible matching
 export const isKeywordPresent = (text: string | null, keyword: string): boolean => {
   if (!text || !keyword) return false;
   
@@ -28,19 +28,28 @@ export const isKeywordPresent = (text: string | null, keyword: string): boolean 
   return false;
 };
 
-// Extract and analyze headings
+// Extract and analyze headings with improved detection
 export const analyzeHeadings = async (content: string, keyword: string) => {
-  // Extract h1-h6 tags
-  const headings = {
-    h1: extractTags(content, 'h1'),
-    h2: extractTags(content, 'h2'),
-    h3: extractTags(content, 'h3'),
-    h4: extractTags(content, 'h4'),
-    h5: extractTags(content, 'h5'),
-    h6: extractTags(content, 'h6')
+  // Extract h1-h6 tags with improved regex patterns
+  const headingRegex = {
+    h1: /<h1[^>]*>([\s\S]*?)<\/h1>/gi,
+    h2: /<h2[^>]*>([\s\S]*?)<\/h2>/gi,
+    h3: /<h3[^>]*>([\s\S]*?)<\/h3>/gi,
+    h4: /<h4[^>]*>([\s\S]*?)<\/h4>/gi,
+    h5: /<h5[^>]*>([\s\S]*?)<\/h5>/gi,
+    h6: /<h6[^>]*>([\s\S]*?)<\/h6>/gi
   };
   
-  // Analyze keyword presence in headings
+  const headings = {
+    h1: Array.from(content.matchAll(headingRegex.h1)).map(m => m[1].replace(/<[^>]*>/g, '').trim()),
+    h2: Array.from(content.matchAll(headingRegex.h2)).map(m => m[1].replace(/<[^>]*>/g, '').trim()),
+    h3: Array.from(content.matchAll(headingRegex.h3)).map(m => m[1].replace(/<[^>]*>/g, '').trim()),
+    h4: Array.from(content.matchAll(headingRegex.h4)).map(m => m[1].replace(/<[^>]*>/g, '').trim()),
+    h5: Array.from(content.matchAll(headingRegex.h5)).map(m => m[1].replace(/<[^>]*>/g, '').trim()),
+    h6: Array.from(content.matchAll(headingRegex.h6)).map(m => m[1].replace(/<[^>]*>/g, '').trim())
+  };
+  
+  // Better keyword analysis to catch variations and derived forms
   const h1WithKeyword = headings.h1.some(h => isKeywordPresent(h, keyword));
   const h2WithKeyword = headings.h2.some(h => isKeywordPresent(h, keyword));
   const h3WithKeyword = headings.h3.some(h => isKeywordPresent(h, keyword));
@@ -62,10 +71,10 @@ export const analyzeHeadings = async (content: string, keyword: string) => {
   };
 };
 
-// Analyze images for SEO
+// Analyze images for SEO with improved detection
 export const analyzeImages = (content: string, keyword: string) => {
-  // Extract all img tags
-  const imgRegex = /<img[^>]*>/gi;
+  // Extract all img tags with a more comprehensive regex
+  const imgRegex = /<img[^>]*?(?:>|\/>)/gi;
   const imgTags = content.match(imgRegex) || [];
   
   let totalImages = imgTags.length;
@@ -76,7 +85,7 @@ export const analyzeImages = (content: string, keyword: string) => {
   let optimizedFormats = 0;
   
   imgTags.forEach(img => {
-    // Check for alt attribute
+    // Check for alt attribute with improved detection
     const altMatch = img.match(/alt\s*=\s*["']([^"']*)["']/i);
     if (altMatch && altMatch[1].trim()) {
       withAlt++;
@@ -87,21 +96,23 @@ export const analyzeImages = (content: string, keyword: string) => {
       }
     }
     
-    // Check for dimensions
-    if ((/width\s*=\s*["'][^"']*["']/i.test(img) || /width\s*:\s*[^;]*/i.test(img)) && 
-        (/height\s*=\s*["'][^"']*["']/i.test(img) || /height\s*:\s*[^;]*/i.test(img))) {
+    // Check for dimensions with improved detection
+    if ((img.match(/width\s*=\s*["'][^"']*["']/i) || img.match(/width\s*:\s*[^;]*/i)) && 
+        (img.match(/height\s*=\s*["'][^"']*["']/i) || img.match(/height\s*:\s*[^;]*/i))) {
       withDimensions++;
     }
     
-    // Check for lazy loading
-    if (/loading\s*=\s*["']lazy["']/i.test(img) || 
-        /data-src/i.test(img) || 
-        /data-lazy/i.test(img)) {
+    // Check for lazy loading with improved detection
+    if (img.match(/loading\s*=\s*["']lazy["']/i) || 
+        img.match(/data-src/i) || 
+        img.match(/data-lazy/i) ||
+        img.match(/class\s*=\s*["'][^"']*lazy[^"']*["']/i)) {
       lazyLoaded++;
     }
     
-    // Check for optimized image formats
-    if (/\.(webp|avif|jxl)/i.test(img)) {
+    // Check for optimized image formats with improved detection
+    if (img.match(/\.(webp|avif|jxl)/i) || 
+        img.match(/type\s*=\s*["']image\/(webp|avif|jxl)["']/i)) {
       optimizedFormats++;
     }
   });
@@ -116,7 +127,7 @@ export const analyzeImages = (content: string, keyword: string) => {
   };
 };
 
-// Check for schema markup
+// Check for schema markup with improved detection
 export const checkSchemaMarkup = (content: string): boolean => {
   return (
     /<script[^>]*type\s*=\s*["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/i.test(content) ||
@@ -130,11 +141,12 @@ export const hasHttps = (url: string): boolean => {
   return url.toLowerCase().startsWith('https://');
 };
 
-// Check social media tags
+// Check social media tags with improved detection
 export const checkSocialMediaTags = (content: string) => {
+  // Improved OG tag extraction
   const ogTags = extractOpenGraphTags(content);
   
-  // Check for Twitter cards
+  // Improved Twitter cards detection
   const twitterTags: Record<string, string> = {};
   const headContent = extractHeadContent(content);
   
@@ -161,7 +173,7 @@ export const checkSocialMediaTags = (content: string) => {
   };
 };
 
-// Check for canonical tag
+// Check for canonical tag with improved detection
 export const checkCanonicalTag = (content: string) => {
   const headContent = extractHeadContent(content);
   const canonicalMatch = headContent.match(/<link[^>]*rel\s*=\s*["']canonical["'][^>]*href\s*=\s*["']([^"']*)["'][^>]*>/i) ||
@@ -177,10 +189,10 @@ export const checkCanonicalTag = (content: string) => {
 export const calculateKeywordDensity = (content: string, keyword: string) => {
   // Remove HTML tags and get plain text
   const plainText = content.replace(/<script[\s\S]*?<\/script>/gi, ' ')
-                          .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-                          .replace(/<[^>]*>/g, ' ')
-                          .replace(/\s+/g, ' ')
-                          .trim();
+                         .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+                         .replace(/<[^>]*>/g, ' ')
+                         .replace(/\s+/g, ' ')
+                         .trim();
   
   // Count total words
   const words = plainText.split(/\s+/);
@@ -194,7 +206,6 @@ export const calculateKeywordDensity = (content: string, keyword: string) => {
   // Count partial matches (keyword fragments)
   const keywordParts = keywordLower.split(/\s+/).filter(part => part.length > 3);
   let partialMatches = 0;
-  let synonymMatches = 0;
   
   // Simple synonym detection based on related words
   const synonymMap: Record<string, string[]> = {
@@ -205,6 +216,7 @@ export const calculateKeywordDensity = (content: string, keyword: string) => {
   };
   
   // Check for synonyms
+  let synonymMatches = 0;
   for (const [term, synonyms] of Object.entries(synonymMap)) {
     if (keywordLower.includes(term)) {
       for (const synonym of synonyms) {

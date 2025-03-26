@@ -1,46 +1,33 @@
 
 import axios from 'axios';
 
-// Improved content fetching using multiple approaches
+/**
+ * Improved page content fetcher with multiple fallback strategies
+ */
 export const fetchPageContent = async (url: string): Promise<{ content: string, success: boolean, error?: string }> => {
   try {
     console.log("Fetching content for:", url);
     
-    // Use a set of reliable CORS proxies
+    // Use server-side proxies that handle CORS more reliably
     const corsProxies = [
-      'https://api.allorigins.win/raw?url=',
       'https://corsproxy.io/?',
+      'https://api.allorigins.win/raw?url=',
       'https://api.codetabs.com/v1/proxy?quest='
     ];
     
-    // Try direct fetch first (rarely works due to CORS)
-    try {
-      const response = await axios.get(url, { 
-        timeout: 5000,
-        headers: {
-          'Accept': 'text/html',
-          'User-Agent': 'Mozilla/5.0 SEO Analyzer'
-        }
-      });
-      
-      if (response.status === 200 && response.data) {
-        console.log("Direct fetch succeeded");
-        return { content: response.data, success: true };
-      }
-    } catch (err) {
-      console.log("Direct fetch failed, trying proxies");
-    }
+    // Normalize URL
+    const normalizedUrl = url.startsWith('http') ? url : `https://${url}`;
     
     // Try each proxy with axios
     for (const proxy of corsProxies) {
       try {
         console.log(`Trying proxy: ${proxy}`);
-        const proxyUrl = `${proxy}${encodeURIComponent(url)}`;
+        const proxyUrl = `${proxy}${encodeURIComponent(normalizedUrl)}`;
         const response = await axios.get(proxyUrl, { 
-          timeout: 10000,
+          timeout: 15000,
           headers: {
             'Accept': 'text/html',
-            'User-Agent': 'Mozilla/5.0 SEO Analyzer'
+            'User-Agent': 'Mozilla/5.0 SEO Analyzer Bot'
           }
         });
         
@@ -49,26 +36,31 @@ export const fetchPageContent = async (url: string): Promise<{ content: string, 
           
           // Basic validation to ensure we got actual HTML
           if (content.includes('<!DOCTYPE html>') || content.includes('<html') || content.includes('<head')) {
-            console.log("Proxy fetch succeeded");
+            console.log("Proxy fetch succeeded with", proxy);
             return { content, success: true };
           }
         }
       } catch (proxyErr) {
-        console.log(`Proxy ${proxy} failed, trying next`);
+        console.log(`Proxy ${proxy} failed:`, proxyErr.message);
       }
     }
     
-    // If we've exhausted all proxies, try directly fetching the view-source URL
+    // Last resort: direct fetch (likely to fail due to CORS)
     try {
-      console.log("Trying view-source URL as last resort");
-      const viewSourceUrl = `view-source:${url}`;
-      const response = await axios.get(viewSourceUrl, { timeout: 5000 });
+      console.log("Attempting direct fetch as last resort");
+      const response = await axios.get(normalizedUrl, { 
+        timeout: 10000,
+        headers: {
+          'Accept': 'text/html',
+          'User-Agent': 'Mozilla/5.0 SEO Analyzer Bot'
+        }
+      });
       
       if (response.status === 200 && response.data) {
         return { content: response.data, success: true };
       }
-    } catch (viewSourceErr) {
-      console.log("View-source approach failed");
+    } catch (directFetchErr) {
+      console.log("Direct fetch failed:", directFetchErr.message);
     }
     
     // If all attempts failed
@@ -87,17 +79,17 @@ export const fetchPageContent = async (url: string): Promise<{ content: string, 
   }
 };
 
+// Extract the head section for more reliable meta tag parsing
+export const extractHeadContent = (content: string): string => {
+  const headMatch = content.match(/<head[^>]*>([\s\S]*?)<\/head>/i);
+  return headMatch ? headMatch[1] : '';
+};
+
 // Extract all HTML content between specific tags
 export const extractElementContent = (content: string, tagName: string): string[] => {
   const regex = new RegExp(`<${tagName}[^>]*>(.*?)<\\/${tagName}>`, 'gs');
   const matches = Array.from(content.matchAll(regex));
   return matches.map(match => match[1].trim());
-};
-
-// Extract the head section for more reliable meta tag parsing
-export const extractHeadContent = (content: string): string => {
-  const headMatch = content.match(/<head[^>]*>([\s\S]*?)<\/head>/i);
-  return headMatch ? headMatch[1] : '';
 };
 
 // Improved HTML tag extraction that handles self-closing tags and attributes
@@ -168,3 +160,67 @@ export const extractOpenGraphTags = (content: string): Record<string, string> =>
   
   return ogTags;
 };
+
+// Extract images with better detection
+export const extractImageInfo = (content: string, keyword?: string): { 
+  totalImages: number,
+  withAlt: number,
+  withKeywordInAlt: number,
+  withDimensions: number,
+  lazyLoaded: number,
+  optimizedFormats: number
+} => {
+  // More accurate image regex that handles complex attributes
+  const imgRegex = /<img[\s\S]*?(?:>|\/>)/gi;
+  const images = content.match(imgRegex) || [];
+  
+  const totalImages = images.length;
+  let withAlt = 0;
+  let withKeywordInAlt = 0;
+  let withDimensions = 0;
+  let lazyLoaded = 0;
+  let optimizedFormats = 0;
+  
+  images.forEach(img => {
+    // Better alt text detection
+    const altMatch = img.match(/\balt\s*=\s*["']([^"']*)["']/i);
+    if (altMatch && altMatch[1].trim()) {
+      withAlt++;
+      
+      // Check if keyword is in alt text
+      if (keyword && altMatch[1] && altMatch[1].toLowerCase().includes(keyword.toLowerCase())) {
+        withKeywordInAlt++;
+      }
+    }
+    
+    // More accurate dimension detection
+    if ((/\bwidth\s*=\s*["']([^"']*)["']/i.test(img) || /\bwidth\s*:\s*([^;]+)/i.test(img)) && 
+        (/\bheight\s*=\s*["']([^"']*)["']/i.test(img) || /\bheight\s*:\s*([^;]+)/i.test(img))) {
+      withDimensions++;
+    }
+    
+    // Better lazy loading detection
+    if (/\bloading\s*=\s*["']lazy["']/i.test(img) || 
+        /\bdata-src\b/i.test(img) || 
+        /\bdata-lazy\b/i.test(img) ||
+        /\blazy\s*=\s*["']true["']/i.test(img)) {
+      lazyLoaded++;
+    }
+    
+    // Check for optimized formats
+    if (/\.(webp|avif|jxl)\b/i.test(img) || 
+        /\btype\s*=\s*["']image\/(webp|avif|jxl)["']/i.test(img)) {
+      optimizedFormats++;
+    }
+  });
+  
+  return { 
+    totalImages, 
+    withAlt, 
+    withKeywordInAlt, 
+    withDimensions, 
+    lazyLoaded, 
+    optimizedFormats 
+  };
+};
+

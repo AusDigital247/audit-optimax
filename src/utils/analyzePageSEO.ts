@@ -21,7 +21,7 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
 }> => {
   console.log(`Analyzing SEO for URL: ${url}, Keyword: ${keyword}`);
   
-  // Fetch page content
+  // Fetch page content with improved fetcher
   const { content, success } = await fetchPageContent(url);
   
   // Prepare categories array
@@ -47,6 +47,8 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       contentFetched: false
     };
   }
+
+  console.log("Content fetched successfully, length:", content.length);
   
   // Basic URL Analysis
   const urlItems: SEOCheckItem[] = [];
@@ -98,13 +100,18 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     items: urlItems
   });
   
-  // Title and Meta Tags Analysis
+  // Title and Meta Tags Analysis with improved parsing
   const titleTagItems: SEOCheckItem[] = [];
   
-  // Extract title and meta description
+  // Extract title and meta description with improved parser
   const title = extractTitle(content);
+  console.log("Extracted title:", title);
+  
   const metaTags = extractMetaTags(content);
+  console.log("Meta tags found:", Object.keys(metaTags).length);
+  
   const metaDescription = metaTags['description'];
+  console.log("Meta description:", metaDescription);
   
   // Check title tag
   if (title) {
@@ -237,8 +244,16 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     items: titleTagItems
   });
   
-  // Headings Analysis
+  // Headings Analysis with improved detection
   const headingsResult = await analyzeHeadings(content, keyword);
+  console.log("Headings analysis:", {
+    h1Count: headingsResult.h1Count,
+    h2Count: headingsResult.h2Count,
+    h3Count: headingsResult.h3Count,
+    h1WithKeyword: headingsResult.h1WithKeyword,
+    h2WithKeyword: headingsResult.h2WithKeyword
+  });
+  
   const headingItems: SEOCheckItem[] = [];
   
   // Check H1 tag
@@ -333,8 +348,10 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     items: headingItems
   });
   
-  // Images Analysis
+  // Images Analysis with improved detection
   const imageResults = analyzeImages(content, keyword);
+  console.log("Image analysis:", imageResults);
+  
   const imageItems: SEOCheckItem[] = [];
   
   if (imageResults.totalImages > 0) {
@@ -416,6 +433,8 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   
   // Check canonical tag
   const canonical = checkCanonicalTag(content);
+  console.log("Canonical check:", canonical);
+  
   technicalItems.push({
     name: "Page has canonical tag",
     status: canonical.has ? "pass" : "warning",
@@ -427,6 +446,8 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   
   // Check schema markup
   const hasSchema = checkSchemaMarkup(content);
+  console.log("Schema markup check:", hasSchema);
+  
   technicalItems.push({
     name: "Page uses structured data / schema markup",
     status: hasSchema ? "pass" : "warning",
@@ -460,6 +481,11 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   
   // Social Media
   const socialResults = checkSocialMediaTags(content);
+  console.log("Social media check:", {
+    openGraph: socialResults.openGraph.has,
+    twitter: socialResults.twitter.has
+  });
+  
   const socialItems: SEOCheckItem[] = [];
   
   socialItems.push({
@@ -538,6 +564,7 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   // Keyword density analysis
   if (keyword) {
     const keywordDensity = calculateKeywordDensity(content, keyword);
+    console.log("Keyword density analysis:", keywordDensity);
     
     contentItems.push({
       name: "Keyword density",
