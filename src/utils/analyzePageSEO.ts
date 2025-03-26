@@ -1,4 +1,3 @@
-
 import { fetchPageContent, extractTitle, extractMetaTags } from './fetchPageContent';
 import { 
   isKeywordPresent, 
@@ -410,10 +409,7 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       message: `Your page has ${headingsResult.h2Count} H2 tags and ${headingsResult.h3Count} H3 tags.`,
       points: seoPointValues.h2Tags,
       details: {
-        found: {
-          h2Tags: headingsResult.headings.h2,
-          h3Tags: headingsResult.headings.h3
-        },
+        found: `H2 tags: ${headingsResult.headings.h2.length > 0 ? headingsResult.headings.h2.join(', ') : 'None'}, H3 tags: ${headingsResult.headings.h3.length > 0 ? headingsResult.headings.h3.join(', ') : 'None'}`,
         expected: "Page should use both H2 and H3 tags to structure content",
         explanation: "Using proper heading hierarchy helps both users and search engines understand your content structure."
       }
@@ -428,11 +424,7 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
         : "Your heading structure may not follow proper hierarchy. Ensure H1 comes before H2, and H2 before H3.",
       points: seoPointValues.headingStructure,
       details: {
-        found: {
-          h1Tags: headingsResult.headings.h1,
-          h2Tags: headingsResult.headings.h2,
-          h3Tags: headingsResult.headings.h3
-        },
+        found: `H1 tags: ${headingsResult.headings.h1.join(', ')}, H2 tags: ${headingsResult.headings.h2.join(', ')}, H3 tags: ${headingsResult.headings.h3.join(', ')}`,
         expected: "Headings should follow proper hierarchy (H1 → H2 → H3)",
         explanation: "A logical heading structure improves accessibility and helps search engines understand your content organization."
       }
