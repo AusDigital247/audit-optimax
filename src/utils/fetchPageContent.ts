@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 
 /**
@@ -6,7 +5,7 @@ import axios from 'axios';
  */
 export const fetchPageContent = async (url: string): Promise<{ content: string, success: boolean, error?: string }> => {
   try {
-    console.log("Fetching content for:", url);
+    console.log("Fetching content for exact URL:", url);
     
     // Use server-side proxies that handle CORS more reliably
     const corsProxies = [
@@ -15,17 +14,14 @@ export const fetchPageContent = async (url: string): Promise<{ content: string, 
       'https://api.codetabs.com/v1/proxy?quest='
     ];
     
-    // Ensure we use the exact URL provided without trying to simplify to domain only
+    // Keep the exact URL provided, including path
     const urlToFetch = url.trim();
-    
-    // Normalize URL only if needed
-    const normalizedUrl = urlToFetch.startsWith('http') ? urlToFetch : `https://${urlToFetch}`;
     
     // Try each proxy with axios
     for (const proxy of corsProxies) {
       try {
-        console.log(`Trying proxy: ${proxy}`);
-        const proxyUrl = `${proxy}${encodeURIComponent(normalizedUrl)}`;
+        console.log(`Trying proxy: ${proxy} for URL: ${urlToFetch}`);
+        const proxyUrl = `${proxy}${encodeURIComponent(urlToFetch)}`;
         const response = await axios.get(proxyUrl, { 
           timeout: 15000,
           headers: {
@@ -40,7 +36,7 @@ export const fetchPageContent = async (url: string): Promise<{ content: string, 
           // Basic validation to ensure we got actual HTML
           if (content.includes('<!DOCTYPE html>') || content.includes('<html') || content.includes('<head')) {
             console.log("Proxy fetch succeeded with", proxy);
-            console.log("Fetched URL:", normalizedUrl);
+            console.log("Fetched exact URL:", urlToFetch);
             return { content, success: true };
           }
         }
@@ -51,8 +47,8 @@ export const fetchPageContent = async (url: string): Promise<{ content: string, 
     
     // Last resort: direct fetch (likely to fail due to CORS)
     try {
-      console.log("Attempting direct fetch as last resort");
-      const response = await axios.get(normalizedUrl, { 
+      console.log("Attempting direct fetch as last resort for:", urlToFetch);
+      const response = await axios.get(urlToFetch, { 
         timeout: 10000,
         headers: {
           'Accept': 'text/html',
@@ -61,7 +57,7 @@ export const fetchPageContent = async (url: string): Promise<{ content: string, 
       });
       
       if (response.status === 200 && response.data) {
-        console.log("Direct fetch succeeded");
+        console.log("Direct fetch succeeded for exact URL:", urlToFetch);
         return { content: response.data, success: true };
       }
     } catch (directFetchErr) {
@@ -228,4 +224,3 @@ export const extractImageInfo = (content: string, keyword?: string): {
     optimizedFormats 
   };
 };
-

@@ -14,8 +14,13 @@ export const analyzeSEO = async (url: string, keyword?: string): Promise<Analysi
   try {
     console.log(`Analyzing SEO for ${url}${keyword ? ` with keyword "${keyword}"` : ''}`);
     
-    // Normalize URL if missing protocol but don't modify the path
-    const normalizedUrl = url.startsWith('http') ? url : `https://${url}`;
+    // Preserve the exact URL including full path, only add protocol if missing
+    let normalizedUrl = url.trim();
+    if (!normalizedUrl.startsWith('http')) {
+      normalizedUrl = `https://${normalizedUrl}`;
+    }
+    
+    console.log(`Using normalized URL: ${normalizedUrl}`);
     
     // Use our comprehensive analyzer
     const result = await analyzePageSEO(normalizedUrl, keyword);
