@@ -1,4 +1,3 @@
-
 import { extractHeadContent, extractTags, extractOpenGraphTags } from './fetchPageContent';
 
 // Analyze if a keyword is present in text - improved with more flexible matching
@@ -200,14 +199,14 @@ export const checkCanonicalTag = (content: string) => {
   };
 };
 
-// Calculate keyword density with improved accuracy
+// Calculate keyword density with improved accuracy and stricter thresholds
 export const calculateKeywordDensity = (content: string, keyword: string) => {
   // Remove HTML tags and get plain text
   const plainText = content.replace(/<script[\s\S]*?<\/script>/gi, ' ')
-                         .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-                         .replace(/<[^>]*>/g, ' ')
-                         .replace(/\s+/g, ' ')
-                         .trim();
+                       .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+                       .replace(/<[^>]*>/g, ' ')
+                       .replace(/\s+/g, ' ')
+                       .trim();
   
   // Count total words
   const words = plainText.split(/\s+/);
@@ -251,18 +250,18 @@ export const calculateKeywordDensity = (content: string, keyword: string) => {
     }
   }
   
-  // Calculate density
-  const totalMatches = exactMatches + (partialMatches * 0.5) + (synonymMatches * 0.3);
+  // Calculate density with stricter weighting of partial matches
+  const totalMatches = exactMatches + (partialMatches * 0.3) + (synonymMatches * 0.2);
   const density = totalWords > 0 ? (totalMatches / totalWords) * 100 : 0;
   
-  // Determine importance level
+  // Determine importance level with stricter thresholds
   let importance: 'high' | 'medium' | 'low' | 'none' = 'none';
   
   if (density === 0) {
     importance = 'none';
   } else if (density < 0.5) {
-    importance = 'low';
-  } else if (density <= 3) {
+    importance = 'low'; // Stricter threshold for low density
+  } else if (density <= 2.5) { // Narrower range for optimal density
     importance = 'medium';
   } else {
     importance = 'high';

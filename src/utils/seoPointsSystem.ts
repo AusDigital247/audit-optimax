@@ -1,35 +1,35 @@
 
 // Point values for different SEO elements
 export const seoPointValues = {
-  // Title tag related points
-  titleTag: 5,
-  titleLength: 2,
-  titleKeyword: 4,
-  titleKeywordPosition: 2,
+  // Title tag related points (increased importance)
+  titleTag: 7,
+  titleLength: 3,
+  titleKeyword: 8,          // Increased from 4 to 8
+  titleKeywordPosition: 3,
   
-  // Meta description related points
-  metaDescription: 3,
-  metaDescriptionLength: 2,
-  metaDescriptionKeyword: 3,
+  // Meta description related points (increased importance)
+  metaDescription: 5,
+  metaDescriptionLength: 3,
+  metaDescriptionKeyword: 6, // Increased from 3 to 6
   
-  // Headings related points
-  h1Tag: 3,
+  // Headings related points (increased importance for keyword presence)
+  h1Tag: 5,
   singleH1: 2,
-  h1Keyword: 4,
+  h1Keyword: 7,              // Increased from 4 to 7
   headingStructure: 2,
-  h2Tags: 2,
-  h2Keyword: 3,
+  h2Tags: 3,
+  h2Keyword: 5,              // Increased from 3 to 5
   h3Tags: 1,
   h3Keyword: 2,
   
-  // Content related points
+  // Content related points (increased importance for keyword density)
   contentLength: 4,
-  keywordDensityGood: 4,
-  keywordDensityOk: 2,
-  keywordInFirstParagraph: 3,
+  keywordDensityGood: 8,     // Increased from 4 to 8
+  keywordDensityOk: 3,
+  keywordInFirstParagraph: 5, // Increased from 3 to 5
   
   // URL related points
-  urlKeyword: 3,
+  urlKeyword: 5,             // Increased from 3 to 5
   urlLength: 1,
   urlReadable: 2,
   
@@ -66,7 +66,7 @@ export const seoPointValues = {
   brokenLinks: 3
 };
 
-// Calculate SEO score based on weighted points
+// Calculate SEO score based on weighted points with improved calculation
 export const calculateSEOScore = (checks: Array<{status: string, points?: number}>) => {
   const totalPossiblePoints = checks
     .filter(check => check.status !== 'info')
@@ -74,12 +74,20 @@ export const calculateSEOScore = (checks: Array<{status: string, points?: number
   
   const earnedPoints = checks.reduce((total, check) => {
     if (check.status === 'pass') return total + (check.points || 1);
-    if (check.status === 'warning') return total + ((check.points || 1) * 0.5);
+    if (check.status === 'warning') return total + ((check.points || 1) * 0.3); // Reduced from 0.5 to 0.3
     return total;
   }, 0);
   
+  // Apply a more aggressive curve to the final score calculation
+  // This will make high scores harder to achieve and more reflective of actual SEO quality
+  const rawScore = totalPossiblePoints > 0 ? (earnedPoints / totalPossiblePoints) * 100 : 0;
+  
+  // Apply a curve that makes it harder to get high scores
+  // Sites with missing keywords in critical elements will see much lower scores
+  const curvedScore = Math.round(rawScore * 0.9); // Apply a 10% overall reduction
+  
   return {
-    score: totalPossiblePoints > 0 ? Math.round((earnedPoints / totalPossiblePoints) * 100) : 0,
+    score: curvedScore,
     earnedPoints,
     totalPossiblePoints
   };

@@ -9,7 +9,7 @@ import {
   checkCanonicalTag,
   calculateKeywordDensity
 } from './seoCheckerHelpers';
-import { seoPointValues } from './seoPointsSystem';
+import { seoPointValues, calculateSEOScore } from './seoPointsSystem';
 import { SEOCheckItem } from '@/components/SEOCategoryCard';
 
 // Main function to analyze page SEO
@@ -775,7 +775,7 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   // Content Analysis
   const contentItems: SEOCheckItem[] = [];
   
-  // Keyword density analysis
+  // Keyword density analysis with stricter evaluation
   if (keyword) {
     const keywordDensity = calculateKeywordDensity(content, keyword);
     console.log("Keyword density analysis:", keywordDensity);
@@ -828,22 +828,38 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     items: contentItems
   });
   
-  // Calculate overall score based on all checks
+  // Calculate overall score using the improved scoring function
   const allChecks = categories.flatMap(category => category.items);
-  const totalPossiblePoints = allChecks
-    .filter(check => check.status !== 'info')
-    .reduce((total, check) => total + (check.points || 1), 0);
   
-  const earnedPoints = allChecks.reduce((total, check) => {
-    if (check.status === 'pass') return total + (check.points || 1);
-    if (check.status === 'warning') return total + ((check.points || 1) * 0.5);
-    return total;
-  }, 0);
+  // Apply key element scoring penalty
+  const hasKeyword = !!keyword;
+  let scoreAdjustment = 0;
   
-  const overallScore = totalPossiblePoints > 0 ? Math.round((earnedPoints / totalPossiblePoints) * 100) : 0;
+  if (hasKeyword) {
+    // Critical elements that should dramatically affect score
+    const titleCheck = allChecks.find(check => check.name === "Keyword in title");
+    const descriptionCheck = allChecks.find(check => check.name === "Keyword in meta description");
+    const h1Check = allChecks.find(check => check.name === "H1 tag includes target keyword");
+    const densityCheck = allChecks.find(check => check.name === "Keyword density");
+    
+    // Apply penalties for missing critical elements
+    if (titleCheck && titleCheck.status === "fail") scoreAdjustment -= 15;
+    if (descriptionCheck && descriptionCheck.status === "fail") scoreAdjustment -= 10;
+    if (h1Check && h1Check.status === "fail") scoreAdjustment -= 10;
+    if (densityCheck && (densityCheck.status === "fail" || 
+        (densityCheck.message && densityCheck.message.includes("not found")))) {
+      scoreAdjustment -= 15;
+    }
+  }
+  
+  // Calculate score using the improved calculation in seoPointsSystem
+  const { score: calculatedScore } = calculateSEOScore(allChecks);
+  
+  // Apply adjustment but ensure score stays within 0-100 range
+  const finalScore = Math.max(0, Math.min(100, calculatedScore + scoreAdjustment));
   
   return {
-    score: overallScore,
+    score: finalScore,
     categories,
     contentFetched: true
   };
