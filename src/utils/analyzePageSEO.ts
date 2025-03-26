@@ -735,4 +735,166 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   
   technicalItems.push({
     name: "Page uses structured data / schema markup",
-    status: hasSchema ? "pass" :
+    status: hasSchema ? "pass" : "warning",
+    message: hasSchema 
+      ? "Your page implements schema markup, which helps search engines understand your content." 
+      : "Your page doesn't use schema markup. Consider adding structured data to help search engines better understand your content.",
+    points: seoPointValues.schemaMarkup,
+    details: {
+      found: hasSchema ? "Schema markup detected" : "No schema markup found",
+      expected: "Page should use schema.org structured data",
+      explanation: "Structured data helps search engines understand your content and can enable rich results in search listings."
+    }
+  });
+  
+  // Add Social Media Tags Check
+  const socialMedia = checkSocialMediaTags(content);
+  console.log("Social media tags check:", socialMedia);
+  
+  technicalItems.push({
+    name: "Page has Open Graph tags for social media",
+    status: socialMedia.openGraph.has ? "pass" : "warning",
+    message: socialMedia.openGraph.has 
+      ? "Your page has Open Graph tags for better social media sharing." 
+      : "Your page is missing Open Graph tags. Add them for better social media sharing experience.",
+    points: seoPointValues.openGraphTags,
+    details: {
+      found: socialMedia.openGraph.has ? "Open Graph tags found" : "No Open Graph tags found",
+      expected: "Page should have Open Graph tags",
+      explanation: "Open Graph tags control how your page appears when shared on social media platforms like Facebook."
+    }
+  });
+  
+  technicalItems.push({
+    name: "Page has Twitter Card tags",
+    status: socialMedia.twitter.has ? "pass" : "info",
+    message: socialMedia.twitter.has 
+      ? "Your page has Twitter Card tags for better Twitter sharing." 
+      : "Your page is missing Twitter Card tags. Consider adding them for better Twitter sharing experience.",
+    points: seoPointValues.twitterCards,
+    details: {
+      found: socialMedia.twitter.has ? "Twitter Card tags found" : "No Twitter Card tags found",
+      expected: "Page should have Twitter Card tags",
+      explanation: "Twitter Card tags control how your page appears when shared on Twitter."
+    }
+  });
+  
+  categories.push({
+    title: "Technical SEO",
+    items: technicalItems
+  });
+  
+  // SEO Content Analysis
+  const contentItems: SEOCheckItem[] = [];
+  
+  // Check keyword density
+  if (keyword) {
+    const keywordDensity = calculateKeywordDensity(content, keyword);
+    console.log("Keyword density:", keywordDensity);
+    
+    let densityStatus: "pass" | "fail" | "warning" | "info" = "fail";
+    let densityMessage = `Your keyword "${keyword}" was not found in the content.`;
+    let densityPoints = 0;
+    
+    if (keywordDensity.density > 0) {
+      if (keywordDensity.density >= 1 && keywordDensity.density <= 3) {
+        densityStatus = "pass";
+        densityMessage = `Good keyword density (${keywordDensity.density.toFixed(2)}%) for "${keyword}". Optimal range is 1-3%.`;
+        densityPoints = seoPointValues.keywordDensityHigh;
+      } else if (keywordDensity.density >= 0.5 && keywordDensity.density < 1) {
+        densityStatus = "pass";
+        densityMessage = `Acceptable keyword density (${keywordDensity.density.toFixed(2)}%) for "${keyword}". Could be improved to 1-3%.`;
+        densityPoints = seoPointValues.keywordDensityMedium;
+      } else if (keywordDensity.density > 0.1 && keywordDensity.density < 0.5) {
+        densityStatus = "warning";
+        densityMessage = `Low keyword density (${keywordDensity.density.toFixed(2)}%) for "${keyword}". Try to increase it to at least 0.5-1%.`;
+        densityPoints = seoPointValues.keywordDensityLow;
+      } else if (keywordDensity.density > 3) {
+        densityStatus = "warning";
+        densityMessage = `High keyword density (${keywordDensity.density.toFixed(2)}%) for "${keyword}". This might be seen as keyword stuffing. Aim for 1-3%.`;
+        densityPoints = seoPointValues.keywordDensityMedium; // Penalize for potential stuffing
+      } else {
+        densityStatus = "fail";
+        densityMessage = `Very low keyword density (${keywordDensity.density.toFixed(2)}%) for "${keyword}". Increase usage of your keyword.`;
+        densityPoints = seoPointValues.keywordDensityLow;
+      }
+    }
+    
+    contentItems.push({
+      name: "Keyword density",
+      status: densityStatus,
+      message: densityMessage,
+      points: densityPoints,
+      details: {
+        found: `${keywordDensity.density.toFixed(2)}% (${keywordDensity.count} occurrences in ${keywordDensity.totalWords} words)`,
+        expected: "Keyword density should be between 1% and 3%",
+        explanation: "Keyword density is the percentage of times a keyword appears on a page compared to the total number of words on the page."
+      }
+    });
+    
+    // Check if keyword is in first paragraph
+    const paragraphs = content.match(/<p[^>]*>(.*?)<\/p>/gi) || [];
+    let keywordInFirstParagraph = false;
+    
+    if (paragraphs.length > 0) {
+      const firstParagraph = paragraphs[0].replace(/<[^>]*>/g, '');
+      keywordInFirstParagraph = isKeywordPresent(firstParagraph, keyword);
+      
+      contentItems.push({
+        name: "Keyword in first paragraph",
+        status: keywordInFirstParagraph ? "pass" : "warning",
+        message: keywordInFirstParagraph 
+          ? `Your first paragraph includes your keyword "${keyword}", which is good for SEO.` 
+          : `Your first paragraph doesn't include your keyword "${keyword}". Consider adding it for better SEO.`,
+        points: keywordInFirstParagraph ? seoPointValues.keywordInFirstParagraph : 0,
+        details: {
+          found: firstParagraph.substring(0, 100) + "...",
+          expected: `First paragraph should include the keyword "${keyword}"`,
+          explanation: "Including your target keyword early in your content helps search engines understand your page's topic."
+        }
+      });
+    }
+    
+    // Content length check
+    contentItems.push({
+      name: "Content length",
+      status: keywordDensity.totalWords >= 300 ? "pass" : "warning",
+      message: keywordDensity.totalWords >= 300 
+        ? `Your content has ${keywordDensity.totalWords} words, which is good for SEO.` 
+        : `Your content is too short (${keywordDensity.totalWords} words). Aim for at least 300 words for better SEO.`,
+      points: seoPointValues.contentLength,
+      details: {
+        found: `${keywordDensity.totalWords} words`,
+        expected: "Content should have at least 300 words",
+        explanation: "Longer content tends to rank better as it provides more information to users and search engines."
+      }
+    });
+  }
+  
+  categories.push({
+    title: "Content Analysis",
+    items: contentItems
+  });
+  
+  // Link Analysis
+  // This section would analyze internal and external links on the page
+  
+  // Calculate SEO score based on all checks
+  const allChecks = [
+    ...urlItems,
+    ...titleTagItems,
+    ...headingItems,
+    ...imageItems,
+    ...technicalItems,
+    ...contentItems
+  ];
+  
+  const scoreResult = calculateSEOScore(allChecks);
+  
+  return {
+    score: scoreResult.score,
+    categories,
+    contentFetched: true,
+    relevanceTier: scoreResult.relevanceTier
+  };
+};
