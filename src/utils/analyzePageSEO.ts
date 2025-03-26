@@ -99,7 +99,7 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     });
   }
   
-  // Check URL length - Using the already defined urlPath variable instead of creating a new one
+  // Check URL length - Using the already defined urlPath variable
   const isUrlLengthGood = urlPath.length > 0 && urlPath.length <= 75;
   
   urlItems.push({
@@ -716,7 +716,7 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   // Check page speed indicators
   const hasResourceHints = content.includes('rel="preload"') || 
                            content.includes('rel="prefetch"') || 
-                           content.includes('rel="dns-prefetch"');
+                           content.includes('rel="dns-prefetch');
   
   performanceItems.push({
     name: "Use resource hints for faster loading",
@@ -744,4 +744,107 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       : "Your page may have unminified resources. Consider minifying JavaScript and CSS files.",
     points: seoPointValues.minifiedResources,
     details: {
-      found: `JavaScript: ${has
+      found: `JavaScript: ${hasMinifiedJs ? 'Minified' : 'Possibly unminified'}, CSS: ${hasMinifiedCss ? 'Minified' : 'Possibly unminified'}`,
+      expected: "JavaScript and CSS files should be minified",
+      explanation: "Minified resources load faster and consume less bandwidth, improving page speed."
+    }
+  });
+  
+  // Check for mobile-friendly indicators
+  const hasViewport = content.includes('name="viewport"') && content.includes('width=device-width');
+  
+  performanceItems.push({
+    name: "Mobile-friendly viewport",
+    status: hasViewport ? "pass" : "fail",
+    message: hasViewport 
+      ? "Your page has a proper viewport meta tag for mobile devices." 
+      : "Your page is missing a proper viewport meta tag. Add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">.",
+    points: seoPointValues.viewport,
+    details: {
+      found: hasViewport ? "Viewport meta tag found" : "No viewport meta tag found",
+      expected: "Page should have a viewport meta tag with width=device-width",
+      explanation: "The viewport meta tag ensures your page displays properly on mobile devices, which is important for mobile SEO."
+    }
+  });
+  
+  categories.push({
+    title: "Performance & Mobile",
+    items: performanceItems
+  });
+  
+  // Content Analysis
+  const contentItems: SEOCheckItem[] = [];
+  
+  // Keyword density analysis
+  if (keyword) {
+    const keywordDensity = calculateKeywordDensity(content, keyword);
+    console.log("Keyword density analysis:", keywordDensity);
+    
+    contentItems.push({
+      name: "Keyword density",
+      status: keywordDensity.importance === 'medium' ? "pass" : 
+             keywordDensity.importance === 'low' ? "warning" : 
+             keywordDensity.importance === 'high' ? "warning" : "fail",
+      message: keywordDensity.importance === 'medium' 
+        ? `Good keyword density (${keywordDensity.density.toFixed(2)}%). Your keyword appears ${keywordDensity.count} times in ${keywordDensity.totalWords} words.` 
+        : keywordDensity.importance === 'low' 
+          ? `Low keyword density (${keywordDensity.density.toFixed(2)}%). Your keyword appears only ${keywordDensity.count} times in ${keywordDensity.totalWords} words.` 
+          : keywordDensity.importance === 'high' 
+            ? `High keyword density (${keywordDensity.density.toFixed(2)}%). This might appear as keyword stuffing. Aim for 0.5% to 2.5%.` 
+            : `Your keyword was not found in the page content. Make sure to use your target keyword naturally throughout the content.`,
+      points: keywordDensity.importance === 'medium' ? seoPointValues.keywordDensityGood : 
+              keywordDensity.importance === 'low' ? seoPointValues.keywordDensityOk : 0,
+      details: {
+        found: `Keyword "${keyword}" appears ${keywordDensity.count} times in ${keywordDensity.totalWords} words (${keywordDensity.density.toFixed(2)}%)`,
+        expected: "Keyword density should be between 0.5% and 2.5%",
+        explanation: "A balanced keyword density helps establish relevance without appearing as keyword stuffing."
+      }
+    });
+    
+    // Content quality indicators
+    const contentLength = keywordDensity.totalWords;
+    const hasSubstantialContent = contentLength >= 300;
+    
+    contentItems.push({
+      name: "Content length",
+      status: contentLength >= 800 ? "pass" : 
+             contentLength >= 300 ? "warning" : "fail",
+      message: contentLength >= 800 
+        ? `Your page has substantial content (${contentLength} words).` 
+        : contentLength >= 300 
+          ? `Your page has ${contentLength} words. Consider adding more comprehensive content (aim for 800+ words).` 
+          : `Your page has insufficient content (${contentLength} words). Search engines prefer pages with substantial, valuable content.`,
+      points: seoPointValues.contentLength,
+      details: {
+        found: `${contentLength} words`,
+        expected: "Page should have at least 800 words of content for comprehensive topic coverage",
+        explanation: "Longer, comprehensive content typically ranks better in search results as it provides more value to users."
+      }
+    });
+  }
+  
+  categories.push({
+    title: "Content Analysis",
+    items: contentItems
+  });
+  
+  // Calculate overall score based on all checks
+  const allChecks = categories.flatMap(category => category.items);
+  const totalPossiblePoints = allChecks
+    .filter(check => check.status !== 'info')
+    .reduce((total, check) => total + (check.points || 1), 0);
+  
+  const earnedPoints = allChecks.reduce((total, check) => {
+    if (check.status === 'pass') return total + (check.points || 1);
+    if (check.status === 'warning') return total + ((check.points || 1) * 0.5);
+    return total;
+  }, 0);
+  
+  const overallScore = totalPossiblePoints > 0 ? Math.round((earnedPoints / totalPossiblePoints) * 100) : 0;
+  
+  return {
+    score: overallScore,
+    categories,
+    contentFetched: true
+  };
+};
