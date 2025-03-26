@@ -20,10 +20,14 @@ export const analyzeSEO = async (url: string, keyword?: string): Promise<Analysi
       normalizedUrl = `https://${normalizedUrl}`;
     }
     
-    console.log(`Using normalized URL: ${normalizedUrl}`);
+    console.log(`Using normalized URL with preserved path: ${normalizedUrl}`);
     
-    // Use our comprehensive analyzer with the preserved URL
-    const result = await analyzePageSEO(normalizedUrl, keyword);
+    // Force a unique cache-busting parameter to prevent cached responses
+    const urlWithCacheBuster = `${normalizedUrl}${normalizedUrl.includes('?') ? '&' : '?'}_seoAnalyzerCache=${Date.now()}`;
+    console.log(`Using cache-busting URL: ${urlWithCacheBuster}`);
+    
+    // Use our analyzer with the preserved URL path and cache buster
+    const result = await analyzePageSEO(urlWithCacheBuster, keyword);
     
     return {
       score: result.score,

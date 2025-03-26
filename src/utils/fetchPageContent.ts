@@ -2,114 +2,127 @@
 import axios from 'axios';
 
 /**
- * Improved page content fetcher with multiple fallback strategies
+ * Improved page content fetcher with robust URL handling and content validation
  */
 export const fetchPageContent = async (url: string): Promise<{ content: string, success: boolean, error?: string }> => {
   try {
     console.log("Fetching content for exact URL:", url);
     
-    // Use server-side proxies that handle CORS more reliably
+    // STRICT URL HANDLING: Preserve the exact URL with full path
+    const urlToFetch = url.trim();
+    const urlObj = new URL(urlToFetch);
+    const urlPath = urlObj.pathname;
+    
+    console.log("URL to fetch (with preserved path):", urlToFetch);
+    console.log("URL path component:", urlPath);
+    
+    // If we're requesting a specific path (not just the domain), we'll verify we got the right content
+    const isRequestingSpecificPage = urlPath && urlPath !== "/" && urlPath !== "";
+    console.log("Requesting specific page (not homepage):", isRequestingSpecificPage);
+    
+    // Use multiple CORS proxies with fallback strategy
     const corsProxies = [
       'https://corsproxy.io/?',
       'https://api.allorigins.win/raw?url=',
       'https://api.codetabs.com/v1/proxy?quest='
     ];
     
-    // Ensure we're using the exact URL with full path - critical fix!
-    const urlToFetch = url.trim();
-    
-    console.log("URL to fetch (with full path preserved):", urlToFetch);
-    
-    // Try each proxy with axios
-    for (const proxy of corsProxies) {
+    // Try each proxy or direct fetch until we get valid specific page content
+    for (const proxy of [...corsProxies, 'direct']) {
       try {
-        console.log(`Trying proxy: ${proxy} for URL: ${urlToFetch}`);
-        const proxyUrl = `${proxy}${encodeURIComponent(urlToFetch)}`;
-        console.log(`Full proxy URL: ${proxyUrl}`);
+        let response;
         
-        const response = await axios.get(proxyUrl, { 
-          timeout: 15000,
-          headers: {
-            'Accept': 'text/html',
-            'User-Agent': 'Mozilla/5.0 SEO Analyzer Bot'
-          }
-        });
+        if (proxy === 'direct') {
+          console.log("Attempting direct fetch for URL:", urlToFetch);
+          response = await axios.get(urlToFetch, { 
+            timeout: 15000,
+            headers: {
+              'Accept': 'text/html',
+              'User-Agent': 'Mozilla/5.0 SEO Analyzer Bot'
+            }
+          });
+        } else {
+          console.log(`Trying proxy: ${proxy} for URL: ${urlToFetch}`);
+          const proxyUrl = `${proxy}${encodeURIComponent(urlToFetch)}`;
+          console.log(`Full proxy URL: ${proxyUrl}`);
+          
+          response = await axios.get(proxyUrl, { 
+            timeout: 15000,
+            headers: {
+              'Accept': 'text/html',
+              'User-Agent': 'Mozilla/5.0 SEO Analyzer Bot'
+            }
+          });
+        }
         
         if (response.status === 200 && response.data) {
           const content = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
           
           // Basic validation to ensure we got actual HTML
           if (content.includes('<!DOCTYPE html>') || content.includes('<html') || content.includes('<head')) {
-            console.log("Proxy fetch succeeded with", proxy);
-            console.log("Fetched specific URL:", urlToFetch);
+            console.log(`Fetch succeeded using ${proxy === 'direct' ? 'direct fetch' : proxy}`);
             
-            // Debug what content we actually got
+            // Extract title for validation
             const titleMatch = content.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-            if (titleMatch) {
-              console.log("Page title from content:", titleMatch[1].trim());
-            }
+            const pageTitle = titleMatch ? titleMatch[1].trim() : 'No title found';
+            console.log("Page title from content:", pageTitle);
             
-            // Verify we're not being redirected to the homepage
-            if (urlToFetch.includes('/') && urlToFetch.split('/').length > 3) {
-              const urlPath = new URL(urlToFetch).pathname;
-              console.log("URL path we're expecting content for:", urlPath);
+            // If we're requesting a specific page, validate that we got the right content
+            if (isRequestingSpecificPage) {
+              console.log("Validating we received content for the specific page:", urlPath);
               
-              // Try to find content specific to this path
-              const pathIndicators = [
-                urlPath,
-                `<link rel="canonical" href="${urlToFetch}"`,
-                `<meta property="og:url" content="${urlToFetch}"`
+              // STRICT VERIFICATION: Check multiple indicators that we got the right page
+              const pageIndicators = [
+                // Check for canonical link with our exact URL or path
+                content.includes(`<link rel="canonical" href="${urlToFetch}"`),
+                content.includes(`<link rel="canonical" href="${urlObj.origin}${urlPath}"`),
+                
+                // Check for Open Graph URL with our exact URL or path
+                content.includes(`<meta property="og:url" content="${urlToFetch}"`),
+                content.includes(`<meta property="og:url" content="${urlObj.origin}${urlPath}"`),
+                
+                // Check for the path component in the content
+                content.includes(`"${urlPath}"`),
+                content.includes(`'${urlPath}'`),
+                content.includes(`=${urlPath}`),
+                
+                // Check if the content has URL slugs that match our path parts
+                urlPath.split('/').filter(part => part && part.length > 3).some(pathPart => 
+                  content.includes(`"${pathPart}"`) || 
+                  content.includes(`'${pathPart}'`) || 
+                  content.includes(`>${pathPart}<`)
+                )
               ];
               
-              // Check if at least one path indicator is present
-              const hasPathSpecificContent = pathIndicators.some(indicator => 
-                content.includes(indicator)
-              );
+              const validationPassed = pageIndicators.some(indicator => indicator === true);
+              console.log("Page validation indicators:", pageIndicators);
+              console.log("Content appears to be for the specific URL:", validationPassed);
               
-              // Log whether the content appears to be for the specific page
-              console.log("Content appears to be for the specific URL:", hasPathSpecificContent);
+              // If content doesn't appear to be for the specific URL, try another proxy
+              if (!validationPassed) {
+                console.log("Content doesn't appear to be for the specific page, trying another source");
+                continue;
+              }
             }
             
+            // If validation passed or not needed, return the content
             return { content, success: true };
+          } else {
+            console.log("Response doesn't contain valid HTML, trying another source");
           }
+        } else {
+          console.log(`Response status not 200 or no data, trying another source`);
         }
-      } catch (proxyErr) {
-        console.log(`Proxy ${proxy} failed:`, proxyErr.message);
+      } catch (fetchErr) {
+        console.log(`Fetch using ${proxy} failed:`, fetchErr.message);
       }
-    }
-    
-    // Last resort: direct fetch (likely to fail due to CORS)
-    try {
-      console.log("Attempting direct fetch as last resort for:", urlToFetch);
-      const response = await axios.get(urlToFetch, { 
-        timeout: 10000,
-        headers: {
-          'Accept': 'text/html',
-          'User-Agent': 'Mozilla/5.0 SEO Analyzer Bot'
-        }
-      });
-      
-      if (response.status === 200 && response.data) {
-        console.log("Direct fetch succeeded for specific URL:", urlToFetch);
-        
-        // Debug what content we actually got
-        const content = response.data;
-        const titleMatch = content.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-        if (titleMatch) {
-          console.log("Page title from direct fetch:", titleMatch[1].trim());
-        }
-        
-        return { content: response.data, success: true };
-      }
-    } catch (directFetchErr) {
-      console.log("Direct fetch failed:", directFetchErr.message);
     }
     
     // If all attempts failed
     return { 
       content: '', 
       success: false, 
-      error: 'Could not fetch page content. CORS restrictions or network issues may be preventing access.' 
+      error: 'Could not fetch content specifically for the requested URL. The site may be redirecting to the homepage.' 
     };
   } catch (error) {
     console.error("Error in fetchPageContent:", error);

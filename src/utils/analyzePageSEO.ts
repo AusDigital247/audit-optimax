@@ -1,3 +1,4 @@
+
 import { fetchPageContent, extractTitle, extractMetaTags } from './fetchPageContent';
 import { 
   isKeywordPresent, 
@@ -20,17 +21,25 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
 }> => {
   console.log(`Analyzing SEO for URL: ${url}, Keyword: ${keyword}`);
   
-  // Ensure we use the exact URL provided (including the full path) without modification
+  // Parse the URL to extract path components for more accurate analysis
+  const urlObj = new URL(url.startsWith('http') ? url : `https://${url}`);
+  const urlPath = urlObj.pathname;
+  const isSpecificPage = urlPath && urlPath !== "/" && urlPath !== "";
+  
+  console.log("URL path for analysis:", urlPath);
+  console.log("Analyzing specific page (not homepage):", isSpecificPage);
+  
+  // Preserve exact URL including cache-busting parameters
   const urlToAnalyze = url.trim();
-  console.log("Using exact URL for analysis (with full path):", urlToAnalyze);
+  console.log("Using exact URL for analysis:", urlToAnalyze);
   
   // Fetch page content with improved fetcher
-  const { content, success } = await fetchPageContent(urlToAnalyze);
+  const { content, success, error } = await fetchPageContent(urlToAnalyze);
   
   // Prepare categories array
   const categories: Array<{title: string, items: SEOCheckItem[]}> = [];
   
-  // If content fetching failed, return limited analysis
+  // If content fetching failed, return detailed error
   if (!success || !content) {
     return {
       score: 0,
@@ -41,8 +50,19 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
             {
               name: "Content access failed",
               status: "fail",
-              message: "We couldn't access the page content. This could be due to CORS restrictions or the site blocking access.",
+              message: error || "We couldn't access the page content. This could be due to CORS restrictions or the site blocking access.",
               points: 0
+            },
+            {
+              name: "URL validation",
+              status: "warning",
+              message: `We attempted to analyze: ${urlToAnalyze}`,
+              points: 0,
+              details: {
+                found: "No content could be fetched",
+                expected: "Valid HTML content for the specific URL",
+                explanation: "The URL may be invalid, or the site may be blocking our analyzer."
+              }
             }
           ]
         }
