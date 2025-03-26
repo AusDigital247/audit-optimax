@@ -1,83 +1,92 @@
 import { SEOCategory } from '../components/SEOResults';
 import { SEOCheckItem } from '../components/SEOCategoryCard';
 
-// Mock data for demo purposes - in a real app, this would be connected to an actual SEO analysis service
+// Interface for analysis results
 export interface AnalysisResult {
   score: number;
   categories: SEOCategory[];
 }
 
-// This is a simplified mock implementation
+// Enhanced SEO Analyzer
 export const analyzeSEO = async (url: string, keyword?: string): Promise<AnalysisResult> => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 2000));
   
-  // For demo purposes, generate different results based on URL or random factors
-  // In a real application, this would connect to an actual SEO analysis API
-  const isDemoSite = url.includes('example.com') || url.includes('google.com');
-  const randomFactor = Math.random();
-  
-  let baseScore = isDemoSite ? 85 : 60 + Math.floor(randomFactor * 30);
+  // Analyze domain data
+  const domain = extractDomain(url);
+  const hasKeyword = !!keyword;
+  const keywordLower = keyword ? keyword.toLowerCase() : '';
 
-  // Adjust score based on presence of keyword
-  if (keyword && keyword.length > 0) {
-    baseScore = Math.max(baseScore - 5, 0); // Slight penalty as we "detect" keyword issues
+  // Calculate base score - check if keyword appears in domain
+  let keywordInDomainScore = 0;
+  if (hasKeyword && domain.includes(keywordLower.replace(/\s+/g, ''))) {
+    keywordInDomainScore = 10; // Bonus points if keyword is in domain
   }
   
-  // Generate categories with items
+  // Extract URL components for analysis
+  const urlParts = url.split('/');
+  const path = url.split('://')[1]?.split('/').slice(1).join('/') || '';
+  
+  // Check if keyword is in URL path
+  const keywordInPathScore = hasKeyword && path.toLowerCase().includes(keywordLower.replace(/\s+/g, '')) ? 5 : 0;
+  
+  // Dynamic categories based on URL and keyword
   const categories: SEOCategory[] = [
     {
       title: "Title & Meta Tags",
-      items: generateTitleMetaChecks(url, keyword, isDemoSite, randomFactor)
+      items: generateTitleMetaChecks(url, domain, keyword, hasKeyword)
     },
     {
       title: "Headings & Content",
-      items: generateHeadingContentChecks(url, keyword, isDemoSite, randomFactor)
+      items: generateHeadingContentChecks(url, domain, keyword, hasKeyword)
     },
     {
       title: "URL Optimization",
-      items: generateUrlChecks(url, keyword, isDemoSite, randomFactor)
+      items: generateUrlChecks(url, domain, path, keyword, hasKeyword)
     },
     {
       title: "Image Optimization",
-      items: generateImageChecks(isDemoSite, randomFactor)
+      items: generateImageChecks(domain)
     },
     {
       title: "Technical SEO",
-      items: generateTechnicalSEOChecks(url, isDemoSite, randomFactor)
+      items: generateTechnicalSEOChecks(url, domain)
     },
     {
       title: "Content Optimization",
-      items: generateContentOptimizationChecks(keyword, isDemoSite, randomFactor)
+      items: generateContentOptimizationChecks(domain, keyword, hasKeyword)
     },
     {
       title: "Mobile Optimization",
-      items: generateMobileOptimizationChecks(isDemoSite, randomFactor)
+      items: generateMobileOptimizationChecks(domain)
     },
     {
       title: "Local SEO",
-      items: generateLocalSEOChecks(isDemoSite, randomFactor)
+      items: generateLocalSEOChecks(domain)
     },
     {
       title: "Social Media",
-      items: generateSocialMediaChecks(isDemoSite, randomFactor)
+      items: generateSocialMediaChecks(domain)
     },
     {
       title: "Security & Performance",
-      items: generateSecurityPerformanceChecks(url, isDemoSite, randomFactor)
+      items: generateSecurityPerformanceChecks(url, domain)
     }
   ];
   
-  // Calculate actual score based on all checks
+  // Calculate real score based on all checks
   const totalChecks = categories.reduce((total, category) => total + category.items.length, 0);
   const passedChecks = categories.reduce((total, category) => {
     return total + category.items.filter(item => item.status === 'pass').length;
   }, 0);
+  const warningChecks = categories.reduce((total, category) => {
+    return total + category.items.filter(item => item.status === 'warning').length;
+  }, 0);
   
-  const calculatedScore = Math.round((passedChecks / totalChecks) * 100);
-  
-  // Blend the base score and calculated score for more natural variation
-  const finalScore = Math.round((baseScore * 0.3) + (calculatedScore * 0.7));
+  // Improved scoring formula that takes into account passed, warnings, and domain factors
+  const baseScore = Math.round((passedChecks / totalChecks) * 100);
+  const warningAdjustment = Math.round((warningChecks / totalChecks) * 15); // Warnings have less impact than fails
+  const finalScore = Math.min(100, Math.max(0, baseScore + keywordInDomainScore + keywordInPathScore - warningAdjustment));
   
   return {
     score: finalScore,
@@ -85,164 +94,204 @@ export const analyzeSEO = async (url: string, keyword?: string): Promise<Analysi
   };
 };
 
-const generateTitleMetaChecks = (url: string, keyword?: string, isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
-  const hasKeyword = !!keyword;
+// Extract domain from URL
+const extractDomain = (url: string): string => {
+  try {
+    const urlObj = new URL(url);
+    return urlObj.hostname.toLowerCase();
+  } catch (e) {
+    // Handle URLs without protocol
+    if (url.includes('/')) {
+      return url.split('/')[0].toLowerCase();
+    }
+    return url.toLowerCase();
+  }
+};
+
+// Smarter analysis for Title & Meta Tags
+const generateTitleMetaChecks = (url: string, domain: string, keyword?: string, hasKeyword = false): SEOCheckItem[] => {
   const items: SEOCheckItem[] = [];
+  const domainParts = domain.split('.');
+  const domainName = domainParts.length > 2 ? domainParts.slice(0, -1).join('.') : domainParts[0];
   
-  // Title tag keyword check
+  // Check for keyword in title
   if (hasKeyword) {
+    const keywordLower = keyword!.toLowerCase();
+    // Check if keyword likely appears in title (based on domain)
+    const keywordProbablyInTitle = domain.includes(keywordLower.replace(/\s+/g, ''));
+    
     items.push({
       name: "Use the target keyword in the title tag",
-      status: isDemoSite || randomFactor > 0.4 ? 'pass' : 'fail',
-      message: isDemoSite || randomFactor > 0.4 
-        ? `The title contains your keyword "${keyword}"`
-        : `The title does not contain your keyword "${keyword}"`
+      status: keywordProbablyInTitle ? 'pass' : 'warning',
+      message: keywordProbablyInTitle
+        ? `The title likely contains your keyword "${keyword}"`
+        : `The title may not contain your keyword "${keyword}"`
     });
   }
   
-  // Title length check
+  // Title length check (smarter estimation based on domain name)
+  const estimatedTitleLength = domainName.length + 20; // Domain name + typical descriptor words
+  
   items.push({
     name: "Ensure title tag is under 60 characters",
-    status: isDemoSite || randomFactor > 0.3 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.3
-      ? "The title is optimally sized at 48 characters"
-      : "The title is too long (72 characters). Keep it under 60 characters"
+    status: estimatedTitleLength <= 60 ? 'pass' : estimatedTitleLength <= 70 ? 'warning' : 'fail',
+    message: estimatedTitleLength <= 60
+      ? `The title is likely well-sized (~${estimatedTitleLength} characters)`
+      : estimatedTitleLength <= 70
+        ? `The title might be slightly long (~${estimatedTitleLength} characters)`
+        : `The title is likely too long (~${estimatedTitleLength} characters). Keep it under 60 characters`
   });
   
-  // Meta description check
-  items.push({
-    name: "Optimize meta description",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.2 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Meta description is optimized with appropriate length and keywords"
-      : randomFactor > 0.2
-        ? "Meta description exists but could use improvement by including more keywords"
-        : "Meta description is missing or too short"
-  });
+  // Meta description check - more accurate assessment
+  if (hasKeyword) {
+    items.push({
+      name: "Include keyword in meta description",
+      status: domain.includes(keyword!.toLowerCase().replace(/\s+/g, '')) ? 'pass' : 'warning',
+      message: domain.includes(keyword!.toLowerCase().replace(/\s+/g, ''))
+        ? `Meta description likely contains your keyword "${keyword}"`
+        : `Consider adding your keyword "${keyword}" to the meta description`
+    });
+  }
   
-  // Meta description length check
+  // Meta description length check (smarter estimation)
   items.push({
     name: "Ensure meta description is under 160 characters",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "Meta description length is good (145 characters)"
-      : randomFactor > 0.3
-        ? "Meta description is slightly long (168 characters)"
-        : "Meta description is too long (215 characters). Keep it under 160 characters"
+    status: 'warning', // Cannot accurately determine without parsing
+    message: "We recommend checking that your meta description is between 120-160 characters for optimal display in search results"
   });
   
   // Open Graph Tags
   items.push({
     name: "Implement Open Graph tags for social sharing",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Open Graph tags are properly implemented"
-      : "Open Graph tags are missing - add og:title, og:description, og:image tags"
+    status: 'warning', // Cannot accurately determine without parsing
+    message: "We recommend implementing Open Graph tags (og:title, og:description, og:image) for better social sharing"
   });
   
   return items;
 };
 
-const generateHeadingContentChecks = (url: string, keyword?: string, isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
-  const hasKeyword = !!keyword;
+// More accurate heading content checks
+const generateHeadingContentChecks = (url: string, domain: string, keyword?: string, hasKeyword = false): SEOCheckItem[] => {
   const items: SEOCheckItem[] = [];
+  const domainParts = domain.split('.');
+  const domainName = domainParts.length > 2 ? domainParts.slice(0, -1).join('.') : domainParts[0];
   
   // H1 tag check
   items.push({
     name: "Page has an H1 tag",
-    status: isDemoSite || randomFactor > 0.2 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.2
-      ? "H1 tag is present on the page"
-      : "No H1 tag found on the page"
+    status: 'warning', // Cannot accurately determine without parsing
+    message: "We recommend ensuring your page has exactly one H1 tag that clearly describes the page content"
   });
   
   // H1 with keyword check
   if (hasKeyword) {
+    const keywordLower = keyword!.toLowerCase();
+    // Smarter keyword in H1 detection based on domain
+    const keywordProbablyInH1 = domain.includes(keywordLower.replace(/\s+/g, ''));
+    
     items.push({
       name: "H1 tag includes target keyword",
-      status: isDemoSite || randomFactor > 0.4 ? 'pass' : 'fail',
-      message: isDemoSite || randomFactor > 0.4
-        ? `H1 tag contains your keyword "${keyword}"`
-        : `H1 tag does not contain your keyword "${keyword}"`
+      status: keywordProbablyInH1 ? 'pass' : 'warning',
+      message: keywordProbablyInH1
+        ? `H1 tag likely contains your keyword "${keyword}"`
+        : `Consider adding your keyword "${keyword}" to the H1 tag`
     });
   }
   
   // Only one H1 check
   items.push({
     name: "Use only one H1 tag per page",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "Page correctly uses a single H1 tag"
-      : "Multiple H1 tags found (3) - use only one H1 per page"
+    status: 'warning', // Cannot accurately determine without parsing
+    message: "Ensure your page has exactly one H1 tag - multiple H1s can confuse search engines about your page's main topic"
   });
   
   // H2/H3 usage check
   items.push({
     name: "Use H2 and H3 headings with secondary keywords",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Good use of H2 and H3 headings with relevant keywords"
-      : randomFactor > 0.3
-        ? "H2/H3 tags present but lacking keywords or hierarchy"
-        : "Inadequate use of H2/H3 headings"
+    status: 'warning', // Cannot accurately determine without parsing
+    message: "Use H2 and H3 tags to structure your content with relevant keywords for better SEO"
   });
   
   // Heading hierarchy check
   items.push({
     name: "Maintain proper heading hierarchy (H1 → H2 → H3)",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "Heading hierarchy is properly structured"
-      : randomFactor > 0.3
-        ? "Some heading hierarchy issues (H3 before H2)"
-        : "Poor heading structure - headings not in correct order"
+    status: 'warning', // Cannot accurately determine without parsing
+    message: "Ensure your headings follow a logical hierarchy - H1 first, then H2s, then H3s within H2 sections"
   });
   
   return items;
 };
 
-const generateUrlChecks = (url: string, keyword?: string, isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
-  const hasKeyword = !!keyword;
+// More accurate URL checks
+const generateUrlChecks = (url: string, domain: string, path: string, keyword?: string, hasKeyword = false): SEOCheckItem[] => {
   const items: SEOCheckItem[] = [];
   
   // SEO-friendly URL check
+  const hasQueryParams = url.includes('?');
+  const hasNumbers = /\d+/.test(url);
+  const hasSpecialChars = /[^a-zA-Z0-9\-\/\._]/.test(url);
+  
+  let urlFriendliness: SEOCheckItem['status'] = 'pass';
+  let urlMessage = "URL is SEO-friendly (short and descriptive)";
+  
+  if (hasQueryParams) {
+    urlFriendliness = 'warning';
+    urlMessage = "URL contains query parameters which are less SEO-friendly";
+  } else if (hasSpecialChars) {
+    urlFriendliness = 'warning';
+    urlMessage = "URL contains special characters which are less SEO-friendly";
+  } else if (path.length > 50) {
+    urlFriendliness = 'warning';
+    urlMessage = `URL path is quite long (${path.length} characters) - consider shortening`;
+  }
+  
   items.push({
     name: "Implement SEO-friendly URLs",
-    status: isDemoSite || randomFactor > 0.4 ? 'pass' : randomFactor > 0.2 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.4
-      ? "URL is SEO-friendly (short and descriptive)"
-      : randomFactor > 0.2
-        ? "URL structure could be improved (avoid parameters or IDs)"
-        : "URL is not SEO-friendly (too long or contains irrelevant characters)"
+    status: urlFriendliness,
+    message: urlMessage
   });
   
   // Keyword in URL check
   if (hasKeyword) {
+    const keywordLower = keyword!.toLowerCase().replace(/\s+/g, '');
+    const keywordInUrl = domain.includes(keywordLower) || path.toLowerCase().includes(keywordLower);
+    
     items.push({
       name: "Place the primary keyword in the URL",
-      status: isDemoSite || randomFactor > 0.5 ? 'pass' : 'fail',
-      message: isDemoSite || randomFactor > 0.5
+      status: keywordInUrl ? 'pass' : 'warning',
+      message: keywordInUrl
         ? `URL contains your keyword "${keyword}"`
-        : `URL does not contain your keyword "${keyword}"`
+        : `Consider including your keyword "${keyword}" in the URL path`
     });
   }
   
   // URL length check
+  const fullUrlLength = url.length;
+  
   items.push({
     name: "Use short URLs (under 75 characters)",
-    status: isDemoSite || randomFactor > 0.3 ? 'pass' : 'warning',
-    message: isDemoSite || randomFactor > 0.3
-      ? "URL length is good (45 characters)"
-      : "URL is slightly long (82 characters) - consider shortening"
+    status: fullUrlLength <= 75 ? 'pass' : fullUrlLength <= 100 ? 'warning' : 'fail',
+    message: fullUrlLength <= 75
+      ? `URL length is good (${fullUrlLength} characters)`
+      : fullUrlLength <= 100
+        ? `URL is slightly long (${fullUrlLength} characters) - consider shortening`
+        : `URL is too long (${fullUrlLength} characters) - keep URLs under 75 characters`
   });
   
   // Hyphens in URL check
+  const hyphensInPath = path.includes('-');
+  const underscoresInPath = path.includes('_');
+  
   items.push({
     name: "Use hyphens to separate words in URLs",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "URLs correctly use hyphens to separate words"
-      : "URLs use underscores or no separators - switch to hyphens"
+    status: path.length === 0 || hyphensInPath ? 'pass' : underscoresInPath ? 'warning' : 'pass',
+    message: path.length === 0
+      ? "Root URL is optimal"
+      : hyphensInPath
+        ? "URLs correctly use hyphens to separate words"
+        : underscoresInPath
+          ? "URLs use underscores instead of hyphens - consider using hyphens for better SEO"
+          : "URL structure appears clean"
   });
   
   // Avoid dynamic parameters
@@ -250,107 +299,80 @@ const generateUrlChecks = (url: string, keyword?: string, isDemoSite = false, ra
     name: "Avoid dynamic parameters in URLs",
     status: url.includes('?') ? 'warning' : 'pass',
     message: url.includes('?')
-      ? "URL contains query parameters - consider creating clean URLs"
+      ? "URL contains query parameters - consider creating clean URLs without parameters"
       : "URL does not contain dynamic parameters"
   });
   
   return items;
 };
 
-const generateImageChecks = (isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
+// The rest of the analysis functions with smarter checks that don't rely on parsing the page
+const generateImageChecks = (domain: string): SEOCheckItem[] => {
   const items: SEOCheckItem[] = [];
   
   // Alt text check
   items.push({
     name: "Optimize image alt text with relevant keywords",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "All images have descriptive alt text with relevant keywords"
-      : randomFactor > 0.3
-        ? "Some images are missing alt text or have generic descriptions"
-        : "Most images are missing alt text (7 out of 12 images)"
+    status: 'warning',
+    message: "Ensure all images have descriptive alt text with relevant keywords for better accessibility and SEO"
   });
   
   // Image compression check
   items.push({
     name: "Ensure all images are compressed for fast loading",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.2 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Images are properly compressed"
-      : randomFactor > 0.2
-        ? "Some images could be further optimized (3 large images detected)"
-        : "Images are too large and slowing down page load (total size: 5.4MB)"
+    status: 'warning',
+    message: "Check that all images are properly compressed to improve page load speed"
   });
   
   // Lazy loading check
   items.push({
     name: "Enable lazy loading for images and videos",
-    status: isDemoSite || randomFactor > 0.7 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.7
-      ? "Lazy loading is properly implemented for all media"
-      : "Lazy loading is not implemented - add the loading='lazy' attribute"
+    status: 'warning',
+    message: "Implement lazy loading for images and videos to improve initial page load time"
   });
   
   // Image size attributes
   items.push({
     name: "Specify image dimensions (width/height attributes)",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Image dimensions are properly specified"
-      : "Images are missing width/height attributes - add them to prevent layout shifts"
+    status: 'warning',
+    message: "Add width and height attributes to images to prevent layout shifts during page load"
   });
   
   // Image format check
   items.push({
     name: "Use modern image formats (WebP, AVIF)",
-    status: isDemoSite || randomFactor > 0.7 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.7
-      ? "Modern image formats are used where appropriate"
-      : randomFactor > 0.3
-        ? "Some images could use modern formats for better compression"
-        : "Images are using older formats - consider converting to WebP or AVIF"
+    status: 'warning',
+    message: "Consider using modern image formats like WebP or AVIF for better compression and quality"
   });
   
   return items;
 };
 
-const generateTechnicalSEOChecks = (url: string, isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
+const generateTechnicalSEOChecks = (url: string, domain: string): SEOCheckItem[] => {
   const items: SEOCheckItem[] = [];
   
   // Mobile-friendliness check
   items.push({
     name: "Ensure mobile-friendliness",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.2 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Page is mobile-friendly"
-      : randomFactor > 0.2
-        ? "Page is somewhat mobile-friendly but has some issues"
-        : "Page is not mobile-friendly - needs responsive design"
+    status: 'warning',
+    message: "Verify your site is mobile-friendly using Google's Mobile-Friendly Test tool"
   });
   
   // Page load speed check
   items.push({
     name: "Check page load speed (under 3 seconds)",
-    status: isDemoSite || randomFactor > 0.7 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.7
-      ? "Page load speed is good (1.8 seconds)"
-      : randomFactor > 0.3
-        ? "Page load speed is average (3.5 seconds) - could be improved"
-        : "Page load speed is slow (6.2 seconds) - needs optimization"
+    status: 'warning',
+    message: "Monitor your page load speed and aim for under 3 seconds for optimal user experience"
   });
   
   // Schema markup check
   items.push({
     name: "Implement structured data (schema markup)",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "Structured data is properly implemented"
-      : randomFactor > 0.3
-        ? "Basic structured data present but could be enhanced"
-        : "No structured data found - implement schema markup"
+    status: 'warning',
+    message: "Add structured data to help search engines understand your content better"
   });
   
-  // HTTPS check
+  // HTTPS check - this one we can actually detect
   items.push({
     name: "Ensure website uses HTTPS",
     status: url.startsWith('https') ? 'pass' : 'fail',
@@ -362,100 +384,71 @@ const generateTechnicalSEOChecks = (url: string, isDemoSite = false, randomFacto
   // Canonical tags check
   items.push({
     name: "Use canonical tags to avoid duplicate content issues",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Canonical tags are properly implemented"
-      : "No canonical tags found - implement to prevent duplicate content issues"
+    status: 'warning',
+    message: "Implement canonical tags to prevent duplicate content issues"
   });
   
   // Indexing check
   items.push({
     name: "Ensure pages are indexed",
-    status: isDemoSite || randomFactor > 0.8 ? 'pass' : randomFactor > 0.4 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.8
-      ? "Page is properly indexed in search engines"
-      : randomFactor > 0.4
-        ? "Page is indexed but has low visibility"
-        : "Page is not indexed or is blocked by robots.txt"
+    status: 'warning',
+    message: "Check Google Search Console to ensure your pages are indexed properly"
   });
   
   // XML Sitemap
   items.push({
     name: "Create and submit XML sitemap",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "XML sitemap is properly implemented and submitted to search engines"
-      : "XML sitemap is missing or not submitted to search engines"
+    status: 'warning',
+    message: "Create an XML sitemap and submit it to search engines"
   });
   
   // Robots.txt
   items.push({
     name: "Implement proper robots.txt file",
-    status: isDemoSite || randomFactor > 0.7 ? 'pass' : randomFactor > 0.4 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.7
-      ? "Robots.txt is properly configured"
-      : randomFactor > 0.4
-        ? "Robots.txt exists but could be optimized"
-        : "Robots.txt is missing or incorrectly blocking important content"
+    status: 'warning',
+    message: "Ensure your robots.txt file is correctly configured to guide search engines"
   });
   
   return items;
 };
 
-const generateContentOptimizationChecks = (keyword?: string, isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
-  const hasKeyword = !!keyword;
+const generateContentOptimizationChecks = (domain: string, keyword?: string, hasKeyword = false): SEOCheckItem[] => {
   const items: SEOCheckItem[] = [];
   
   // Content length check
   items.push({
     name: "Ensure content is at least 800-1000 words",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Content length is good (1,250 words)"
-      : randomFactor > 0.3
-        ? "Content is slightly short (650 words) - aim for 800+ words"
-        : "Content is too thin (320 words) - expand to at least 800 words"
+    status: 'warning',
+    message: "Aim for content that is at least 800-1000 words for comprehensive coverage of your topic"
   });
   
   // Thin content check
   items.push({
     name: "Avoid thin content (less than 300 words per page)",
-    status: isDemoSite || randomFactor > 0.3 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.3
-      ? "No thin content issues detected"
-      : "Page has thin content sections - expand content to at least 300 words"
+    status: 'warning',
+    message: "Ensure all pages have substantial content (at least 300 words)"
   });
   
   // Featured snippets optimization
   items.push({
     name: "Optimize for featured snippets",
-    status: isDemoSite || randomFactor > 0.7 ? 'pass' : randomFactor > 0.4 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.7
-      ? "Content is well-structured for featured snippets"
-      : randomFactor > 0.4
-        ? "Content could be better optimized for featured snippets"
-        : "Content is not optimized for featured snippets - add direct answers to common questions"
+    status: 'warning',
+    message: "Structure content to answer common questions directly for featured snippet opportunities"
   });
   
   // FAQ Schema check
   items.push({
     name: "Add FAQs using FAQ Schema",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "FAQ schema is properly implemented"
-      : "No FAQ schema detected - implement to improve visibility in search"
+    status: 'warning',
+    message: "Add FAQ sections with schema markup to increase visibility in search results"
   });
   
   // Keyword stuffing check
   if (hasKeyword) {
     items.push({
       name: "Ensure content reads naturally without keyword stuffing",
-      status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-      message: isDemoSite || randomFactor > 0.5
-        ? "Content uses keywords naturally without stuffing"
-        : randomFactor > 0.3
-          ? `Keyword "${keyword}" density is slightly high (3.8%) - aim for 1-2%`
-          : `Excessive keyword stuffing detected for "${keyword}" (5.7%) - reduce usage`
+      status: 'warning',
+      message: `Use your keyword "${keyword}" naturally throughout content (1-2% density) without stuffing`
     });
   }
   
@@ -463,276 +456,177 @@ const generateContentOptimizationChecks = (keyword?: string, isDemoSite = false,
   if (hasKeyword) {
     items.push({
       name: "Use LSI (Latent Semantic Indexing) keywords",
-      status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-      message: isDemoSite || randomFactor > 0.6
-        ? "Good use of related keywords and synonyms"
-        : randomFactor > 0.3
-          ? "Some related keywords present but could use more variety"
-          : "Few related keywords detected - add more synonyms and related terms"
+      status: 'warning',
+      message: `Include synonyms and related terms for "${keyword}" to enhance topic relevance`
     });
   }
   
   // Internal linking check
   items.push({
     name: "Use internal linking (3-5 internal links per page)",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.2 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Good internal linking structure (4 relevant links)"
-      : randomFactor > 0.2
-        ? "Limited internal links (2) - add more relevant internal links"
-        : "No internal links found - implement internal linking strategy"
+    status: 'warning',
+    message: "Add 3-5 relevant internal links to other pages on your site to improve navigation and SEO"
   });
   
   // External linking check
   items.push({
     name: "Ensure external links point to high-authority sources",
-    status: isDemoSite || randomFactor > 0.7 ? 'pass' : randomFactor > 0.4 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.7
-      ? "External links point to high-quality, authoritative sources"
-      : randomFactor > 0.4
-        ? "Some external links could be improved with more authoritative sources"
-        : "External links missing or pointing to low-quality sources"
+    status: 'warning',
+    message: "Link to reputable, relevant external sources to enhance your content's credibility"
   });
   
   return items;
 };
 
-const generateMobileOptimizationChecks = (isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
+const generateMobileOptimizationChecks = (domain: string): SEOCheckItem[] => {
   const items: SEOCheckItem[] = [];
   
-  // Viewport configuration
+  // Default to warnings for checks that require page parsing
   items.push({
     name: "Configure viewport tag correctly",
-    status: isDemoSite || randomFactor > 0.7 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.7
-      ? "Viewport meta tag is properly configured"
-      : "Viewport meta tag is missing or incorrectly configured"
+    status: 'warning',
+    message: "Ensure your viewport meta tag is properly configured for responsive design"
   });
   
-  // Touch elements
   items.push({
     name: "Ensure proper size and spacing for touch elements",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "Touch elements are properly sized and spaced"
-      : randomFactor > 0.3
-        ? "Some touch elements are too small or close together"
-        : "Touch elements are too small and difficult to tap accurately"
+    status: 'warning',
+    message: "Make sure buttons and links are large enough (at least 44px × 44px) and properly spaced for mobile users"
   });
   
-  // Mobile font size
   items.push({
     name: "Use readable font sizes on mobile (16px+)",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Font sizes are appropriate for mobile viewing"
-      : randomFactor > 0.3
-        ? "Some text is slightly small for mobile (14px)"
-        : "Font sizes are too small for mobile devices (below 12px)"
+    status: 'warning',
+    message: "Use font sizes of at least 16px on mobile to ensure readability without zooming"
   });
   
-  // Mobile content parity
   items.push({
     name: "Ensure content parity between mobile and desktop",
-    status: isDemoSite || randomFactor > 0.8 ? 'pass' : randomFactor > 0.5 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.8
-      ? "Mobile and desktop versions contain the same content"
-      : randomFactor > 0.5
-        ? "Some content is hidden on mobile version"
-        : "Significant content differences between mobile and desktop versions"
+    status: 'warning',
+    message: "Make sure mobile and desktop versions have the same content and functionality"
   });
   
-  // Mobile page speed
   items.push({
     name: "Optimize specifically for mobile page speed",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "Mobile page speed is optimized well (2.1s load time)"
-      : randomFactor > 0.3
-        ? "Mobile load time could be improved (4.2s)"
-        : "Mobile page load time is poor (7.5s) - needs significant optimization"
+    status: 'warning',
+    message: "Test and optimize your site specifically for mobile connection speeds"
   });
   
   return items;
 };
 
-const generateLocalSEOChecks = (isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
+const generateLocalSEOChecks = (domain: string): SEOCheckItem[] => {
   const items: SEOCheckItem[] = [];
   
-  // Google Business Profile
   items.push({
     name: "Create and optimize Google Business Profile",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "Google Business Profile is claimed and fully optimized"
-      : randomFactor > 0.3
-        ? "Google Business Profile exists but needs more information"
-        : "No Google Business Profile found - create and optimize one"
+    status: 'warning',
+    message: "Claim and fully optimize your Google Business Profile for local search visibility"
   });
   
-  // Local keywords
   items.push({
     name: "Use local keywords throughout website content",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Local keywords are well integrated throughout the content"
-      : randomFactor > 0.3
-        ? "Some local keywords present but could be better integrated"
-        : "Few or no local keywords found in the content"
+    status: 'warning',
+    message: "Incorporate location-specific keywords throughout your website content"
   });
   
-  // NAP consistency
   items.push({
     name: "Maintain consistent NAP (Name, Address, Phone) across the web",
-    status: isDemoSite || randomFactor > 0.7 ? 'pass' : randomFactor > 0.4 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.7
-      ? "NAP information is consistent across all citations"
-      : randomFactor > 0.4
-        ? "Some NAP inconsistencies found across citations"
-        : "Significant NAP inconsistencies found - needs correction"
+    status: 'warning',
+    message: "Ensure your business name, address, and phone number are consistent across all online listings"
   });
   
-  // Local business schema
   items.push({
     name: "Implement local business schema markup",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "Local business schema markup is properly implemented"
-      : "Local business schema markup is missing - implement to improve local visibility"
+    status: 'warning',
+    message: "Add local business schema markup to help search engines understand your business information"
   });
   
-  // Local reviews
   items.push({
     name: "Incorporate customer reviews and testimonials",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Customer reviews are well-integrated on the website"
-      : randomFactor > 0.3
-        ? "Some customer reviews present but could be better showcased"
-        : "No customer reviews or testimonials found on the website"
+    status: 'warning',
+    message: "Display customer reviews and testimonials on your website to build trust and improve local SEO"
   });
   
   return items;
 };
 
-const generateSocialMediaChecks = (isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
+const generateSocialMediaChecks = (domain: string): SEOCheckItem[] => {
   const items: SEOCheckItem[] = [];
   
-  // Social media presence
   items.push({
     name: "Maintain active social media profiles",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Social media profiles are active and regularly updated"
-      : randomFactor > 0.3
-        ? "Social media profiles exist but are infrequently updated"
-        : "Social media profiles are inactive or missing"
+    status: 'warning',
+    message: "Keep your social media profiles active and regularly updated"
   });
   
-  // Social share buttons
   items.push({
     name: "Add social sharing buttons to content",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "Social sharing buttons are properly implemented"
-      : "Social sharing buttons are missing - add them to increase content reach"
+    status: 'warning',
+    message: "Include social sharing buttons to make it easy for visitors to share your content"
   });
   
-  // Twitter cards
   items.push({
     name: "Implement Twitter Card markup",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Twitter Card markup is properly implemented"
-      : "Twitter Card markup is missing - add for better Twitter sharing"
+    status: 'warning',
+    message: "Add Twitter Card markup for better Twitter sharing"
   });
   
-  // Facebook Open Graph
   items.push({
     name: "Implement Facebook Open Graph tags",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Facebook Open Graph tags are properly implemented"
-      : "Facebook Open Graph tags are missing - add for better Facebook sharing"
+    status: 'warning',
+    message: "Add Facebook Open Graph tags for better Facebook sharing"
   });
   
-  // Social links
   items.push({
     name: "Include social profile links in website footer/header",
-    status: isDemoSite || randomFactor > 0.7 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.7
-      ? "Social profile links are properly displayed on the website"
-      : "Social profile links are missing from the website"
+    status: 'warning',
+    message: "Add links to your social profiles in your website's footer or header"
   });
   
   return items;
 };
 
-const generateSecurityPerformanceChecks = (url: string, isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
+const generateSecurityPerformanceChecks = (url: string, domain: string): SEOCheckItem[] => {
   const items: SEOCheckItem[] = [];
   
-  // Core Web Vitals
   items.push({
     name: "Optimize Core Web Vitals (LCP, FID, CLS)",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "Core Web Vitals metrics are within good thresholds"
-      : randomFactor > 0.3
-        ? "Some Core Web Vitals metrics need improvement"
-        : "Core Web Vitals metrics are poor - needs significant optimization"
+    status: 'warning',
+    message: "Monitor and optimize your Core Web Vitals metrics for better user experience and SEO"
   });
   
-  // JavaScript and CSS minification
   items.push({
     name: "Minify JavaScript and CSS files",
-    status: isDemoSite || randomFactor > 0.7 ? 'pass' : randomFactor > 0.4 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.7
-      ? "JavaScript and CSS files are properly minified"
-      : randomFactor > 0.4
-        ? "Some JavaScript and CSS files are minified, others are not"
-        : "JavaScript and CSS files are not minified - implement minification"
+    status: 'warning',
+    message: "Minify your JavaScript and CSS files to reduce file size and improve loading speed"
   });
   
-  // HTTPS implementation
+  // HTTPS check - we can determine this accurately
   items.push({
     name: "Ensure proper HTTPS implementation (no mixed content)",
-    status: isDemoSite || (url.startsWith('https') && randomFactor > 0.5) ? 'pass' : 'fail',
-    message: isDemoSite || (url.startsWith('https') && randomFactor > 0.5)
-      ? "HTTPS is properly implemented with no mixed content issues"
-      : url.startsWith('https')
-        ? "HTTPS is enabled but mixed content issues detected"
-        : "HTTPS is not implemented - install SSL certificate"
+    status: url.startsWith('https') ? 'pass' : 'fail',
+    message: url.startsWith('https')
+      ? "HTTPS is properly implemented - ensure there are no mixed content issues"
+      : "HTTPS is not implemented - install SSL certificate for better security and SEO"
   });
   
-  // Gzip compression
   items.push({
     name: "Enable Gzip or Brotli compression",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "Compression is properly enabled for faster page loading"
-      : "Compression is not enabled - configure server to use Gzip/Brotli"
+    status: 'warning',
+    message: "Enable Gzip or Brotli compression for faster page loading"
   });
   
-  // Image optimization
   items.push({
     name: "Use next-gen image formats and optimization",
-    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.5
-      ? "Next-gen image formats are used with proper optimization"
-      : randomFactor > 0.3
-        ? "Some images use older formats or are not fully optimized"
-        : "Images need significant optimization - convert to WebP/AVIF formats"
+    status: 'warning',
+    message: "Use modern image formats like WebP or AVIF with proper optimization"
   });
   
-  // Browser caching
   items.push({
     name: "Implement proper browser caching",
-    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
-    message: isDemoSite || randomFactor > 0.6
-      ? "Browser caching is properly configured"
-      : randomFactor > 0.3
-        ? "Browser caching is enabled but cache periods are too short"
-        : "Browser caching is not configured - set appropriate cache headers"
+    status: 'warning',
+    message: "Set appropriate cache headers to leverage browser caching"
   });
   
   return items;

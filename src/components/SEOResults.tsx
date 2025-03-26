@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import SEOScoreCard from './SEOScoreCard';
@@ -10,7 +9,6 @@ import SEOSummaryChart from './SEOSummaryChart';
 import SEOCategoryChart from './SEOCategoryChart';
 import { toast } from "@/hooks/use-toast";
 import html2pdf from 'html2pdf.js';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 
 export interface SEOCategory {
@@ -212,49 +210,33 @@ const SEOResults = ({
         transition={{ duration: 0.4, delay: 0.3 }}
         className="mb-8"
       >
-        <Tabs defaultValue="charts" className="w-full">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
-            <TabsTrigger value="charts" className="flex items-center gap-2">
-              <PieChart className="h-4 w-4" />
-              <span>Charts & Analysis</span>
-            </TabsTrigger>
-            <TabsTrigger value="details" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              <span>Detailed Report</span>
-            </TabsTrigger>
-          </TabsList>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <Card>
+            <CardContent className="pt-6">
+              <h3 className="text-lg font-medium mb-4">Overall SEO Performance</h3>
+              <SEOSummaryChart score={score} />
+            </CardContent>
+          </Card>
           
-          <TabsContent value="charts" className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <Card>
-                <CardContent className="pt-6">
-                  <h3 className="text-lg font-medium mb-4">Overall SEO Performance</h3>
-                  <SEOSummaryChart score={score} />
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="pt-6">
-                  <h3 className="text-lg font-medium mb-4">Category Performance</h3>
-                  <SEOCategoryChart categories={categoryStats} />
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="details" className="mt-6">
-            <div className="space-y-6">
-              {categories.map((category, index) => (
-                <SEOCategoryCard
-                  key={category.title}
-                  title={category.title}
-                  items={category.items}
-                  delay={index + 2}
-                />
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
+          <Card>
+            <CardContent className="pt-6">
+              <h3 className="text-lg font-medium mb-4">Category Performance</h3>
+              <SEOCategoryChart categories={categoryStats} />
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="space-y-6 mt-8">
+          <h3 className="text-xl font-semibold">Detailed Report</h3>
+          {categories.map((category, index) => (
+            <SEOCategoryCard
+              key={category.title}
+              title={category.title}
+              items={category.items}
+              delay={index + 2}
+            />
+          ))}
+        </div>
       </motion.div>
       
       <motion.div

@@ -47,7 +47,8 @@ const SEOSummaryChart = ({ score, className }: SEOSummaryChartProps) => {
             <Label
               content={({ viewBox }) => {
                 if (!viewBox) return null;
-                const { cx, cy } = viewBox;
+                // Type assertion to access cx and cy
+                const { cx, cy } = viewBox as { cx: number; cy: number };
                 return (
                   <g>
                     <text

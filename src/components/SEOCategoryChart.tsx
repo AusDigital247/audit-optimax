@@ -54,7 +54,9 @@ const SEOCategoryChart = ({ categories, className }: SEOCategoryChartProps) => {
           <Tooltip
             formatter={(value, name) => {
               if (name === 'score') return [`${value}%`, 'Score'];
-              return [value, name.charAt(0).toUpperCase() + name.slice(1)];
+              // Fix type issue by safely converting name to string first
+              const nameStr = String(name);
+              return [value, nameStr.charAt(0).toUpperCase() + nameStr.slice(1)];
             }}
             contentStyle={{ 
               backgroundColor: 'rgba(255, 255, 255, 0.95)', 
