@@ -21,8 +21,11 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
 }> => {
   console.log(`Analyzing SEO for URL: ${url}, Keyword: ${keyword}`);
   
+  // Ensure we use the exact URL provided without modifying it
+  const urlToAnalyze = url.trim();
+  
   // Fetch page content with improved fetcher
-  const { content, success } = await fetchPageContent(url);
+  const { content, success } = await fetchPageContent(urlToAnalyze);
   
   // Prepare categories array
   const categories: Array<{title: string, items: SEOCheckItem[]}> = [];
@@ -408,8 +411,8 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       points: seoPointValues.h2Tags,
       details: {
         found: {
-          h2: headingsResult.headings.h2,
-          h3: headingsResult.headings.h3
+          h2Tags: headingsResult.headings.h2,
+          h3Tags: headingsResult.headings.h3
         },
         expected: "Page should use both H2 and H3 tags to structure content",
         explanation: "Using proper heading hierarchy helps both users and search engines understand your content structure."
@@ -426,9 +429,9 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       points: seoPointValues.headingStructure,
       details: {
         found: {
-          h1: headingsResult.headings.h1,
-          h2: headingsResult.headings.h2,
-          h3: headingsResult.headings.h3
+          h1Tags: headingsResult.headings.h1,
+          h2Tags: headingsResult.headings.h2,
+          h3Tags: headingsResult.headings.h3
         },
         expected: "Headings should follow proper hierarchy (H1 → H2 → H3)",
         explanation: "A logical heading structure improves accessibility and helps search engines understand your content organization."

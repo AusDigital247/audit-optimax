@@ -15,8 +15,11 @@ export const fetchPageContent = async (url: string): Promise<{ content: string, 
       'https://api.codetabs.com/v1/proxy?quest='
     ];
     
-    // Normalize URL
-    const normalizedUrl = url.startsWith('http') ? url : `https://${url}`;
+    // Ensure we use the exact URL provided without trying to simplify to domain only
+    const urlToFetch = url.trim();
+    
+    // Normalize URL only if needed
+    const normalizedUrl = urlToFetch.startsWith('http') ? urlToFetch : `https://${urlToFetch}`;
     
     // Try each proxy with axios
     for (const proxy of corsProxies) {
@@ -37,6 +40,7 @@ export const fetchPageContent = async (url: string): Promise<{ content: string, 
           // Basic validation to ensure we got actual HTML
           if (content.includes('<!DOCTYPE html>') || content.includes('<html') || content.includes('<head')) {
             console.log("Proxy fetch succeeded with", proxy);
+            console.log("Fetched URL:", normalizedUrl);
             return { content, success: true };
           }
         }
@@ -57,6 +61,7 @@ export const fetchPageContent = async (url: string): Promise<{ content: string, 
       });
       
       if (response.status === 200 && response.data) {
+        console.log("Direct fetch succeeded");
         return { content: response.data, success: true };
       }
     } catch (directFetchErr) {
