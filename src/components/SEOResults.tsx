@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import SEOScoreCard from './SEOScoreCard';
 import SEOCategoryCard, { SEOCheckItem } from './SEOCategoryCard';
 import { Button } from '@/components/ui/button';
-import { Download, RefreshCw, FileText, PieChart, AlertCircle } from 'lucide-react';
+import { Download, RefreshCw, FileText, PieChart, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import SEOSummaryChart from './SEOSummaryChart';
 import SEOCategoryChart from './SEOCategoryChart';
@@ -158,12 +158,24 @@ const SEOResults = ({
       </div>
       
       {!contentFetched && (
-        <Alert className="mb-6 border-teal/30 bg-navy-light">
-          <AlertCircle className="h-4 w-4 text-amber-400" />
-          <AlertTitle className="text-amber-400">Limited Analysis</AlertTitle>
-          <AlertDescription className="text-sm">
-            We were unable to access your page content directly due to security restrictions. Our analysis is based on URL structure only.
-            For a more accurate analysis, we recommend using Google Search Console, Screaming Frog, or other SEO tools that can directly access your page content.
+        <Alert className="mb-6 border-amber-400/30 bg-amber-50 dark:bg-amber-900/20">
+          <AlertCircle className="h-4 w-4 text-amber-500" />
+          <AlertTitle className="text-amber-600 dark:text-amber-400">Limited Analysis</AlertTitle>
+          <AlertDescription className="text-sm text-amber-700 dark:text-amber-300">
+            We were unable to access your page content directly. Our analysis is based on URL structure only.
+            For a more accurate analysis, try running the audit from a device that has access to the target website,
+            or use Google Search Console, Screaming Frog, or other SEO tools.
+          </AlertDescription>
+        </Alert>
+      )}
+      
+      {contentFetched && (
+        <Alert className="mb-6 border-green-400/30 bg-green-50 dark:bg-green-900/20">
+          <CheckCircle2 className="h-4 w-4 text-green-500" />
+          <AlertTitle className="text-green-600 dark:text-green-400">Complete Analysis</AlertTitle>
+          <AlertDescription className="text-sm text-green-700 dark:text-green-300">
+            We successfully accessed your page content. This analysis includes an evaluation of your content, meta tags, images, 
+            and technical elements for a comprehensive SEO assessment.
           </AlertDescription>
         </Alert>
       )}
