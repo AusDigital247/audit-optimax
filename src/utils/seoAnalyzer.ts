@@ -7,6 +7,7 @@ export interface AnalysisResult {
   score: number;
   categories: SEOCategory[];
   contentFetched: boolean;
+  relevanceTier?: string;
 }
 
 // Main function to analyze a URL for SEO issues
@@ -32,7 +33,8 @@ export const analyzeSEO = async (url: string, keyword?: string): Promise<Analysi
     return {
       score: result.score,
       categories: result.categories,
-      contentFetched: result.contentFetched
+      contentFetched: result.contentFetched,
+      relevanceTier: result.relevanceTier
     };
   } catch (error) {
     console.error('Error during SEO analysis:', error);

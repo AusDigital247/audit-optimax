@@ -1,35 +1,42 @@
 
 // Point values for different SEO elements
 export const seoPointValues = {
-  // Title tag related points (increased importance)
+  // Title tag related points (critical for relevance)
   titleTag: 7,
   titleLength: 3,
-  titleKeyword: 8,          // Increased from 4 to 8
+  titleKeyword: 15,          // Critical factor - exact keyword in title
+  titleKeywordVariation: 8,  // Variation of keyword in title
   titleKeywordPosition: 3,
   
-  // Meta description related points (increased importance)
+  // Meta description related points (critical for relevance)
   metaDescription: 5,
   metaDescriptionLength: 3,
-  metaDescriptionKeyword: 6, // Increased from 3 to 6
+  metaDescriptionKeyword: 12, // Critical factor - exact keyword in meta desc
+  metaDescriptionVariation: 6, // Variation of keyword in meta desc
   
-  // Headings related points (increased importance for keyword presence)
+  // Headings related points (critical for relevance)
   h1Tag: 5,
   singleH1: 2,
-  h1Keyword: 7,              // Increased from 4 to 7
+  h1Keyword: 15,              // Critical factor - exact keyword in H1
+  h1KeywordVariation: 7,      // Variation of keyword in H1
   headingStructure: 2,
   h2Tags: 3,
-  h2Keyword: 5,              // Increased from 3 to 5
+  h2Keyword: 8,               // Important - keyword in H2
+  h2KeywordVariation: 4,      // Variation in H2
   h3Tags: 1,
-  h3Keyword: 2,
+  h3Keyword: 3,
   
-  // Content related points (increased importance for keyword density)
+  // Content related points (critical for relevance)
   contentLength: 4,
-  keywordDensityGood: 8,     // Increased from 4 to 8
-  keywordDensityOk: 3,
-  keywordInFirstParagraph: 5, // Increased from 3 to 5
+  keywordDensityHigh: 15,     // 1-3% density - optimal
+  keywordDensityMedium: 8,    // 0.5-1% density - acceptable
+  keywordDensityLow: 3,       // 0.1-0.5% density - minimal
+  keywordDensityNone: 0,      // <0.1% density - not relevant
+  keywordInFirstParagraph: 6, 
   
   // URL related points
-  urlKeyword: 5,             // Increased from 3 to 5
+  urlKeyword: 10,             // Critical factor - exact keyword in URL
+  urlKeywordVariation: 5,     // Variation of keyword in URL
   urlLength: 1,
   urlReadable: 2,
   
@@ -66,7 +73,56 @@ export const seoPointValues = {
   brokenLinks: 3
 };
 
-// Calculate SEO score based on weighted points with improved calculation
+// Define relevance tiers
+export const relevanceTiers = {
+  NOT_RELEVANT: 'Not Relevant',
+  SOMEWHAT_RELEVANT: 'Somewhat Relevant',
+  HIGHLY_RELEVANT: 'Highly Relevant'
+};
+
+// Classify relevance based on key SEO factors
+export const classifyRelevance = (checks: Array<{name: string, status: string, points?: number}>) => {
+  // Check if keyword is present in critical elements
+  const titleCheck = checks.find(check => check.name === "Keyword in title");
+  const titleHasKeyword = titleCheck && titleCheck.status === "pass";
+  
+  const metaDescCheck = checks.find(check => check.name === "Keyword in meta description");
+  const metaHasKeyword = metaDescCheck && metaDescCheck.status === "pass";
+  
+  const h1Check = checks.find(check => check.name === "H1 tag includes target keyword");
+  const h1HasKeyword = h1Check && h1Check.status === "pass";
+  
+  const densityCheck = checks.find(check => check.name === "Keyword density");
+  const hasSufficientDensity = densityCheck && 
+    densityCheck.status === "pass" || 
+    (densityCheck.message && densityCheck.message.includes("Good keyword density"));
+  const hasMinimalDensity = densityCheck && 
+    !densityCheck.message?.includes("not found") && 
+    !densityCheck.message?.includes("0.00%");
+  
+  const urlCheck = checks.find(check => check.name === "URL contains target keyword");
+  const urlHasKeyword = urlCheck && urlCheck.status === "pass";
+
+  // Count how many critical elements have the exact keyword
+  const criticalElementsWithKeyword = [
+    titleHasKeyword,
+    metaHasKeyword,
+    h1HasKeyword,
+    hasSufficientDensity,
+    urlHasKeyword
+  ].filter(Boolean).length;
+
+  // Determine relevance tier
+  if (criticalElementsWithKeyword <= 1 && !hasSufficientDensity) {
+    return relevanceTiers.NOT_RELEVANT;
+  } else if (criticalElementsWithKeyword >= 4) {
+    return relevanceTiers.HIGHLY_RELEVANT;
+  } else {
+    return relevanceTiers.SOMEWHAT_RELEVANT;
+  }
+};
+
+// Calculate SEO score based on weighted points and relevance tier
 export const calculateSEOScore = (checks: Array<{status: string, points?: number}>) => {
   const totalPossiblePoints = checks
     .filter(check => check.status !== 'info')
@@ -74,21 +130,38 @@ export const calculateSEOScore = (checks: Array<{status: string, points?: number
   
   const earnedPoints = checks.reduce((total, check) => {
     if (check.status === 'pass') return total + (check.points || 1);
-    if (check.status === 'warning') return total + ((check.points || 1) * 0.3); // Reduced from 0.5 to 0.3
+    if (check.status === 'warning') return total + ((check.points || 1) * 0.3); // Reduced value for warnings
     return total;
   }, 0);
   
-  // Apply a more aggressive curve to the final score calculation
-  // This will make high scores harder to achieve and more reflective of actual SEO quality
-  const rawScore = totalPossiblePoints > 0 ? (earnedPoints / totalPossiblePoints) * 100 : 0;
+  // Calculate raw score percentage
+  const rawPercentage = totalPossiblePoints > 0 ? (earnedPoints / totalPossiblePoints) * 100 : 0;
   
-  // Apply a curve that makes it harder to get high scores
-  // Sites with missing keywords in critical elements will see much lower scores
-  const curvedScore = Math.round(rawScore * 0.9); // Apply a 10% overall reduction
+  // Apply relevance-based scoring tiers
+  const relevanceTier = classifyRelevance(checks);
+  let finalScore = 0;
+  
+  switch (relevanceTier) {
+    case relevanceTiers.NOT_RELEVANT:
+      // Score range: 10-30
+      finalScore = Math.min(30, Math.max(10, rawPercentage * 0.3));
+      break;
+      
+    case relevanceTiers.SOMEWHAT_RELEVANT:
+      // Score range: 35-65
+      finalScore = Math.min(65, Math.max(35, rawPercentage * 0.65));
+      break;
+      
+    case relevanceTiers.HIGHLY_RELEVANT:
+      // Score range: 70-100
+      finalScore = Math.min(100, Math.max(70, rawPercentage * 0.8 + 20));
+      break;
+  }
   
   return {
-    score: curvedScore,
+    score: Math.round(finalScore),
     earnedPoints,
-    totalPossiblePoints
+    totalPossiblePoints,
+    relevanceTier
   };
 };

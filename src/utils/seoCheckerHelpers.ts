@@ -199,34 +199,59 @@ export const checkCanonicalTag = (content: string) => {
   };
 };
 
-// Calculate keyword density with improved accuracy and stricter thresholds
+// Calculate keyword density with improved accuracy and strict relevance thresholds
 export const calculateKeywordDensity = (content: string, keyword: string) => {
   // Remove HTML tags and get plain text
   const plainText = content.replace(/<script[\s\S]*?<\/script>/gi, ' ')
-                       .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-                       .replace(/<[^>]*>/g, ' ')
-                       .replace(/\s+/g, ' ')
-                       .trim();
+                      .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+                      .replace(/<[^>]*>/g, ' ')
+                      .replace(/\s+/g, ' ')
+                      .trim();
   
   // Count total words
   const words = plainText.split(/\s+/);
   const totalWords = words.length;
   
-  // Count exact keyword occurrences
+  // Count exact keyword occurrences (for precise matching)
   const keywordLower = keyword.toLowerCase();
   const exactPattern = new RegExp(`\\b${keywordLower.replace(/\s+/g, '\\s+')}\\b`, 'gi');
   const exactMatches = (plainText.toLowerCase().match(exactPattern) || []).length;
   
-  // Count partial matches (keyword fragments)
+  // Check for keyword variations (for "somewhat relevant" matching)
   const keywordParts = keywordLower.split(/\s+/).filter(part => part.length > 3);
   let partialMatches = 0;
+  
+  // Check for variations - words in different order
+  const keywordWords = keywordLower.split(/\s+/);
+  let variationMatches = 0;
+  
+  if (keywordWords.length > 1) {
+    // Try different word orders (for multi-word keywords)
+    const permutations = [];
+    for (let i = 0; i < keywordWords.length; i++) {
+      const wordsCopy = [...keywordWords];
+      const word = wordsCopy.splice(i, 1)[0];
+      for (const perm of [word + ' ' + wordsCopy.join(' '), wordsCopy.join(' ') + ' ' + word]) {
+        if (perm !== keywordLower) {
+          permutations.push(perm);
+        }
+      }
+    }
+    
+    for (const perm of permutations) {
+      const permPattern = new RegExp(`\\b${perm}\\b`, 'gi');
+      const matches = (plainText.toLowerCase().match(permPattern) || []).length;
+      variationMatches += matches;
+    }
+  }
   
   // Simple synonym detection based on related words
   const synonymMap: Record<string, string[]> = {
     'seo': ['search', 'ranking', 'optimization', 'optimize', 'engine', 'serp'],
     'toronto': ['gta', 'ontario', 'local'],
-    'agency': ['company', 'service', 'firm', 'consultant'],
-    'marketing': ['advertise', 'promotion', 'campaign', 'brand']
+    'agency': ['company', 'service', 'firm', 'consultant', 'expert', 'professional'],
+    'marketing': ['advertise', 'promotion', 'campaign', 'brand'],
+    'website': ['site', 'web', 'page', 'online']
   };
   
   // Check for synonyms
@@ -234,14 +259,16 @@ export const calculateKeywordDensity = (content: string, keyword: string) => {
   for (const [term, synonyms] of Object.entries(synonymMap)) {
     if (keywordLower.includes(term)) {
       for (const synonym of synonyms) {
-        const synonymPattern = new RegExp(`\\b${synonym}\\w*\\b`, 'gi');
-        const matches = (plainText.toLowerCase().match(synonymPattern) || []).length;
-        synonymMatches += matches;
+        if (!keywordLower.includes(synonym)) { // Don't double count
+          const synonymPattern = new RegExp(`\\b${synonym}\\w*\\b`, 'gi');
+          const matches = (plainText.toLowerCase().match(synonymPattern) || []).length;
+          synonymMatches += matches;
+        }
       }
     }
   }
   
-  // Check for partial matches
+  // Check for partial matches (keyword fragments)
   for (const part of keywordParts) {
     if (part.length > 3) {
       const partPattern = new RegExp(`\\b${part}\\w*\\b`, 'gi');
@@ -250,35 +277,54 @@ export const calculateKeywordDensity = (content: string, keyword: string) => {
     }
   }
   
-  // Calculate density with stricter weighting of partial matches
-  const totalMatches = exactMatches + (partialMatches * 0.3) + (synonymMatches * 0.2);
-  const density = totalWords > 0 ? (totalMatches / totalWords) * 100 : 0;
+  // Calculate density with stricter weighting
+  // Exact matches count fully, variations count 70%, synonyms 40%, and partials 30%
+  const weightedMatches = exactMatches + 
+                         (variationMatches * 0.7) + 
+                         (synonymMatches * 0.4) + 
+                         (partialMatches * 0.3);
   
-  // Determine importance level with stricter thresholds
+  const density = totalWords > 0 ? (weightedMatches / totalWords) * 100 : 0;
+  
+  // Determine importance level with strict thresholds aligned to our relevance tiers
   let importance: 'high' | 'medium' | 'low' | 'none' = 'none';
   
-  if (density === 0) {
-    importance = 'none';
+  if (density < 0.1) {
+    importance = 'none'; // Not Relevant tier
   } else if (density < 0.5) {
-    importance = 'low'; // Stricter threshold for low density
-  } else if (density <= 2.5) { // Narrower range for optimal density
-    importance = 'medium';
+    importance = 'low';  // Lower end of Somewhat Relevant
+  } else if (density <= 1.0) {
+    importance = 'medium'; // Higher end of Somewhat Relevant
+  } else if (density <= 3.0) {
+    importance = 'high'; // Highly Relevant tier - optimal density
   } else {
-    importance = 'high';
+    importance = 'medium'; // Too much - keyword stuffing, penalize back to medium
   }
   
   // Sample occurrences for the details view
   const keywordPattern = new RegExp(`(.{0,30}\\b${keywordLower.replace(/\s+/g, '\\s+')}\\b.{0,30})`, 'gi');
   const occurrencesInContext = Array.from(plainText.matchAll(keywordPattern)).map(m => `...${m[1]}...`).slice(0, 5);
   
+  // Also gather variations for context
+  const variationOccurrences = [];
+  if (keywordWords.length > 1) {
+    for (const perm of permutations) {
+      const permPattern = new RegExp(`(.{0,30}\\b${perm}\\b.{0,30})`, 'gi');
+      const matches = Array.from(plainText.matchAll(permPattern)).map(m => `...${m[1]}...`).slice(0, 2);
+      variationOccurrences.push(...matches);
+    }
+  }
+  
   return {
     density,
-    count: Math.round(totalMatches),
-    totalWords,
+    count: Math.round(weightedMatches),
     exactMatchCount: exactMatches,
+    variationMatchCount: variationMatches,
     partialMatchCount: partialMatches,
     synonymMatchCount: synonymMatches,
+    totalWords,
     importance,
-    occurrencesInContext
+    occurrencesInContext,
+    variationOccurrences: variationOccurrences.slice(0, 3) // Limit to 3 examples
   };
 };

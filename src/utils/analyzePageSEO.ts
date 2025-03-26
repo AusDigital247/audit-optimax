@@ -9,14 +9,15 @@ import {
   checkCanonicalTag,
   calculateKeywordDensity
 } from './seoCheckerHelpers';
-import { seoPointValues, calculateSEOScore } from './seoPointsSystem';
+import { seoPointValues, calculateSEOScore, relevanceTiers } from './seoPointsSystem';
 import { SEOCheckItem } from '@/components/SEOCategoryCard';
 
 // Main function to analyze page SEO
 export const analyzePageSEO = async (url: string, keyword: string = ''): Promise<{
   score: number,
   categories: Array<{title: string, items: SEOCheckItem[]}>,
-  contentFetched: boolean
+  contentFetched: boolean,
+  relevanceTier?: string
 }> => {
   console.log(`Analyzing SEO for URL: ${url}, Keyword: ${keyword}`);
   
@@ -81,16 +82,42 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   
   // Check URL contains keyword
   if (keyword) {
-    const urlHasKeyword = url.toLowerCase().includes(keyword.toLowerCase().replace(/\s+/g, '-')) || 
-                         url.toLowerCase().includes(keyword.toLowerCase().replace(/\s+/g, ''));
+    // Check for exact keyword match in URL
+    const keywordLower = keyword.toLowerCase().replace(/\s+/g, '-');
+    const urlLower = url.toLowerCase();
+    
+    const exactKeywordInUrl = urlLower.includes(keywordLower) || 
+                            urlLower.includes(keyword.toLowerCase().replace(/\s+/g, ''));
+    
+    // Check for keyword variations in URL (words in different order)
+    const keywordWords = keyword.toLowerCase().split(/\s+/).filter(w => w.length > 2);
+    const allWordsInUrl = keywordWords.every(word => urlLower.includes(word));
+    const someWordsInUrl = keywordWords.some(word => urlLower.includes(word));
+    
+    // Determine status based on exact match or variations
+    let urlKeywordStatus = "fail";
+    let urlKeywordMessage = `Your URL does not contain the target keyword "${keyword}". Consider including it for better SEO.`;
+    let urlKeywordPoints = 0;
+    
+    if (exactKeywordInUrl) {
+      urlKeywordStatus = "pass";
+      urlKeywordMessage = `Your URL contains the exact target keyword "${keyword}".`;
+      urlKeywordPoints = seoPointValues.urlKeyword;
+    } else if (allWordsInUrl) {
+      urlKeywordStatus = "warning";
+      urlKeywordMessage = `Your URL contains all words from the keyword "${keyword}" but not in the exact order. This is good but exact match would be better.`;
+      urlKeywordPoints = seoPointValues.urlKeywordVariation;
+    } else if (someWordsInUrl) {
+      urlKeywordStatus = "warning";
+      urlKeywordMessage = `Your URL contains some words from the keyword "${keyword}". Consider including the full keyword for better SEO.`;
+      urlKeywordPoints = Math.floor(seoPointValues.urlKeywordVariation / 2);
+    }
     
     urlItems.push({
       name: "URL contains target keyword",
-      status: urlHasKeyword ? "pass" : "fail",
-      message: urlHasKeyword 
-        ? `Your URL contains the target keyword "${keyword}".` 
-        : `Your URL does not contain the target keyword "${keyword}". Consider including it for better SEO.`,
-      points: seoPointValues.urlKeyword,
+      status: urlKeywordStatus,
+      message: urlKeywordMessage,
+      points: urlKeywordPoints,
       details: {
         found: url,
         expected: `URL should contain the keyword "${keyword}"`,
@@ -189,27 +216,46 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     
     // Check if keyword is in title
     if (keyword) {
-      const keywordInTitle = isKeywordPresent(title, keyword);
+      // Check for exact keyword match in title
+      const exactKeywordInTitle = isKeywordPresent(title, keyword);
+      
+      // Check for keyword variations in title (words in different order)
+      const titleLower = title.toLowerCase();
+      const keywordWords = keyword.toLowerCase().split(/\s+/).filter(w => w.length > 2);
+      const allKeywordWordsInTitle = keywordWords.every(word => titleLower.includes(word));
+      
+      let titleKeywordStatus = "fail";
+      let titleKeywordMessage = `Your title does not contain the target keyword "${keyword}". This is critical for SEO - add it for better rankings.`;
+      let titleKeywordPoints = 0;
+      
+      if (exactKeywordInTitle) {
+        titleKeywordStatus = "pass";
+        titleKeywordMessage = `Your title contains the exact target keyword "${keyword}". This is excellent for SEO.`;
+        titleKeywordPoints = seoPointValues.titleKeyword;
+      } else if (allKeywordWordsInTitle) {
+        titleKeywordStatus = "warning";
+        titleKeywordMessage = `Your title contains all words from the keyword "${keyword}" but not in the exact order. Using the exact phrase would be better.`;
+        titleKeywordPoints = seoPointValues.titleKeywordVariation;
+      }
       
       titleTagItems.push({
         name: "Keyword in title",
-        status: keywordInTitle ? "pass" : "fail",
-        message: keywordInTitle 
-          ? `Your title contains the target keyword "${keyword}".` 
-          : `Your title does not contain the target keyword "${keyword}". Consider adding it for better SEO.`,
-        points: seoPointValues.titleKeyword,
+        status: titleKeywordStatus,
+        message: titleKeywordMessage,
+        points: titleKeywordPoints,
         details: {
           found: title,
           expected: `Title should contain the keyword "${keyword}"`,
-          explanation: "Including your target keyword in the title helps search engines understand what your page is about."
+          explanation: "Including your target keyword in the title helps search engines understand what your page is about and is one of the most critical SEO factors."
         }
       });
       
       // Check keyword position in title
-      if (keywordInTitle) {
+      if (exactKeywordInTitle || allKeywordWordsInTitle) {
         const keywordAtBeginning = title.toLowerCase().startsWith(keyword.toLowerCase()) || 
-                                 title.toLowerCase().startsWith(`the ${keyword.toLowerCase()}`) ||
-                                 title.toLowerCase().indexOf(keyword.toLowerCase()) < 20;
+                                  title.toLowerCase().startsWith(`the ${keyword.toLowerCase()}`) ||
+                                  title.toLowerCase().indexOf(keyword.toLowerCase()) < 20 ||
+                                  keywordWords.some(word => title.toLowerCase().startsWith(word));
         
         titleTagItems.push({
           name: "Keyword position in title",
@@ -290,19 +336,37 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     
     // Check if keyword is in meta description
     if (keyword) {
-      const keywordInDescription = isKeywordPresent(metaDescription, keyword);
+      // Check for exact keyword in meta description
+      const exactKeywordInDesc = isKeywordPresent(metaDescription, keyword);
+      
+      // Check for keyword variations in description
+      const descLower = metaDescription.toLowerCase();
+      const keywordWords = keyword.toLowerCase().split(/\s+/).filter(w => w.length > 2);
+      const allKeywordWordsInDesc = keywordWords.every(word => descLower.includes(word));
+      
+      let descKeywordStatus = "fail";
+      let descKeywordMessage = `Your meta description does not contain the target keyword "${keyword}". This is important for SEO - add it for better rankings.`;
+      let descKeywordPoints = 0;
+      
+      if (exactKeywordInDesc) {
+        descKeywordStatus = "pass";
+        descKeywordMessage = `Your meta description contains the exact target keyword "${keyword}". This is excellent for SEO.`;
+        descKeywordPoints = seoPointValues.metaDescriptionKeyword;
+      } else if (allKeywordWordsInDesc) {
+        descKeywordStatus = "warning";
+        descKeywordMessage = `Your meta description contains all words from the keyword "${keyword}" but not in the exact order. Using the exact phrase would be better.`;
+        descKeywordPoints = seoPointValues.metaDescriptionVariation;
+      }
       
       titleTagItems.push({
         name: "Keyword in meta description",
-        status: keywordInDescription ? "pass" : "fail",
-        message: keywordInDescription 
-          ? `Your meta description contains the target keyword "${keyword}".` 
-          : `Your meta description does not contain the target keyword "${keyword}". Consider adding it for better SEO.`,
-        points: seoPointValues.metaDescriptionKeyword,
+        status: descKeywordStatus,
+        message: descKeywordMessage,
+        points: descKeywordPoints,
         details: {
           found: metaDescription,
           expected: `Meta description should contain the keyword "${keyword}"`,
-          explanation: "Including your target keyword in the meta description can improve relevance for search engines."
+          explanation: "Including your target keyword in the meta description can improve relevance for search engines and click-through rates."
         }
       });
     }
@@ -382,13 +446,34 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     
     // Check if keyword is in H1
     if (keyword) {
+      // Check for exact keyword in H1
+      const h1Texts = headingsResult.headings.h1.join(' ');
+      const exactKeywordInH1 = headingsResult.h1WithKeyword;
+      
+      // Check for keyword variations in H1
+      const h1Lower = h1Texts.toLowerCase();
+      const keywordWords = keyword.toLowerCase().split(/\s+/).filter(w => w.length > 2);
+      const allKeywordWordsInH1 = keywordWords.every(word => h1Lower.includes(word));
+      
+      let h1KeywordStatus = "fail";
+      let h1KeywordMessage = `Your H1 tag does not contain the target keyword "${keyword}". This is important for SEO - add it for better rankings.`;
+      let h1KeywordPoints = 0;
+      
+      if (exactKeywordInH1) {
+        h1KeywordStatus = "pass";
+        h1KeywordMessage = `Your H1 tag contains the exact target keyword "${keyword}". This is excellent for SEO.`;
+        h1KeywordPoints = seoPointValues.h1Keyword;
+      } else if (allKeywordWordsInH1) {
+        h1KeywordStatus = "warning";
+        h1KeywordMessage = `Your H1 tag contains all words from the keyword "${keyword}" but not in the exact order. Using the exact phrase would be better.`;
+        h1KeywordPoints = seoPointValues.h1KeywordVariation;
+      }
+      
       headingItems.push({
         name: "H1 tag includes target keyword",
-        status: headingsResult.h1WithKeyword ? "pass" : "fail",
-        message: headingsResult.h1WithKeyword 
-          ? `Your H1 tag contains your keyword "${keyword}".` 
-          : `Your H1 tag does not contain your keyword "${keyword}". Add it for better SEO.`,
-        points: seoPointValues.h1Keyword,
+        status: h1KeywordStatus,
+        message: h1KeywordMessage,
+        points: h1KeywordPoints,
         details: {
           found: headingsResult.headings.h1,
           expected: `H1 should contain the keyword "${keyword}"`,
@@ -455,13 +540,34 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     
     // Check if keyword is in H2
     if (keyword && headingsResult.h2Count > 0) {
+      // Check for exact keyword in H2
+      const exactKeywordInH2 = headingsResult.h2WithKeyword;
+      
+      // Check for keyword variations in H2
+      const h2Texts = headingsResult.headings.h2.join(' ');
+      const h2Lower = h2Texts.toLowerCase();
+      const keywordWords = keyword.toLowerCase().split(/\s+/).filter(w => w.length > 2);
+      const allKeywordWordsInH2 = keywordWords.some(word => h2Lower.includes(word));
+      
+      let h2KeywordStatus = "warning";
+      let h2KeywordMessage = `None of your H2 tags contain your keyword "${keyword}". Consider adding it to at least one H2 for better topic relevance.`;
+      let h2KeywordPoints = 0;
+      
+      if (exactKeywordInH2) {
+        h2KeywordStatus = "pass";
+        h2KeywordMessage = `At least one of your H2 tags contains your keyword "${keyword}". This is good for establishing topic relevance.`;
+        h2KeywordPoints = seoPointValues.h2Keyword;
+      } else if (allKeywordWordsInH2) {
+        h2KeywordStatus = "warning";
+        h2KeywordMessage = `Your H2 tags contain some words from your keyword "${keyword}". Using the complete keyword would be better.`;
+        h2KeywordPoints = seoPointValues.h2KeywordVariation;
+      }
+      
       headingItems.push({
         name: "H2 tags include target keyword",
-        status: headingsResult.h2WithKeyword ? "pass" : "warning",
-        message: headingsResult.h2WithKeyword 
-          ? `At least one of your H2 tags contains your keyword "${keyword}".` 
-          : `None of your H2 tags contain your keyword "${keyword}". Consider adding it to at least one H2 for better SEO.`,
-        points: seoPointValues.h2Keyword,
+        status: h2KeywordStatus,
+        message: h2KeywordMessage,
+        points: h2KeywordPoints,
         details: {
           found: headingsResult.headings.h2,
           expected: `At least one H2 tag should contain the keyword "${keyword}"`,
@@ -635,232 +741,4 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       : "Your page doesn't use schema markup. Consider adding structured data to help search engines better understand your content.",
     points: seoPointValues.schemaMarkup,
     details: {
-      found: hasSchema ? "Schema markup detected" : "No schema markup found",
-      expected: "Page should use structured data/schema markup",
-      explanation: "Schema markup helps search engines understand your content and can enable rich results in search listings."
-    }
-  });
-  
-  // Check robots meta tag
-  const hasRobotsMeta = content.includes('name="robots"') || content.includes("name='robots'");
-  const robotsNoindex = content.includes('noindex') || content.includes('none');
-  
-  technicalItems.push({
-    name: "Robots meta tag",
-    status: hasRobotsMeta && !robotsNoindex ? "pass" : 
-           !hasRobotsMeta ? "info" : 
-           "warning",
-    message: hasRobotsMeta && !robotsNoindex 
-      ? "Your page has a robots meta tag that allows indexing." 
-      : !hasRobotsMeta 
-        ? "No robots meta tag found. By default, search engines can index your page." 
-        : "Your page has a robots meta tag that may prevent indexing (noindex or none directive found).",
-    points: hasRobotsMeta && !robotsNoindex ? seoPointValues.robots : 0,
-    details: {
-      found: hasRobotsMeta ? (robotsNoindex ? "Robots meta tag with noindex directive" : "Robots meta tag allowing indexing") : "No robots meta tag found",
-      expected: "Page should allow indexing if it's meant to be found in search results",
-      explanation: "The robots meta tag controls how search engines crawl and index your page."
-    }
-  });
-  
-  categories.push({
-    title: "Technical SEO",
-    items: technicalItems
-  });
-  
-  // Social Media
-  const socialResults = checkSocialMediaTags(content);
-  console.log("Social media check:", {
-    openGraph: socialResults.openGraph.has,
-    twitter: socialResults.twitter.has
-  });
-  
-  const socialItems: SEOCheckItem[] = [];
-  
-  socialItems.push({
-    name: "Implement Open Graph tags for social sharing",
-    status: socialResults.openGraph.has ? "pass" : "fail",
-    message: socialResults.openGraph.has 
-      ? `Your page has Open Graph tags (${Object.keys(socialResults.openGraph.tags).length} found).` 
-      : "Your page is missing Open Graph tags. Add og:title, og:description, and og:image.",
-    points: seoPointValues.openGraphTags,
-    details: {
-      found: socialResults.openGraph.has ? Object.entries(socialResults.openGraph.tags).map(([key, value]) => `og:${key}: ${value}`).join('\n') : "No Open Graph tags found",
-      expected: "Page should have Open Graph tags (og:title, og:description, og:image)",
-      explanation: "Open Graph tags control how your content appears when shared on social media platforms like Facebook."
-    }
-  });
-  
-  socialItems.push({
-    name: "Implement Twitter Cards",
-    status: socialResults.twitter.has ? "pass" : "warning",
-    message: socialResults.twitter.has 
-      ? `Your page has Twitter Card tags (${Object.keys(socialResults.twitter.tags).length} found).` 
-      : "Your page is missing Twitter Card tags. Add twitter:card, twitter:title, and twitter:description.",
-    points: seoPointValues.twitterCards,
-    details: {
-      found: socialResults.twitter.has ? Object.entries(socialResults.twitter.tags).map(([key, value]) => `twitter:${key}: ${value}`).join('\n') : "No Twitter Card tags found",
-      expected: "Page should have Twitter Card tags (twitter:card, twitter:title, twitter:description)",
-      explanation: "Twitter Card tags control how your content appears when shared on Twitter."
-    }
-  });
-  
-  categories.push({
-    title: "Social Media",
-    items: socialItems
-  });
-  
-  // Performance
-  const performanceItems: SEOCheckItem[] = [];
-  
-  // Check page speed indicators
-  const hasResourceHints = content.includes('rel="preload"') || 
-                           content.includes('rel="prefetch"') || 
-                           content.includes('rel="dns-prefetch');
-  
-  performanceItems.push({
-    name: "Use resource hints for faster loading",
-    status: hasResourceHints ? "pass" : "warning",
-    message: hasResourceHints 
-      ? "Your page uses resource hints like preload, prefetch, or dns-prefetch for faster loading." 
-      : "Your page doesn't use resource hints. Consider adding preload, prefetch, or dns-prefetch for critical resources.",
-    points: seoPointValues.resourceHints,
-    details: {
-      found: hasResourceHints ? "Resource hints detected" : "No resource hints found",
-      expected: "Page should use resource hints like preload, prefetch, or dns-prefetch",
-      explanation: "Resource hints help browsers prioritize loading critical resources, improving performance."
-    }
-  });
-  
-  // Check for minified resources
-  const hasMinifiedJs = !content.includes('.js"></script>') || content.includes('.min.js"></script>');
-  const hasMinifiedCss = !content.includes('.css">') || content.includes('.min.css">');
-  
-  performanceItems.push({
-    name: "Minify JavaScript and CSS",
-    status: hasMinifiedJs && hasMinifiedCss ? "pass" : "warning",
-    message: hasMinifiedJs && hasMinifiedCss 
-      ? "Your page appears to use minified JavaScript and CSS." 
-      : "Your page may have unminified resources. Consider minifying JavaScript and CSS files.",
-    points: seoPointValues.minifiedResources,
-    details: {
-      found: `JavaScript: ${hasMinifiedJs ? 'Minified' : 'Possibly unminified'}, CSS: ${hasMinifiedCss ? 'Minified' : 'Possibly unminified'}`,
-      expected: "JavaScript and CSS files should be minified",
-      explanation: "Minified resources load faster and consume less bandwidth, improving page speed."
-    }
-  });
-  
-  // Check for mobile-friendly indicators
-  const hasViewport = content.includes('name="viewport"') && content.includes('width=device-width');
-  
-  performanceItems.push({
-    name: "Mobile-friendly viewport",
-    status: hasViewport ? "pass" : "fail",
-    message: hasViewport 
-      ? "Your page has a proper viewport meta tag for mobile devices." 
-      : "Your page is missing a proper viewport meta tag. Add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">.",
-    points: seoPointValues.viewport,
-    details: {
-      found: hasViewport ? "Viewport meta tag found" : "No viewport meta tag found",
-      expected: "Page should have a viewport meta tag with width=device-width",
-      explanation: "The viewport meta tag ensures your page displays properly on mobile devices, which is important for mobile SEO."
-    }
-  });
-  
-  categories.push({
-    title: "Performance & Mobile",
-    items: performanceItems
-  });
-  
-  // Content Analysis
-  const contentItems: SEOCheckItem[] = [];
-  
-  // Keyword density analysis with stricter evaluation
-  if (keyword) {
-    const keywordDensity = calculateKeywordDensity(content, keyword);
-    console.log("Keyword density analysis:", keywordDensity);
-    
-    contentItems.push({
-      name: "Keyword density",
-      status: keywordDensity.importance === 'medium' ? "pass" : 
-             keywordDensity.importance === 'low' ? "warning" : 
-             keywordDensity.importance === 'high' ? "warning" : "fail",
-      message: keywordDensity.importance === 'medium' 
-        ? `Good keyword density (${keywordDensity.density.toFixed(2)}%). Your keyword appears ${keywordDensity.count} times in ${keywordDensity.totalWords} words.` 
-        : keywordDensity.importance === 'low' 
-          ? `Low keyword density (${keywordDensity.density.toFixed(2)}%). Your keyword appears only ${keywordDensity.count} times in ${keywordDensity.totalWords} words.` 
-          : keywordDensity.importance === 'high' 
-            ? `High keyword density (${keywordDensity.density.toFixed(2)}%). This might appear as keyword stuffing. Aim for 0.5% to 2.5%.` 
-            : `Your keyword was not found in the page content. Make sure to use your target keyword naturally throughout the content.`,
-      points: keywordDensity.importance === 'medium' ? seoPointValues.keywordDensityGood : 
-              keywordDensity.importance === 'low' ? seoPointValues.keywordDensityOk : 0,
-      details: {
-        found: `Keyword "${keyword}" appears ${keywordDensity.count} times in ${keywordDensity.totalWords} words (${keywordDensity.density.toFixed(2)}%)`,
-        expected: "Keyword density should be between 0.5% and 2.5%",
-        explanation: "A balanced keyword density helps establish relevance without appearing as keyword stuffing."
-      }
-    });
-    
-    // Content quality indicators
-    const contentLength = keywordDensity.totalWords;
-    const hasSubstantialContent = contentLength >= 300;
-    
-    contentItems.push({
-      name: "Content length",
-      status: contentLength >= 800 ? "pass" : 
-             contentLength >= 300 ? "warning" : "fail",
-      message: contentLength >= 800 
-        ? `Your page has substantial content (${contentLength} words).` 
-        : contentLength >= 300 
-          ? `Your page has ${contentLength} words. Consider adding more comprehensive content (aim for 800+ words).` 
-          : `Your page has insufficient content (${contentLength} words). Search engines prefer pages with substantial, valuable content.`,
-      points: seoPointValues.contentLength,
-      details: {
-        found: `${contentLength} words`,
-        expected: "Page should have at least 800 words of content for comprehensive topic coverage",
-        explanation: "Longer, comprehensive content typically ranks better in search results as it provides more value to users."
-      }
-    });
-  }
-  
-  categories.push({
-    title: "Content Analysis",
-    items: contentItems
-  });
-  
-  // Calculate overall score using the improved scoring function
-  const allChecks = categories.flatMap(category => category.items);
-  
-  // Apply key element scoring penalty
-  const hasKeyword = !!keyword;
-  let scoreAdjustment = 0;
-  
-  if (hasKeyword) {
-    // Critical elements that should dramatically affect score
-    const titleCheck = allChecks.find(check => check.name === "Keyword in title");
-    const descriptionCheck = allChecks.find(check => check.name === "Keyword in meta description");
-    const h1Check = allChecks.find(check => check.name === "H1 tag includes target keyword");
-    const densityCheck = allChecks.find(check => check.name === "Keyword density");
-    
-    // Apply penalties for missing critical elements
-    if (titleCheck && titleCheck.status === "fail") scoreAdjustment -= 15;
-    if (descriptionCheck && descriptionCheck.status === "fail") scoreAdjustment -= 10;
-    if (h1Check && h1Check.status === "fail") scoreAdjustment -= 10;
-    if (densityCheck && (densityCheck.status === "fail" || 
-        (densityCheck.message && densityCheck.message.includes("not found")))) {
-      scoreAdjustment -= 15;
-    }
-  }
-  
-  // Calculate score using the improved calculation in seoPointsSystem
-  const { score: calculatedScore } = calculateSEOScore(allChecks);
-  
-  // Apply adjustment but ensure score stays within 0-100 range
-  const finalScore = Math.max(0, Math.min(100, calculatedScore + scoreAdjustment));
-  
-  return {
-    score: finalScore,
-    categories,
-    contentFetched: true
-  };
-};
+      found: hasSchema ? "Schema markup detected"

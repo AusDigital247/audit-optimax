@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import SEOScoreCard from './SEOScoreCard';
 import SEOCategoryCard, { SEOCheckItem } from './SEOCategoryCard';
 import { Button } from '@/components/ui/button';
-import { Download, RefreshCw, FileText, PieChart, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Download, RefreshCw, FileText, PieChart, AlertCircle, CheckCircle2, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import SEOSummaryChart from './SEOSummaryChart';
 import SEOCategoryChart from './SEOCategoryChart';
@@ -12,6 +12,7 @@ import { toast } from "@/hooks/use-toast";
 import html2pdf from 'html2pdf.js';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { relevanceTiers } from '@/utils/seoPointsSystem';
 
 export interface SEOCategory {
   title: string;
@@ -24,6 +25,7 @@ interface SEOResultsProps {
   score: number;
   categories: SEOCategory[];
   contentFetched?: boolean;
+  relevanceTier?: string;
   onReset: () => void;
   className?: string;
 }
@@ -34,6 +36,7 @@ const SEOResults = ({
   score, 
   categories, 
   contentFetched = false,
+  relevanceTier,
   onReset,
   className 
 }: SEOResultsProps) => {
@@ -90,10 +93,15 @@ const SEOResults = ({
           <p style="font-size: 14px;">Generated on ${reportDate}</p>
           <div style="margin: 40px 0;">
             <div style="width: 120px; height: 120px; border-radius: 50%; background-color: ${
-              score >= 80 ? '#22c55e' : score >= 60 ? '#f59e0b' : '#ef4444'
+              score >= 70 ? '#22c55e' : score >= 35 ? '#f59e0b' : '#ef4444'
             }; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
               <span style="color: white; font-size: 36px; font-weight: bold;">${score}</span>
             </div>
+            ${relevanceTier ? `<p style="margin-top: 10px; font-size: 18px; font-weight: bold; color: ${
+              relevanceTier === relevanceTiers.HIGHLY_RELEVANT ? '#22c55e' : 
+              relevanceTier === relevanceTiers.SOMEWHAT_RELEVANT ? '#f59e0b' : 
+              '#ef4444'
+            };">${relevanceTier}</p>` : ''}
           </div>
           <p style="font-size: 16px; max-width: 600px; margin: 0 auto;">
             This report provides a comprehensive analysis of your website's SEO performance
@@ -154,6 +162,20 @@ const SEOResults = ({
   // Get the top 5 issues to display
   const topIssues = allIssues.slice(0, 5);
   
+  // Get relevance color based on tier
+  const getRelevanceColor = (tier: string) => {
+    switch(tier) {
+      case relevanceTiers.HIGHLY_RELEVANT:
+        return "text-green-600 dark:text-green-400";
+      case relevanceTiers.SOMEWHAT_RELEVANT:
+        return "text-amber-600 dark:text-amber-400";
+      case relevanceTiers.NOT_RELEVANT:
+        return "text-red-600 dark:text-red-400";
+      default:
+        return "text-muted-foreground";
+    }
+  };
+  
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -177,6 +199,19 @@ const SEOResults = ({
             )}
           </p>
           <p className="text-sm text-muted-foreground mt-1">Generated on {reportDate}</p>
+          
+          {relevanceTier && keyword && (
+            <div className="mt-3">
+              <span className={cn("inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium", 
+                relevanceTier === relevanceTiers.HIGHLY_RELEVANT ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" : 
+                relevanceTier === relevanceTiers.SOMEWHAT_RELEVANT ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400" : 
+                "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
+              )}>
+                <Target className="h-3.5 w-3.5" />
+                {relevanceTier} for "{keyword}"
+              </span>
+            </div>
+          )}
         </motion.div>
       </div>
       
@@ -204,7 +239,7 @@ const SEOResults = ({
       )}
       
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-        <SEOScoreCard score={score} className="lg:col-span-1" />
+        <SEOScoreCard score={score} relevanceTier={relevanceTier} className="lg:col-span-1" />
         
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -222,20 +257,34 @@ const SEOResults = ({
               ) : " "}. 
               The overall score of <span className={cn(
                 "font-semibold",
-                score >= 80 ? "text-seo-good" : 
-                score >= 60 ? "text-seo-warning" : 
+                score >= 70 ? "text-seo-good" : 
+                score >= 35 ? "text-seo-warning" : 
                 "text-seo-bad"
               )}>
                 {score}/100
               </span> is calculated based on {categories.reduce((acc, cat) => acc + cat.items.length, 0)} individual checks
-              across {categories.length} categories using a weighted scoring system.
+              across {categories.length} categories.
             </p>
             
+            {relevanceTier && keyword && (
+              <p>
+                Your page is classified as <span className={cn("font-semibold", getRelevanceColor(relevanceTier))}>
+                  {relevanceTier}
+                </span> for the keyword "{keyword}". {
+                  relevanceTier === relevanceTiers.HIGHLY_RELEVANT 
+                    ? "This indicates strong keyword targeting and content relevance." 
+                    : relevanceTier === relevanceTiers.SOMEWHAT_RELEVANT 
+                      ? "This indicates partial keyword relevance but room for improvement."
+                      : "This indicates poor keyword targeting and low content relevance."
+                }
+              </p>
+            )}
+            
             <p>
-              {score >= 80 
+              {score >= 70 
                 ? "Your website demonstrates strong SEO practices. Continue maintaining these standards while addressing the few improvement opportunities identified."
-                : score >= 60 
-                  ? "Your website has a solid SEO foundation but several opportunities for improvement exist. Focus on addressing the identified issues to improve search visibility."
+                : score >= 35 
+                  ? "Your website has a foundation for SEO but several opportunities for improvement exist. Focus on addressing the identified issues to improve search visibility."
                   : "Your website requires significant SEO improvements. Prioritize addressing the critical issues identified to enhance your search visibility and performance."}
             </p>
             

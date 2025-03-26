@@ -2,26 +2,43 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { Target } from 'lucide-react';
+import { relevanceTiers } from '@/utils/seoPointsSystem';
 
 interface SEOScoreCardProps {
   score: number;
+  relevanceTier?: string;
   className?: string;
 }
 
-const SEOScoreCard = ({ score, className }: SEOScoreCardProps) => {
+const SEOScoreCard = ({ score, relevanceTier, className }: SEOScoreCardProps) => {
   const [animatedScore, setAnimatedScore] = useState(0);
   
-  // Determine color based on score
+  // Determine color based on score - adjusted for new scoring tiers
   const getScoreColor = (value: number) => {
-    if (value >= 80) return "text-seo-good";
-    if (value >= 60) return "text-seo-warning";
+    if (value >= 70) return "text-seo-good";
+    if (value >= 35) return "text-seo-warning";
     return "text-seo-bad";
   };
 
   const getScoreBackground = (value: number) => {
-    if (value >= 80) return "from-green-100 to-green-50 dark:from-green-900/20 dark:to-green-800/10";
-    if (value >= 60) return "from-amber-100 to-amber-50 dark:from-amber-900/20 dark:to-amber-800/10";
+    if (value >= 70) return "from-green-100 to-green-50 dark:from-green-900/20 dark:to-green-800/10";
+    if (value >= 35) return "from-amber-100 to-amber-50 dark:from-amber-900/20 dark:to-amber-800/10";
     return "from-red-100 to-red-50 dark:from-red-900/20 dark:to-red-800/10";
+  };
+  
+  // Get relevance tier color
+  const getRelevanceColor = (tier: string) => {
+    switch(tier) {
+      case relevanceTiers.HIGHLY_RELEVANT:
+        return "text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30";
+      case relevanceTiers.SOMEWHAT_RELEVANT:
+        return "text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30";
+      case relevanceTiers.NOT_RELEVANT:
+        return "text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30";
+      default:
+        return "text-muted-foreground";
+    }
   };
 
   // Animate the score counting up
@@ -81,8 +98,8 @@ const SEOScoreCard = ({ score, className }: SEOScoreCardProps) => {
             {/* Progress circle with gradient */}
             <defs>
               <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor={score >= 80 ? "#22c55e" : score >= 60 ? "#f59e0b" : "#ef4444"} />
-                <stop offset="100%" stopColor={score >= 80 ? "#4ade80" : score >= 60 ? "#fbbf24" : "#f87171"} />
+                <stop offset="0%" stopColor={score >= 70 ? "#22c55e" : score >= 35 ? "#f59e0b" : "#ef4444"} />
+                <stop offset="100%" stopColor={score >= 70 ? "#4ade80" : score >= 35 ? "#fbbf24" : "#f87171"} />
               </linearGradient>
             </defs>
             <circle
@@ -120,16 +137,27 @@ const SEOScoreCard = ({ score, className }: SEOScoreCardProps) => {
       
       <div className="mt-4 text-center relative z-10">
         <p className={cn("text-sm", 
-          score >= 80 ? "text-green-800 dark:text-green-400" : 
-          score >= 60 ? "text-amber-800 dark:text-amber-400" : 
+          score >= 70 ? "text-green-800 dark:text-green-400" : 
+          score >= 35 ? "text-amber-800 dark:text-amber-400" : 
           "text-red-800 dark:text-red-400"
         )}>
-          {score >= 80 
+          {score >= 70 
             ? "Excellent! Your site is well-optimized."
-            : score >= 60 
-              ? "Good, but there's room for improvement."
-              : "Needs significant improvement."}
+            : score >= 35 
+              ? "Needs improvement to compete effectively."
+              : "Critical issues need immediate attention."}
         </p>
+        
+        {relevanceTier && (
+          <div className="mt-3">
+            <span className={cn("inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium",
+              getRelevanceColor(relevanceTier)
+            )}>
+              <Target className="h-3 w-3" />
+              {relevanceTier}
+            </span>
+          </div>
+        )}
       </div>
     </motion.div>
   );
