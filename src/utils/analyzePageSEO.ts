@@ -52,6 +52,10 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
 
   console.log("Content fetched successfully, length:", content.length);
   
+  // Extract and log the title to verify we're getting the right page
+  const pageTitle = extractTitle(content);
+  console.log("Extracted page title:", pageTitle);
+  
   // Basic URL Analysis
   const urlItems: SEOCheckItem[] = [];
   

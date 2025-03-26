@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 
 /**
@@ -22,6 +23,8 @@ export const fetchPageContent = async (url: string): Promise<{ content: string, 
       try {
         console.log(`Trying proxy: ${proxy} for URL: ${urlToFetch}`);
         const proxyUrl = `${proxy}${encodeURIComponent(urlToFetch)}`;
+        console.log(`Full proxy URL: ${proxyUrl}`);
+        
         const response = await axios.get(proxyUrl, { 
           timeout: 15000,
           headers: {
@@ -37,6 +40,13 @@ export const fetchPageContent = async (url: string): Promise<{ content: string, 
           if (content.includes('<!DOCTYPE html>') || content.includes('<html') || content.includes('<head')) {
             console.log("Proxy fetch succeeded with", proxy);
             console.log("Fetched exact URL:", urlToFetch);
+            
+            // Debug what content we actually got
+            const titleMatch = content.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+            if (titleMatch) {
+              console.log("Page title from content:", titleMatch[1].trim());
+            }
+            
             return { content, success: true };
           }
         }
@@ -58,6 +68,14 @@ export const fetchPageContent = async (url: string): Promise<{ content: string, 
       
       if (response.status === 200 && response.data) {
         console.log("Direct fetch succeeded for exact URL:", urlToFetch);
+        
+        // Debug what content we actually got
+        const content = response.data;
+        const titleMatch = content.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+        if (titleMatch) {
+          console.log("Page title from direct fetch:", titleMatch[1].trim());
+        }
+        
         return { content: response.data, success: true };
       }
     } catch (directFetchErr) {
