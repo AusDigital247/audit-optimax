@@ -30,7 +30,8 @@ const SEOCategoryCard = ({
   const passedCount = items.filter(item => item.status === 'pass').length;
   const warningCount = items.filter(item => item.status === 'warning').length;
   const failedCount = items.filter(item => item.status === 'fail').length;
-  const score = items.length > 0 ? Math.round((passedCount / items.length) * 100) : 0;
+  const infoCount = items.filter(item => item.status === 'info').length;
+  const score = items.length > 0 ? Math.round((passedCount / (items.length - infoCount)) * 100) : 0;
   
   // Determine status icon and color
   const getStatusIcon = (status: SEOCheckItem['status']) => {
@@ -123,6 +124,13 @@ const SEOCategoryCard = ({
                 {failedCount}
               </Badge>
             )}
+            
+            {infoCount > 0 && (
+              <Badge variant="outline" className={getBadgeColor('info')}>
+                <Info className="mr-1 h-3 w-3" />
+                {infoCount}
+              </Badge>
+            )}
           </div>
         </div>
         
@@ -173,3 +181,4 @@ const SEOCategoryCard = ({
 };
 
 export default SEOCategoryCard;
+

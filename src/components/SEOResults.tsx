@@ -189,11 +189,12 @@ const SEOResults = ({
           transition={{ duration: 0.4, delay: 0.2 }}
           className="glass p-6 rounded-xl shadow-md lg:col-span-3"
         >
-          <h3 className="text-xl font-semibold mb-4">Summary</h3>
+          <h3 className="text-xl font-semibold mb-4">Score Breakdown</h3>
           
           <div className="space-y-3 text-sm">
             <p>
-              This SEO audit has evaluated various aspects of your website's search engine optimization.
+              This SEO audit has evaluated various aspects of your website's optimization for the keyword 
+              <span className="font-semibold"> {keyword || "None provided"}</span>.
               The overall score of <span className={cn(
                 "font-semibold",
                 score >= 80 ? "text-seo-good" : 
@@ -295,3 +296,4 @@ const SEOResults = ({
 };
 
 export default SEOResults;
+
