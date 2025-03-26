@@ -20,8 +20,9 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
 }> => {
   console.log(`Analyzing SEO for URL: ${url}, Keyword: ${keyword}`);
   
-  // Ensure we use the exact URL provided without modifying it
+  // Ensure we use the exact URL provided (including the full path) without modification
   const urlToAnalyze = url.trim();
+  console.log("Using exact URL for analysis (with full path):", urlToAnalyze);
   
   // Fetch page content with improved fetcher
   const { content, success } = await fetchPageContent(urlToAnalyze);
@@ -54,7 +55,7 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   
   // Extract and log the title to verify we're getting the right page
   const pageTitle = extractTitle(content);
-  console.log("Extracted page title:", pageTitle);
+  console.log("Extracted page title for validation:", pageTitle);
   
   // Basic URL Analysis
   const urlItems: SEOCheckItem[] = [];
@@ -126,7 +127,7 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   
   // Extract title and meta description with improved parser
   const title = extractTitle(content);
-  console.log("Extracted title:", title);
+  console.log("Extracted title for analysis:", title);
   
   const metaTags = extractMetaTags(content);
   console.log("Meta tags found:", Object.keys(metaTags).length);

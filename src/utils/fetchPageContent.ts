@@ -15,8 +15,10 @@ export const fetchPageContent = async (url: string): Promise<{ content: string, 
       'https://api.codetabs.com/v1/proxy?quest='
     ];
     
-    // Keep the exact URL provided, including path
+    // Ensure we're using the exact URL with full path - critical fix!
     const urlToFetch = url.trim();
+    
+    console.log("URL to fetch (with full path preserved):", urlToFetch);
     
     // Try each proxy with axios
     for (const proxy of corsProxies) {
@@ -39,12 +41,33 @@ export const fetchPageContent = async (url: string): Promise<{ content: string, 
           // Basic validation to ensure we got actual HTML
           if (content.includes('<!DOCTYPE html>') || content.includes('<html') || content.includes('<head')) {
             console.log("Proxy fetch succeeded with", proxy);
-            console.log("Fetched exact URL:", urlToFetch);
+            console.log("Fetched specific URL:", urlToFetch);
             
             // Debug what content we actually got
             const titleMatch = content.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
             if (titleMatch) {
               console.log("Page title from content:", titleMatch[1].trim());
+            }
+            
+            // Verify we're not being redirected to the homepage
+            if (urlToFetch.includes('/') && urlToFetch.split('/').length > 3) {
+              const urlPath = new URL(urlToFetch).pathname;
+              console.log("URL path we're expecting content for:", urlPath);
+              
+              // Try to find content specific to this path
+              const pathIndicators = [
+                urlPath,
+                `<link rel="canonical" href="${urlToFetch}"`,
+                `<meta property="og:url" content="${urlToFetch}"`
+              ];
+              
+              // Check if at least one path indicator is present
+              const hasPathSpecificContent = pathIndicators.some(indicator => 
+                content.includes(indicator)
+              );
+              
+              // Log whether the content appears to be for the specific page
+              console.log("Content appears to be for the specific URL:", hasPathSpecificContent);
             }
             
             return { content, success: true };
@@ -67,7 +90,7 @@ export const fetchPageContent = async (url: string): Promise<{ content: string, 
       });
       
       if (response.status === 200 && response.data) {
-        console.log("Direct fetch succeeded for exact URL:", urlToFetch);
+        console.log("Direct fetch succeeded for specific URL:", urlToFetch);
         
         // Debug what content we actually got
         const content = response.data;
