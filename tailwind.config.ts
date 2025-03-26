@@ -55,15 +55,15 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
         // SEO status colors
-        'seo-good': '#22c55e',     // Green for passed checks
+        'seo-good': '#5D9EF0',     // Changed from green to blue
         'seo-warning': '#f59e0b',  // Amber for warnings
         'seo-bad': '#ef4444',      // Red for failed checks
         'seo-blue': '#3b82f6',     // Blue for info
         // New theme colors
         'navy': '#121a2e',        // Dark navy background
         'navy-light': '#1e2b4a',  // Lighter navy for cards
-        'teal': '#4ce2cd',        // Teal accent color
-        'teal-light': '#5ff4df',  // Lighter teal for hover states
+        'teal': '#5D9EF0',        // Changed from teal to blue
+        'teal-light': '#7DBEFC',  // Lighter blue for hover states
         'magenta': '#fe00fe',     // Magenta accent (for buttons)
       },
       borderRadius: {

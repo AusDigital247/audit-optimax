@@ -16,24 +16,24 @@
     --popover: 222 33% 12%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 170 75% 60%;    /* Teal accent */
+    --primary: 213 85% 65%;    /* Blue #5D9EF0 */
     --primary-foreground: 222 47% 11%;
 
     --secondary: 217 33% 17%;  /* Lighter navy */
     --secondary-foreground: 210 40% 98%;
 
     --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
+    --muted-foreground: 215 20% 75%;   /* Brightened for better visibility */
 
-    --accent: 170 75% 60%;     /* Teal accent */
+    --accent: 213 85% 65%;     /* Blue accent */
     --accent-foreground: 222 47% 11%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217 33% 20%;
-    --input: 217 33% 20%;
-    --ring: 170 75% 60%;        /* Teal for focus rings */
+    --border: 217 33% 25%;     /* Brightened border for better visibility */
+    --input: 217 33% 25%;
+    --ring: 213 85% 65%;       /* Blue for focus rings */
 
     --radius: 0.75rem;
   }
@@ -57,12 +57,22 @@ html, body {
   overflow-x: hidden;
 }
 
-/* Glass effect */
+/* Enhanced Glass effect */
 .glass {
-  background: rgba(30, 43, 74, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(76, 226, 205, 0.18);
+  background: rgba(30, 43, 74, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(93, 158, 240, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Stronger glass effect */
+.glass-strong {
+  background: rgba(30, 43, 74, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(93, 158, 240, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 /* Wave divider */
@@ -122,13 +132,13 @@ html, body {
   transform: translateY(10px);
 }
 
-/* Teal button glow effect */
+/* Teal button glow effect - updated to blue */
 .btn-glow {
-  box-shadow: 0 0 15px rgba(76, 226, 205, 0.5);
+  box-shadow: 0 0 15px rgba(93, 158, 240, 0.5);
 }
 
 .btn-glow:hover {
-  box-shadow: 0 0 20px rgba(76, 226, 205, 0.7);
+  box-shadow: 0 0 20px rgba(93, 158, 240, 0.7);
 }
 
 /* Magenta button glow effect */
@@ -139,6 +149,22 @@ html, body {
 
 .btn-magenta:hover {
   box-shadow: 0 0 20px rgba(254, 0, 254, 0.7);
+}
+
+/* Enhanced card shadow */
+.card-shadow {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 
+              0 10px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+/* Floating card effect */
+.card-float {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-float:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.3);
 }
 
 /* Wave divider at the bottom of sections */
@@ -156,4 +182,34 @@ html, body {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='1' d='M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,224C672,213,768,171,864,165.3C960,160,1056,192,1152,197.3C1248,203,1344,181,1392,170.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+/* New text section styling */
+.content-section {
+  padding: 3rem 0;
+}
+
+.content-section h2 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #5D9EF0;
+}
+
+.content-section h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.content-section p {
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+}
+
+/* Text highlight for keywords */
+.text-highlight {
+  color: #5D9EF0;
+  font-weight: 500;
 }
