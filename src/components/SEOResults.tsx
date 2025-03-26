@@ -46,13 +46,16 @@ const SEOResults = ({
     day: 'numeric',
   });
   
-  // Calculate statistics for each category
+  // Calculate statistics for each category using weighted scoring
   const categoryStats = categories.map(category => {
-    const total = category.items.length;
+    const total = category.items.filter(item => item.status !== 'info').length;
     const passed = category.items.filter(item => item.status === 'pass').length;
     const warnings = category.items.filter(item => item.status === 'warning').length;
     const failed = category.items.filter(item => item.status === 'fail').length;
-    const score = Math.round((passed / total) * 100);
+    
+    // Calculate weighted score (Pass = 1, Warning = 0.5, Fail = 0)
+    const earnedPoints = passed + (warnings * 0.5);
+    const categoryScore = total > 0 ? Math.round((earnedPoints / total) * 100) : 0;
     
     return {
       title: category.title,
@@ -60,7 +63,7 @@ const SEOResults = ({
       passed,
       warnings,
       failed,
-      score
+      score: categoryScore
     };
   });
   
@@ -131,6 +134,26 @@ const SEOResults = ({
     }
   };
   
+  // Get all critical issues for the recommendation section
+  const criticalIssues = categories.flatMap(category => 
+    category.items
+      .filter(item => item.status === 'fail')
+      .map(item => ({ category: category.title, item }))
+  );
+  
+  // Get warning issues for the recommendation section
+  const warningIssues = categories.flatMap(category => 
+    category.items
+      .filter(item => item.status === 'warning')
+      .map(item => ({ category: category.title, item }))
+  );
+  
+  // Combine all issues, prioritizing critical ones
+  const allIssues = [...criticalIssues, ...warningIssues];
+  
+  // Get the top 5 issues to display
+  const topIssues = allIssues.slice(0, 5);
+  
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -150,7 +173,7 @@ const SEOResults = ({
           <p className="text-lg text-muted-foreground">
             For: <span className="font-medium text-foreground">{url}</span>
             {keyword && (
-              <> | Keyword: <span className="font-medium text-foreground">{keyword}</span></>
+              <> | Target Keyword: <span className="font-medium text-foreground">{keyword}</span></>
             )}
           </p>
           <p className="text-sm text-muted-foreground mt-1">Generated on {reportDate}</p>
@@ -193,8 +216,10 @@ const SEOResults = ({
           
           <div className="space-y-3 text-sm">
             <p>
-              This SEO audit has evaluated various aspects of your website's optimization for the keyword 
-              <span className="font-semibold"> {keyword || "None provided"}</span>.
+              This SEO audit has evaluated various aspects of your website's optimization
+              {keyword ? (
+                <> for the target keyword <span className="font-semibold">{keyword}</span></>
+              ) : " "}. 
               The overall score of <span className={cn(
                 "font-semibold",
                 score >= 80 ? "text-seo-good" : 
@@ -203,7 +228,7 @@ const SEOResults = ({
               )}>
                 {score}/100
               </span> is calculated based on {categories.reduce((acc, cat) => acc + cat.items.length, 0)} individual checks
-              across {categories.length} categories.
+              across {categories.length} categories using a weighted scoring system.
             </p>
             
             <p>
@@ -214,20 +239,18 @@ const SEOResults = ({
                   : "Your website requires significant SEO improvements. Prioritize addressing the critical issues identified to enhance your search visibility and performance."}
             </p>
             
-            <p className="font-medium">Key recommendations:</p>
-            <ul className="list-disc pl-5 space-y-1">
-              {categories.map(category => {
-                const failedItems = category.items.filter(item => item.status === 'fail');
-                if (failedItems.length > 0) {
-                  return failedItems.slice(0, 2).map((item, idx) => (
-                    <li key={`${category.title}-${idx}`}>
-                      {item.name}
+            {topIssues.length > 0 && (
+              <>
+                <p className="font-medium mt-2">Key recommendations:</p>
+                <ul className="list-disc pl-5 space-y-1">
+                  {topIssues.map((issue, idx) => (
+                    <li key={idx} className={issue.item.status === 'fail' ? 'text-seo-bad' : 'text-seo-warning'}>
+                      <span className="text-foreground">{issue.item.name}</span>
                     </li>
-                  ));
-                }
-                return null;
-              }).flat().filter(Boolean).slice(0, 5)}
-            </ul>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
         </motion.div>
       </div>
@@ -296,4 +319,3 @@ const SEOResults = ({
 };
 
 export default SEOResults;
-

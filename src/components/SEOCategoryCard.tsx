@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, X, AlertTriangle, Info, ChevronDown, ChevronUp } from 'lucide-react';
@@ -8,6 +9,7 @@ export interface SEOCheckItem {
   name: string;
   status: 'pass' | 'fail' | 'warning' | 'info';
   message: string;
+  points?: number; // Points value for this check
 }
 
 interface SEOCategoryCardProps {
@@ -25,12 +27,19 @@ const SEOCategoryCard = ({
 }: SEOCategoryCardProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   
-  // Calculate a simple score based on passed checks
+  // Calculate a score based on passed checks using a weighted system
   const passedCount = items.filter(item => item.status === 'pass').length;
   const warningCount = items.filter(item => item.status === 'warning').length;
   const failedCount = items.filter(item => item.status === 'fail').length;
   const infoCount = items.filter(item => item.status === 'info').length;
-  const score = items.length > 0 ? Math.round((passedCount / (items.length - infoCount)) * 100) : 0;
+  
+  // Calculate weighted score
+  // Pass = 1 point, Warning = 0.5 points, Fail = 0 points, Info = not counted
+  const totalPoints = items.length - infoCount; // Maximum possible points
+  const earnedPoints = passedCount + (warningCount * 0.5); // Weighted earned points
+  
+  // Calculate percentage score
+  const score = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 100) : 0;
   
   // Determine status icon and color
   const getStatusIcon = (status: SEOCheckItem['status']) => {
