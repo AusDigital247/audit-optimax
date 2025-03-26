@@ -4,13 +4,14 @@ import { motion } from 'framer-motion';
 import SEOScoreCard from './SEOScoreCard';
 import SEOCategoryCard, { SEOCheckItem } from './SEOCategoryCard';
 import { Button } from '@/components/ui/button';
-import { Download, RefreshCw, FileText, PieChart } from 'lucide-react';
+import { Download, RefreshCw, FileText, PieChart, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import SEOSummaryChart from './SEOSummaryChart';
 import SEOCategoryChart from './SEOCategoryChart';
 import { toast } from "@/hooks/use-toast";
 import html2pdf from 'html2pdf.js';
 import { Card, CardContent } from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export interface SEOCategory {
   title: string;
@@ -153,6 +154,16 @@ const SEOResults = ({
           <p className="text-sm text-muted-foreground mt-1">Generated on {reportDate}</p>
         </motion.div>
       </div>
+      
+      <Alert className="mb-6 border-teal/30 bg-navy-light">
+        <AlertCircle className="h-4 w-4 text-teal" />
+        <AlertTitle className="text-teal">Disclaimer</AlertTitle>
+        <AlertDescription className="text-sm">
+          This tool provides an estimated SEO assessment based only on the URL structure and domain name. 
+          For a complete SEO analysis, we would need to analyze the actual page content, which is not possible without accessing the site directly. 
+          Many checks are marked as "warnings" because we cannot verify them without analyzing your page content.
+        </AlertDescription>
+      </Alert>
       
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
         <SEOScoreCard score={score} className="lg:col-span-1" />
