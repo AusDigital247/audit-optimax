@@ -55,15 +55,19 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
         // SEO status colors
-        'seo-good': '#5D9EF0',     // Changed from green to blue
+        'seo-good': '#5D9EF0',     // Blue for passed checks
         'seo-warning': '#f59e0b',  // Amber for warnings
         'seo-bad': '#ef4444',      // Red for failed checks
         'seo-blue': '#3b82f6',     // Blue for info
-        // New theme colors
+        // Theme colors
         'navy': '#121a2e',        // Dark navy background
         'navy-light': '#1e2b4a',  // Lighter navy for cards
-        'teal': '#5D9EF0',        // Changed from teal to blue
+        'teal': '#5D9EF0',        // Blue accent
         'teal-light': '#7DBEFC',  // Lighter blue for hover states
+        'light-bg': '#f8fafc',    // Light background
+        'accent-purple': '#8b5cf6', // Purple accent
+        'accent-pink': '#ec4899',   // Pink accent
+        'accent-orange': '#f97316', // Orange accent
         'magenta': '#fe00fe',     // Magenta accent (for buttons)
       },
       borderRadius: {
@@ -73,6 +77,8 @@ const config = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        display: ["Poppins", ...fontFamily.sans],
+        body: ["Inter", ...fontFamily.sans],
       },
       keyframes: {
         "accordion-down": {
@@ -83,10 +89,21 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "pulse-glow": {
+          "0%, 100%": { boxShadow: "0 0 15px rgba(93, 158, 240, 0.5)" },
+          "50%": { boxShadow: "0 0 25px rgba(93, 158, 240, 0.8)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-glow": "pulse-glow 2s infinite",
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-blueprint': 'linear-gradient(135deg, #121a2e 0%, #1e2b4a 100%)',
+        'gradient-light': 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
       },
     },
   },

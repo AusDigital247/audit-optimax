@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Search, Globe } from 'lucide-react';
+import { Search, Globe, ArrowRight, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -47,10 +47,17 @@ const SEOForm = ({ onSubmit, isLoading, className }: SEOFormProps) => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className={cn("w-full max-w-3xl mx-auto glass p-8 rounded-xl shadow-lg", className)}
+      className={cn(
+        "w-full max-w-3xl mx-auto glass p-8 rounded-xl shadow-lg border border-teal/30",
+        className
+      )}
     >
+      <h2 className="text-2xl font-display font-semibold mb-6 text-center text-white">
+        Free SEO Checker & Website Analyzer
+      </h2>
+      
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div className="flex items-center">
             <Globe className="w-5 h-5 mr-2 text-teal" />
             <Label htmlFor="url" className="text-base font-medium text-white">
@@ -65,23 +72,29 @@ const SEOForm = ({ onSubmit, isLoading, className }: SEOFormProps) => {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               className={cn(
-                "pl-4 pr-10 py-6 bg-navy border-teal/30 focus:border-teal rounded-lg text-base placeholder:text-muted-foreground",
+                "pl-4 pr-10 py-6 bg-navy-light/50 border-teal/30 focus:border-teal rounded-lg text-base placeholder:text-muted-foreground",
                 error ? "border-red-500 focus-visible:ring-red-500" : "focus-visible:ring-teal"
               )}
             />
+            {error && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500">
+                <AlertCircle className="h-5 w-5" />
+              </div>
+            )}
           </div>
           {error && (
             <motion.p 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-red-500 text-sm mt-1"
+              className="text-red-500 text-sm mt-1 flex items-center"
             >
+              <AlertCircle className="h-4 w-4 mr-1" />
               {error}
             </motion.p>
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div className="flex items-center">
             <Search className="w-5 h-5 mr-2 text-teal" />
             <Label htmlFor="keyword" className="text-base font-medium text-white">
@@ -94,18 +107,19 @@ const SEOForm = ({ onSubmit, isLoading, className }: SEOFormProps) => {
             placeholder="Enter a keyword to check keyword optimization"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            className="pl-4 pr-10 py-6 bg-navy border-teal/30 focus:border-teal rounded-lg text-base placeholder:text-muted-foreground focus-visible:ring-teal"
+            className="pl-4 pr-10 py-6 bg-navy-light/50 border-teal/30 focus:border-teal rounded-lg text-base placeholder:text-muted-foreground focus-visible:ring-teal"
           />
         </div>
 
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex flex-col md:flex-row gap-4 mt-8">
           <Button 
             type="submit" 
-            className="w-full py-6 text-base font-medium rounded-lg transition-all"
+            className="w-full py-6 text-base font-medium rounded-lg transition-all flex items-center justify-center gap-2"
             disabled={isLoading}
             size="lg"
           >
             {isLoading ? 'Analyzing...' : 'Analyze SEO'}
+            {!isLoading && <ArrowRight className="h-5 w-5" />}
           </Button>
           
           <Button 
@@ -120,6 +134,10 @@ const SEOForm = ({ onSubmit, isLoading, className }: SEOFormProps) => {
           >
             Try Demo
           </Button>
+        </div>
+        
+        <div className="text-center text-sm text-gray-400 mt-4">
+          No sign-up required. Instant results. 100% Free.
         </div>
       </form>
     </motion.div>

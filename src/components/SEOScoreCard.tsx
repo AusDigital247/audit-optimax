@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { Target } from 'lucide-react';
+import { Target, Award } from 'lucide-react';
 import { relevanceTiers } from '@/utils/seoPointsSystem';
 
 interface SEOScoreCardProps {
@@ -71,7 +71,7 @@ const SEOScoreCard = ({ score, relevanceTier, className }: SEOScoreCardProps) =>
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, delay: 0.1 }}
       className={cn(
-        "glass p-6 rounded-xl shadow-md relative overflow-hidden", 
+        "glass-strong p-6 rounded-xl shadow-md relative overflow-hidden card-float", 
         className
       )}
     >
@@ -80,32 +80,36 @@ const SEOScoreCard = ({ score, relevanceTier, className }: SEOScoreCardProps) =>
         getScoreBackground(score)
       )} />
       
-      <h3 className="text-xl font-semibold mb-3 text-center relative z-10">Overall SEO Score</h3>
+      <div className="absolute top-4 right-4">
+        <Award className="h-6 w-6 text-teal opacity-50" />
+      </div>
+      
+      <h3 className="text-xl font-semibold mb-4 text-center relative z-10">Overall SEO Score</h3>
       
       <div className="flex justify-center items-center relative z-10">
         <div className="relative flex items-center justify-center">
-          <svg width="140" height="140" viewBox="0 0 140 140">
+          <svg width="160" height="160" viewBox="0 0 160 160">
             {/* Background circle */}
             <circle
-              cx="70"
-              cy="70"
-              r="55"
+              cx="80"
+              cy="80"
+              r="60"
               fill="none"
-              stroke="rgba(0,0,0,0.1)"
+              stroke="rgba(30,43,74,0.5)"
               strokeWidth="12"
               className="dark:stroke-gray-700"
             />
             {/* Progress circle with gradient */}
             <defs>
               <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor={score >= 70 ? "#22c55e" : score >= 35 ? "#f59e0b" : "#ef4444"} />
-                <stop offset="100%" stopColor={score >= 70 ? "#4ade80" : score >= 35 ? "#fbbf24" : "#f87171"} />
+                <stop offset="0%" stopColor={score >= 70 ? "#5D9EF0" : score >= 35 ? "#f59e0b" : "#ef4444"} />
+                <stop offset="100%" stopColor={score >= 70 ? "#7DBEFC" : score >= 35 ? "#fbbf24" : "#f87171"} />
               </linearGradient>
             </defs>
             <circle
-              cx="70"
-              cy="70"
-              r="55"
+              cx="80"
+              cy="80"
+              r="60"
               fill="none"
               stroke="url(#scoreGradient)"
               strokeWidth="12"
@@ -113,7 +117,7 @@ const SEOScoreCard = ({ score, relevanceTier, className }: SEOScoreCardProps) =>
               strokeDashoffset={strokeDashoffset}
               strokeLinecap="round"
               className="progress-ring-circle"
-              transform="rotate(-90 70 70)"
+              transform="rotate(-90 80 80)"
             >
               <animate
                 attributeName="stroke-dashoffset"
@@ -127,7 +131,7 @@ const SEOScoreCard = ({ score, relevanceTier, className }: SEOScoreCardProps) =>
             </circle>
           </svg>
           <div className="absolute flex flex-col items-center justify-center">
-            <span className={cn("text-4xl font-bold", getScoreColor(animatedScore))}>
+            <span className={cn("text-5xl font-bold", getScoreColor(animatedScore))}>
               {animatedScore}
             </span>
             <span className="text-sm text-muted-foreground mt-1">out of 100</span>
@@ -135,11 +139,11 @@ const SEOScoreCard = ({ score, relevanceTier, className }: SEOScoreCardProps) =>
         </div>
       </div>
       
-      <div className="mt-4 text-center relative z-10">
-        <p className={cn("text-sm", 
-          score >= 70 ? "text-green-800 dark:text-green-400" : 
-          score >= 35 ? "text-amber-800 dark:text-amber-400" : 
-          "text-red-800 dark:text-red-400"
+      <div className="mt-6 text-center relative z-10">
+        <p className={cn("text-sm font-medium", 
+          score >= 70 ? "text-green-400" : 
+          score >= 35 ? "text-amber-400" : 
+          "text-red-400"
         )}>
           {score >= 70 
             ? "Excellent! Your site is well-optimized."
@@ -149,11 +153,11 @@ const SEOScoreCard = ({ score, relevanceTier, className }: SEOScoreCardProps) =>
         </p>
         
         {relevanceTier && (
-          <div className="mt-3">
-            <span className={cn("inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium",
+          <div className="mt-4">
+            <span className={cn("inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium",
               getRelevanceColor(relevanceTier)
             )}>
-              <Target className="h-3 w-3" />
+              <Target className="h-4 w-4" />
               {relevanceTier}
             </span>
           </div>

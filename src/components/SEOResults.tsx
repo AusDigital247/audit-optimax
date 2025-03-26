@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import SEOScoreCard from './SEOScoreCard';
 import SEOCategoryCard, { SEOCheckItem } from './SEOCategoryCard';
 import { Button } from '@/components/ui/button';
-import { Download, RefreshCw, FileText, PieChart, AlertCircle, CheckCircle2, Target } from 'lucide-react';
+import { Download, RefreshCw, FileText, PieChart, AlertCircle, CheckCircle2, Target, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import SEOSummaryChart from './SEOSummaryChart';
 import SEOCategoryChart from './SEOCategoryChart';
@@ -166,11 +166,11 @@ const SEOResults = ({
   const getRelevanceColor = (tier: string) => {
     switch(tier) {
       case relevanceTiers.HIGHLY_RELEVANT:
-        return "text-green-600 dark:text-green-400";
+        return "text-green-400";
       case relevanceTiers.SOMEWHAT_RELEVANT:
-        return "text-amber-600 dark:text-amber-400";
+        return "text-amber-400";
       case relevanceTiers.NOT_RELEVANT:
-        return "text-red-600 dark:text-red-400";
+        return "text-red-400";
       default:
         return "text-muted-foreground";
     }
@@ -191,11 +191,11 @@ const SEOResults = ({
           transition={{ duration: 0.4 }}
           className="text-center"
         >
-          <h2 className="text-2xl md:text-5xl font-semibold mb-2">SEO Audit Results</h2>
+          <h2 className="text-3xl md:text-5xl font-display font-semibold mb-3 gradient-text">SEO Audit Results</h2>
           <p className="text-lg text-muted-foreground">
             For: <span className="font-medium text-foreground">{url}</span>
             {keyword && (
-              <> | Target Keyword: <span className="font-medium text-foreground">{keyword}</span></>
+              <> | Target Keyword: <span className="font-medium text-teal">{keyword}</span></>
             )}
           </p>
           <p className="text-sm text-muted-foreground mt-1">Generated on {reportDate}</p>
@@ -203,9 +203,9 @@ const SEOResults = ({
           {relevanceTier && keyword && (
             <div className="mt-3">
               <span className={cn("inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium", 
-                relevanceTier === relevanceTiers.HIGHLY_RELEVANT ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" : 
-                relevanceTier === relevanceTiers.SOMEWHAT_RELEVANT ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400" : 
-                "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
+                relevanceTier === relevanceTiers.HIGHLY_RELEVANT ? "bg-green-900/30 text-green-400" : 
+                relevanceTier === relevanceTiers.SOMEWHAT_RELEVANT ? "bg-amber-900/30 text-amber-400" : 
+                "bg-red-900/30 text-red-400"
               )}>
                 <Target className="h-3.5 w-3.5" />
                 {relevanceTier} for "{keyword}"
@@ -216,10 +216,10 @@ const SEOResults = ({
       </div>
       
       {!contentFetched && (
-        <Alert className="mb-6 border-amber-400/30 bg-amber-50 dark:bg-amber-900/20">
+        <Alert className="mb-6 border-amber-400/30 bg-amber-900/20">
           <AlertCircle className="h-4 w-4 text-amber-500" />
-          <AlertTitle className="text-amber-600 dark:text-amber-400">Limited Analysis</AlertTitle>
-          <AlertDescription className="text-sm text-amber-700 dark:text-amber-300">
+          <AlertTitle className="text-amber-400">Limited Analysis</AlertTitle>
+          <AlertDescription className="text-sm text-amber-300">
             We were unable to access your page content directly. Our analysis is based on URL structure only.
             For a more accurate analysis, try running the audit from a device that has access to the target website,
             or use Google Search Console, Screaming Frog, or other SEO tools.
@@ -228,10 +228,10 @@ const SEOResults = ({
       )}
       
       {contentFetched && (
-        <Alert className="mb-6 border-green-400/30 bg-green-50 dark:bg-green-900/20">
+        <Alert className="mb-6 border-green-400/30 bg-green-900/20">
           <CheckCircle2 className="h-4 w-4 text-green-500" />
-          <AlertTitle className="text-green-600 dark:text-green-400">Complete Analysis</AlertTitle>
-          <AlertDescription className="text-sm text-green-700 dark:text-green-300">
+          <AlertTitle className="text-green-400">Complete Analysis</AlertTitle>
+          <AlertDescription className="text-sm text-green-300">
             We successfully accessed your page content. This analysis includes a thorough evaluation of your content, meta tags, images, 
             and technical elements for a comprehensive SEO assessment.
           </AlertDescription>
@@ -245,15 +245,15 @@ const SEOResults = ({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
-          className="glass p-6 rounded-xl shadow-md lg:col-span-3"
+          className="glass-strong p-6 rounded-xl shadow-md lg:col-span-3 card-float"
         >
-          <h3 className="text-xl font-semibold mb-4">Score Breakdown</h3>
+          <h3 className="text-xl font-semibold mb-4 text-teal">Score Breakdown</h3>
           
           <div className="space-y-3 text-sm">
-            <p>
+            <p className="text-gray-300">
               This SEO audit has evaluated various aspects of your website's optimization
               {keyword ? (
-                <> for the target keyword <span className="font-semibold">{keyword}</span></>
+                <> for the target keyword <span className="font-semibold text-teal">{keyword}</span></>
               ) : " "}. 
               The overall score of <span className={cn(
                 "font-semibold",
@@ -267,7 +267,7 @@ const SEOResults = ({
             </p>
             
             {relevanceTier && keyword && (
-              <p>
+              <p className="text-gray-300">
                 Your page is classified as <span className={cn("font-semibold", getRelevanceColor(relevanceTier))}>
                   {relevanceTier}
                 </span> for the keyword "{keyword}". {
@@ -280,7 +280,7 @@ const SEOResults = ({
               </p>
             )}
             
-            <p>
+            <p className="text-gray-300">
               {score >= 70 
                 ? "Your website demonstrates strong SEO practices. Continue maintaining these standards while addressing the few improvement opportunities identified."
                 : score >= 35 
@@ -290,11 +290,11 @@ const SEOResults = ({
             
             {topIssues.length > 0 && (
               <>
-                <p className="font-medium mt-2">Key recommendations:</p>
-                <ul className="list-disc pl-5 space-y-1">
+                <p className="font-medium mt-4 text-white">Key recommendations:</p>
+                <ul className="list-disc pl-5 space-y-1 text-gray-300">
                   {topIssues.map((issue, idx) => (
                     <li key={idx} className={issue.item.status === 'fail' ? 'text-seo-bad' : 'text-seo-warning'}>
-                      <span className="text-foreground">{issue.item.name}</span>
+                      <span className="text-gray-200">{issue.item.name}</span>
                     </li>
                   ))}
                 </ul>
@@ -311,23 +311,23 @@ const SEOResults = ({
         className="mb-8"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <Card>
+          <Card className="glass-card overflow-hidden border-teal/20">
             <CardContent className="pt-6">
-              <h3 className="text-lg font-medium mb-4">Overall SEO Performance</h3>
+              <h3 className="text-lg font-medium mb-4 text-teal">Overall SEO Performance</h3>
               <SEOSummaryChart score={score} />
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="glass-card overflow-hidden border-teal/20">
             <CardContent className="pt-6">
-              <h3 className="text-lg font-medium mb-4">Category Performance</h3>
+              <h3 className="text-lg font-medium mb-4 text-teal">Category Performance</h3>
               <SEOCategoryChart categories={categoryStats} />
             </CardContent>
           </Card>
         </div>
 
-        <div className="space-y-6 mt-8">
-          <h3 className="text-xl font-semibold">Detailed Report</h3>
+        <div className="space-y-6 mt-12">
+          <h3 className="text-2xl font-display font-semibold mb-4 text-center text-teal">Detailed Report</h3>
           {categories.map((category, index) => (
             <SEOCategoryCard
               key={category.title}
@@ -343,20 +343,22 @@ const SEOResults = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 0.5 }}
-        className="flex flex-col sm:flex-row justify-center gap-4 mb-10"
+        className="flex flex-col sm:flex-row justify-center gap-4 mb-10 mt-12"
       >
         <Button 
           onClick={onReset}
           variant="outline"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 py-6"
+          size="lg"
         >
-          <RefreshCw className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4" />
           Run New Audit
         </Button>
         
         <Button 
           onClick={downloadPdfReport}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 py-6"
+          size="lg"
           disabled={isGeneratingPdf}
         >
           <Download className="h-4 w-4" />
