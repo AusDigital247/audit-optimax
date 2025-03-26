@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, X, AlertTriangle, Info, ChevronDown, ChevronUp } from 'lucide-react';
@@ -27,19 +26,25 @@ const SEOCategoryCard = ({
 }: SEOCategoryCardProps) => {
   const [isExpanded, setIsExpanded] = useState(true);
   
-  // Calculate a score based on passed checks using a weighted system
+  // Calculate total points possible and earned points using actual points property
+  const totalPoints = items
+    .filter(item => item.status !== 'info')
+    .reduce((acc, item) => acc + (item.points || 1), 0);
+  
+  const earnedPoints = items.reduce((acc, item) => {
+    if (item.status === 'pass') return acc + (item.points || 1);
+    if (item.status === 'warning') return acc + (item.points ? item.points * 0.5 : 0.5);
+    return acc;
+  }, 0);
+  
+  // Calculate percentage score
+  const score = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 100) : 0;
+  
+  // Count items by status
   const passedCount = items.filter(item => item.status === 'pass').length;
   const warningCount = items.filter(item => item.status === 'warning').length;
   const failedCount = items.filter(item => item.status === 'fail').length;
   const infoCount = items.filter(item => item.status === 'info').length;
-  
-  // Calculate weighted score
-  // Pass = 1 point, Warning = 0.5 points, Fail = 0 points, Info = not counted
-  const totalPoints = items.length - infoCount; // Maximum possible points
-  const earnedPoints = passedCount + (warningCount * 0.5); // Weighted earned points
-  
-  // Calculate percentage score
-  const score = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 100) : 0;
   
   // Determine status icon and color
   const getStatusIcon = (status: SEOCheckItem['status']) => {
@@ -178,6 +183,11 @@ const SEOCategoryCard = ({
                   )}>
                     {item.message}
                   </p>
+                  {item.points && item.status === 'pass' && (
+                    <p className="text-xs mt-1 text-green-600 dark:text-green-400">
+                      +{item.points} points
+                    </p>
+                  )}
                 </div>
               </div>
             </motion.div>
