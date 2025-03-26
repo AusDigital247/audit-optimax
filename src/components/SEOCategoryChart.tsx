@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
 import { cn } from '@/lib/utils';
 
 interface CategoryStat {
@@ -44,7 +44,11 @@ const SEOCategoryChart = ({ categories, className }: SEOCategoryChartProps) => {
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-          <XAxis type="number" domain={[0, 100]} />
+          <XAxis 
+            type="number" 
+            domain={[0, 100]} 
+            tickFormatter={(value) => `${value}%`}
+          />
           <YAxis 
             type="category" 
             dataKey="name" 
@@ -73,6 +77,7 @@ const SEOCategoryChart = ({ categories, className }: SEOCategoryChartProps) => {
             {data.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={getScoreColor(entry.score)} />
             ))}
+            <LabelList dataKey="score" position="right" formatter={(value: number) => `${value}%`} />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
