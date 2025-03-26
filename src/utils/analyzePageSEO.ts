@@ -741,4 +741,318 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       : "Your page doesn't use schema markup. Consider adding structured data to help search engines better understand your content.",
     points: seoPointValues.schemaMarkup,
     details: {
-      found: hasSchema ? "Schema markup detected"
+      found: hasSchema ? "Schema markup detected" : "No schema markup found",
+      expected: "Page should use structured data/schema markup",
+      explanation: "Schema markup helps search engines understand your content and can enable rich results in search listings."
+    }
+  });
+  
+  // Check robots meta tag
+  const hasRobotsMeta = content.includes('name="robots"') || content.includes("name='robots'");
+  const robotsNoindex = content.includes('noindex') || content.includes('none');
+  
+  technicalItems.push({
+    name: "Robots meta tag",
+    status: hasRobotsMeta && !robotsNoindex ? "pass" : 
+           !hasRobotsMeta ? "info" : 
+           "warning",
+    message: hasRobotsMeta && !robotsNoindex 
+      ? "Your page has a robots meta tag that allows indexing." 
+      : !hasRobotsMeta 
+        ? "No robots meta tag found. By default, search engines can index your page." 
+        : "Your page has a robots meta tag that may prevent indexing (noindex or none directive found).",
+    points: hasRobotsMeta && !robotsNoindex ? seoPointValues.robots : 0,
+    details: {
+      found: hasRobotsMeta ? (robotsNoindex ? "Robots meta tag with noindex directive" : "Robots meta tag allowing indexing") : "No robots meta tag found",
+      expected: "Page should allow indexing if it's meant to be found in search results",
+      explanation: "The robots meta tag controls how search engines crawl and index your page."
+    }
+  });
+  
+  categories.push({
+    title: "Technical SEO",
+    items: technicalItems
+  });
+  
+  // Social Media
+  const socialResults = checkSocialMediaTags(content);
+  console.log("Social media check:", {
+    openGraph: socialResults.openGraph.has,
+    twitter: socialResults.twitter.has
+  });
+  
+  const socialItems: SEOCheckItem[] = [];
+  
+  socialItems.push({
+    name: "Implement Open Graph tags for social sharing",
+    status: socialResults.openGraph.has ? "pass" : "fail",
+    message: socialResults.openGraph.has 
+      ? `Your page has Open Graph tags (${Object.keys(socialResults.openGraph.tags).length} found).` 
+      : "Your page is missing Open Graph tags. Add og:title, og:description, and og:image.",
+    points: seoPointValues.openGraphTags,
+    details: {
+      found: socialResults.openGraph.has ? Object.entries(socialResults.openGraph.tags).map(([key, value]) => `og:${key}: ${value}`).join('\n') : "No Open Graph tags found",
+      expected: "Page should have Open Graph tags (og:title, og:description, og:image)",
+      explanation: "Open Graph tags control how your content appears when shared on social media platforms like Facebook."
+    }
+  });
+  
+  socialItems.push({
+    name: "Implement Twitter Cards",
+    status: socialResults.twitter.has ? "pass" : "warning",
+    message: socialResults.twitter.has 
+      ? `Your page has Twitter Card tags (${Object.keys(socialResults.twitter.tags).length} found).` 
+      : "Your page is missing Twitter Card tags. Add twitter:card, twitter:title, and twitter:description.",
+    points: seoPointValues.twitterCards,
+    details: {
+      found: socialResults.twitter.has ? Object.entries(socialResults.twitter.tags).map(([key, value]) => `twitter:${key}: ${value}`).join('\n') : "No Twitter Card tags found",
+      expected: "Page should have Twitter Card tags (twitter:card, twitter:title, twitter:description)",
+      explanation: "Twitter Card tags control how your content appears when shared on Twitter."
+    }
+  });
+  
+  categories.push({
+    title: "Social Media",
+    items: socialItems
+  });
+  
+  // Performance
+  const performanceItems: SEOCheckItem[] = [];
+  
+  // Check page speed indicators
+  const hasResourceHints = content.includes('rel="preload"') || 
+                           content.includes('rel="prefetch"') || 
+                           content.includes('rel="dns-prefetch"');
+  
+  performanceItems.push({
+    name: "Use resource hints for faster loading",
+    status: hasResourceHints ? "pass" : "warning",
+    message: hasResourceHints 
+      ? "Your page uses resource hints like preload, prefetch, or dns-prefetch for faster loading." 
+      : "Your page doesn't use resource hints. Consider adding preload, prefetch, or dns-prefetch for critical resources.",
+    points: seoPointValues.resourceHints,
+    details: {
+      found: hasResourceHints ? "Resource hints detected" : "No resource hints found",
+      expected: "Page should use resource hints like preload, prefetch, or dns-prefetch",
+      explanation: "Resource hints help browsers prioritize loading critical resources, improving performance."
+    }
+  });
+  
+  // Check for minified resources
+  const hasMinifiedJs = !content.includes('.js"></script>') || content.includes('.min.js"></script>');
+  const hasMinifiedCss = !content.includes('.css">') || content.includes('.min.css">');
+  
+  performanceItems.push({
+    name: "Minify JavaScript and CSS",
+    status: hasMinifiedJs && hasMinifiedCss ? "pass" : "warning",
+    message: hasMinifiedJs && hasMinifiedCss 
+      ? "Your page appears to use minified JavaScript and CSS." 
+      : "Your page may have unminified resources. Consider minifying JavaScript and CSS files.",
+    points: seoPointValues.minifiedResources,
+    details: {
+      found: `JavaScript: ${hasMinifiedJs ? "Appears minified" : "May not be minified"}, CSS: ${hasMinifiedCss ? "Appears minified" : "May not be minified"}`,
+      expected: "All JavaScript and CSS files should be minified",
+      explanation: "Minified resources load faster, improving page performance."
+    }
+  });
+  
+  // Check for page load speed indicators
+  const hasFastLoading = content.includes('http2') || 
+                        !content.includes('document.write') || 
+                        content.includes('async') || 
+                        content.includes('defer');
+  
+  performanceItems.push({
+    name: "Fast loading techniques",
+    status: hasFastLoading ? "pass" : "warning",
+    message: hasFastLoading 
+      ? "Your page appears to use fast loading techniques." 
+      : "Your page may not use optimal loading techniques. Consider using async/defer for scripts and avoiding render-blocking resources.",
+    points: seoPointValues.fastLoading,
+    details: {
+      found: hasFastLoading ? "Fast loading techniques detected" : "Optimal loading techniques not detected",
+      expected: "Page should use fast loading techniques like async/defer for scripts",
+      explanation: "Fast loading pages provide better user experience and can improve search engine rankings."
+    }
+  });
+  
+  categories.push({
+    title: "Performance",
+    items: performanceItems
+  });
+  
+  // Content Analysis
+  const contentItems: SEOCheckItem[] = [];
+  
+  // Calculate and analyze keyword density
+  if (keyword) {
+    const keywordDensity = calculateKeywordDensity(content, keyword);
+    console.log("Keyword density:", keywordDensity);
+    
+    // Determine density level and message
+    let densityStatus: "pass" | "warning" | "fail" = "fail";
+    let densityMessage = "";
+    let densityPoints = 0;
+    
+    if (keywordDensity.density >= 1 && keywordDensity.density <= 3) {
+      densityStatus = "pass";
+      densityMessage = `Good keyword density (${keywordDensity.density.toFixed(2)}%) - Your content has an optimal keyword density between 1-3%.`;
+      densityPoints = seoPointValues.keywordDensityHigh;
+    } else if (keywordDensity.density >= 0.5 && keywordDensity.density < 1) {
+      densityStatus = "warning";
+      densityMessage = `Acceptable keyword density (${keywordDensity.density.toFixed(2)}%) - Consider increasing slightly for better relevance.`;
+      densityPoints = seoPointValues.keywordDensityMedium;
+    } else if (keywordDensity.density > 0.1 && keywordDensity.density < 0.5) {
+      densityStatus = "warning";
+      densityMessage = `Low keyword density (${keywordDensity.density.toFixed(2)}%) - Your keyword appears only ${keywordDensity.count} times in about ${keywordDensity.totalWords} words.`;
+      densityPoints = seoPointValues.keywordDensityLow;
+    } else if (keywordDensity.density <= 0.1) {
+      densityStatus = "fail";
+      densityMessage = `Very low keyword density (${keywordDensity.density.toFixed(2)}%) - The page might not be relevant for this keyword.`;
+      densityPoints = seoPointValues.keywordDensityNone;
+    } else if (keywordDensity.density > 3) {
+      densityStatus = "warning";
+      densityMessage = `High keyword density (${keywordDensity.density.toFixed(2)}%) - This may be considered keyword stuffing. Aim for 1-3%.`;
+      densityPoints = seoPointValues.keywordDensityMedium;
+    }
+    
+    contentItems.push({
+      name: "Keyword density",
+      status: densityStatus,
+      message: densityMessage,
+      points: densityPoints,
+      details: {
+        found: `${keywordDensity.density.toFixed(2)}% (${keywordDensity.count} instances in ${keywordDensity.totalWords} words)`,
+        expected: "Keyword density should be between 1% and 3% for optimal relevance",
+        explanation: "Keyword density is the percentage of times a keyword appears in your content compared to the total word count. Too low means low relevance, too high may be considered keyword stuffing."
+      }
+    });
+    
+    // Check if keyword appears in first paragraph
+    const firstParagraphMatch = content.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
+    const firstParagraph = firstParagraphMatch ? firstParagraphMatch[1].replace(/<[^>]*>/g, ' ').trim() : '';
+    const keywordInFirstParagraph = firstParagraph && isKeywordPresent(firstParagraph, keyword);
+    
+    contentItems.push({
+      name: "Keyword in first paragraph",
+      status: keywordInFirstParagraph ? "pass" : "warning",
+      message: keywordInFirstParagraph 
+        ? `Your target keyword "${keyword}" appears in the first paragraph.` 
+        : `Your target keyword "${keyword}" does not appear in the first paragraph. Add it for better SEO.`,
+      points: keywordInFirstParagraph ? seoPointValues.keywordInFirstParagraph : 0,
+      details: {
+        found: firstParagraph ? firstParagraph : "No paragraph found at the beginning of content",
+        expected: "First paragraph should contain the target keyword",
+        explanation: "Using your keyword early in your content signals relevance to search engines."
+      }
+    });
+  }
+  
+  // Check content length
+  const plainText = content.replace(/<script[\s\S]*?<\/script>/gi, ' ')
+                    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+                    .replace(/<[^>]*>/g, ' ')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+  const wordCount = plainText.split(/\s+/).length;
+  
+  let contentLengthStatus: "pass" | "warning" | "fail" = "fail";
+  let contentLengthMessage = "";
+  
+  if (wordCount >= 900) {
+    contentLengthStatus = "pass";
+    contentLengthMessage = `Good content length (${wordCount} words). Long-form content tends to rank better.`;
+  } else if (wordCount >= 500) {
+    contentLengthStatus = "warning";
+    contentLengthMessage = `Moderate content length (${wordCount} words). Consider expanding to at least 900 words for better ranking potential.`;
+  } else {
+    contentLengthStatus = "fail";
+    contentLengthMessage = `Short content (${wordCount} words). This may not be enough to adequately cover the topic and rank well. Aim for at least 900 words.`;
+  }
+  
+  contentItems.push({
+    name: "Content length",
+    status: contentLengthStatus,
+    message: contentLengthMessage,
+    points: seoPointValues.contentLength,
+    details: {
+      found: `${wordCount} words`,
+      expected: "Content should be at least 900 words for comprehensive coverage",
+      explanation: "Longer content tends to perform better in search results as it provides more comprehensive information."
+    }
+  });
+  
+  categories.push({
+    title: "Content Analysis",
+    items: contentItems
+  });
+  
+  // Internal and External Links
+  const linkItems: SEOCheckItem[] = [];
+  
+  // Extract all links
+  const linkRegex = /<a\s+[^>]*href\s*=\s*["']([^"']*)["'][^>]*>([\s\S]*?)<\/a>/gi;
+  const links = Array.from(content.matchAll(linkRegex));
+  
+  // Count internal and external links
+  let internalLinks = 0;
+  let externalLinks = 0;
+  let brokenLinks = 0; // We can't really check this without making requests, so it's mostly a placeholder
+  
+  links.forEach(link => {
+    const href = link[1].toLowerCase();
+    if (href.startsWith('#') || href === '' || href === 'javascript:void(0)') {
+      // These are anchor links or empty links
+    } else if (href.startsWith('http') && !href.includes(urlObj.hostname)) {
+      externalLinks++;
+    } else {
+      internalLinks++;
+    }
+  });
+  
+  linkItems.push({
+    name: "Internal links",
+    status: internalLinks > 0 ? "pass" : "warning",
+    message: internalLinks > 0 
+      ? `Your page has ${internalLinks} internal links.` 
+      : "Your page has no internal links. Add links to other pages on your site to improve navigation and SEO.",
+    points: seoPointValues.internalLinks,
+    details: {
+      found: `${internalLinks} internal links found`,
+      expected: "Page should have internal links to other relevant pages on your site",
+      explanation: "Internal links help establish site architecture and spread link equity throughout your site."
+    }
+  });
+  
+  linkItems.push({
+    name: "External links",
+    status: "info",
+    message: externalLinks > 0 
+      ? `Your page has ${externalLinks} external links.` 
+      : "Your page has no external links.",
+    points: seoPointValues.outboundLinks,
+    details: {
+      found: `${externalLinks} external links found`,
+      expected: "Including some authoritative external links can be beneficial",
+      explanation: "Linking to reputable external resources can add credibility to your content."
+    }
+  });
+  
+  categories.push({
+    title: "Links",
+    items: linkItems
+  });
+  
+  // Calculate overall SEO score based on all checks
+  const allChecks = categories.flatMap(category => category.items);
+  
+  // Use the scoring system that categorizes pages into relevance tiers
+  const scoreResult = calculateSEOScore(allChecks);
+  
+  return {
+    score: scoreResult.score,
+    categories,
+    contentFetched: true,
+    relevanceTier: scoreResult.relevanceTier
+  };
+};
