@@ -81,7 +81,7 @@ export const relevanceTiers = {
 };
 
 // Classify relevance based on key SEO factors
-export const classifyRelevance = (checks: Array<{name: string, status: string, points?: number}>) => {
+export const classifyRelevance = (checks: Array<{name: string, status: string, points?: number, message?: string}>) => {
   // Check if keyword is present in critical elements
   const titleCheck = checks.find(check => check.name === "Keyword in title");
   const titleHasKeyword = titleCheck && titleCheck.status === "pass";
@@ -94,11 +94,12 @@ export const classifyRelevance = (checks: Array<{name: string, status: string, p
   
   const densityCheck = checks.find(check => check.name === "Keyword density");
   const hasSufficientDensity = densityCheck && 
-    densityCheck.status === "pass" || 
-    (densityCheck.message && densityCheck.message.includes("Good keyword density"));
+    (densityCheck.status === "pass" || 
+    (densityCheck.message && densityCheck.message.includes("Good keyword density")));
   const hasMinimalDensity = densityCheck && 
-    !densityCheck.message?.includes("not found") && 
-    !densityCheck.message?.includes("0.00%");
+    densityCheck.message && 
+    !densityCheck.message.includes("not found") && 
+    !densityCheck.message.includes("0.00%");
   
   const urlCheck = checks.find(check => check.name === "URL contains target keyword");
   const urlHasKeyword = urlCheck && urlCheck.status === "pass";
@@ -123,7 +124,7 @@ export const classifyRelevance = (checks: Array<{name: string, status: string, p
 };
 
 // Calculate SEO score based on weighted points and relevance tier
-export const calculateSEOScore = (checks: Array<{status: string, points?: number}>) => {
+export const calculateSEOScore = (checks: Array<{name: string, status: string, points?: number}>) => {
   const totalPossiblePoints = checks
     .filter(check => check.status !== 'info')
     .reduce((total, check) => total + (check.points || 1), 0);
@@ -138,7 +139,7 @@ export const calculateSEOScore = (checks: Array<{status: string, points?: number
   const rawPercentage = totalPossiblePoints > 0 ? (earnedPoints / totalPossiblePoints) * 100 : 0;
   
   // Apply relevance-based scoring tiers
-  const relevanceTier = classifyRelevance(checks);
+  const relevanceTier = classifyRelevance(checks as Array<{name: string, status: string, points?: number, message?: string}>);
   let finalScore = 0;
   
   switch (relevanceTier) {

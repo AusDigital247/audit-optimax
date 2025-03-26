@@ -1,3 +1,4 @@
+
 import { extractHeadContent, extractTags, extractOpenGraphTags } from './fetchPageContent';
 
 // Analyze if a keyword is present in text - improved with more flexible matching
@@ -227,18 +228,18 @@ export const calculateKeywordDensity = (content: string, keyword: string) => {
   
   if (keywordWords.length > 1) {
     // Try different word orders (for multi-word keywords)
-    const permutations = [];
+    const allPermutations: string[] = [];
     for (let i = 0; i < keywordWords.length; i++) {
       const wordsCopy = [...keywordWords];
       const word = wordsCopy.splice(i, 1)[0];
       for (const perm of [word + ' ' + wordsCopy.join(' '), wordsCopy.join(' ') + ' ' + word]) {
         if (perm !== keywordLower) {
-          permutations.push(perm);
+          allPermutations.push(perm);
         }
       }
     }
     
-    for (const perm of permutations) {
+    for (const perm of allPermutations) {
       const permPattern = new RegExp(`\\b${perm}\\b`, 'gi');
       const matches = (plainText.toLowerCase().match(permPattern) || []).length;
       variationMatches += matches;
@@ -306,9 +307,9 @@ export const calculateKeywordDensity = (content: string, keyword: string) => {
   const occurrencesInContext = Array.from(plainText.matchAll(keywordPattern)).map(m => `...${m[1]}...`).slice(0, 5);
   
   // Also gather variations for context
-  const variationOccurrences = [];
+  const variationOccurrences: string[] = [];
   if (keywordWords.length > 1) {
-    for (const perm of permutations) {
+    for (const perm of allPermutations) {
       const permPattern = new RegExp(`(.{0,30}\\b${perm}\\b.{0,30})`, 'gi');
       const matches = Array.from(plainText.matchAll(permPattern)).map(m => `...${m[1]}...`).slice(0, 2);
       variationOccurrences.push(...matches);
