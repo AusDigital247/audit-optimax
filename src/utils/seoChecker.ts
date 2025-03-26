@@ -191,10 +191,11 @@ export const checkRedirect = async (url: string): Promise<boolean> => {
   }
 };
 
-// Check for image optimization clues in HTML with improved detection
-export const extractImageInfo = (content: string): { 
+// Extract image optimization clues in HTML with improved detection
+export const extractImageInfo = (content: string, keyword?: string): { 
   totalImages: number,
-  withAlt: number, 
+  withAlt: number,
+  withKeywordInAlt: number,
   withDimensions: number,
   lazyLoaded: number,
   optimizedFormats: number
@@ -205,14 +206,21 @@ export const extractImageInfo = (content: string): {
   
   const totalImages = images.length;
   let withAlt = 0;
+  let withKeywordInAlt = 0;
   let withDimensions = 0;
   let lazyLoaded = 0;
   let optimizedFormats = 0;
   
   images.forEach(img => {
     // Better alt text detection
-    if (/\balt\s*=\s*["']([^"']*)["']/i.test(img)) {
+    const altMatch = img.match(/\balt\s*=\s*["']([^"']*)["']/i);
+    if (altMatch) {
       withAlt++;
+      
+      // Check if keyword is in alt text
+      if (keyword && altMatch[1] && altMatch[1].toLowerCase().includes(keyword.toLowerCase())) {
+        withKeywordInAlt++;
+      }
     }
     
     // More accurate dimension detection
@@ -236,7 +244,7 @@ export const extractImageInfo = (content: string): {
     }
   });
   
-  return { totalImages, withAlt, withDimensions, lazyLoaded, optimizedFormats };
+  return { totalImages, withAlt, withKeywordInAlt, withDimensions, lazyLoaded, optimizedFormats };
 };
 
 // Extract schema markup with better detection
@@ -440,10 +448,19 @@ export const analyzeKeywordDensity = (content: string, keyword: string): {
   totalWords: number,
   exactMatchCount: number,
   partialMatchCount: number,
+  synonymMatchCount: number,
   importance: 'high' | 'medium' | 'low' | 'none'
 } => {
   if (!keyword || !content) {
-    return { density: 0, count: 0, totalWords: 0, exactMatchCount: 0, partialMatchCount: 0, importance: 'none' };
+    return { 
+      density: 0, 
+      count: 0, 
+      totalWords: 0, 
+      exactMatchCount: 0, 
+      partialMatchCount: 0, 
+      synonymMatchCount: 0, 
+      importance: 'none' 
+    };
   }
   
   // Better HTML content extraction - get text from the body if possible
@@ -491,6 +508,7 @@ export const analyzeKeywordDensity = (content: string, keyword: string): {
     totalWords, 
     exactMatchCount: keywordAnalysis.exactMatches, 
     partialMatchCount: keywordAnalysis.partialMatches,
+    synonymMatchCount: keywordAnalysis.variations.length,
     importance
   };
 };

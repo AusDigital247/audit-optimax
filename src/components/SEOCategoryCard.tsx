@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, X, AlertTriangle, Info, ChevronDown, ChevronUp } from 'lucide-react';
@@ -181,4 +180,3 @@ const SEOCategoryCard = ({
 };
 
 export default SEOCategoryCard;
-

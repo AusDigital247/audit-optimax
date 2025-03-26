@@ -66,7 +66,7 @@ export const analyzeSEO = async (url: string, keyword?: string): Promise<Analysi
     count: 0, 
     totalWords: 0, 
     exactMatchCount: 0, 
-    partialMatchCount: 0,
+    partialMatchCount: 0, 
     synonymMatchCount: 0
   };
   let mobileFriendlyInfo = { viewport: false, responsiveMediaQueries: false, touchIcons: false };
@@ -92,7 +92,13 @@ export const analyzeSEO = async (url: string, keyword?: string): Promise<Analysi
     canonicalInfo = seoChecker.hasCanonicalTag(content);
     robotsInfo = seoChecker.hasRobotsMeta(content);
     socialMediaInfo = seoChecker.hasSocialMediaTags(content);
-    imageInfo = seoChecker.extractImageInfo(content, keywordLower);
+    
+    if (hasKeyword) {
+      imageInfo = seoChecker.extractImageInfo(content, keywordLower);
+    } else {
+      imageInfo = seoChecker.extractImageInfo(content);
+    }
+    
     linksInfo = seoChecker.extractLinks(content, domain);
     
     if (hasKeyword) {
