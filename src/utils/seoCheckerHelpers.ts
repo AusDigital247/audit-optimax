@@ -225,9 +225,11 @@ export const calculateKeywordDensity = (content: string, keyword: string) => {
   const keywordWords = keywordLower.split(/\s+/);
   let variationMatches = 0;
   
+  // Create a variable to store all generated permutations, available for the entire function scope
+  const generatedPermutations: string[] = [];
+  
   if (keywordWords.length > 1) {
     // Try different word orders (for multi-word keywords)
-    const generatedPermutations: string[] = [];
     for (let i = 0; i < keywordWords.length; i++) {
       const wordsCopy = [...keywordWords];
       const word = wordsCopy.splice(i, 1)[0];

@@ -12,7 +12,6 @@ import {
 import { seoPointValues, calculateSEOScore, relevanceTiers } from './seoPointsSystem';
 import { SEOCheckItem } from '@/components/SEOCategoryCard';
 
-// Main function to analyze page SEO
 export const analyzePageSEO = async (url: string, keyword: string = ''): Promise<{
   score: number,
   categories: Array<{title: string, items: SEOCheckItem[]}>,
@@ -21,7 +20,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
 }> => {
   console.log(`Analyzing SEO for URL: ${url}, Keyword: ${keyword}`);
   
-  // Parse the URL to extract path components for more accurate analysis
   const urlObj = new URL(url.startsWith('http') ? url : `https://${url}`);
   const urlPath = urlObj.pathname;
   const isSpecificPage = urlPath && urlPath !== "/" && urlPath !== "";
@@ -29,17 +27,13 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   console.log("URL path for analysis:", urlPath);
   console.log("Analyzing specific page (not homepage):", isSpecificPage);
   
-  // Preserve exact URL including cache-busting parameters
   const urlToAnalyze = url.trim();
   console.log("Using exact URL for analysis:", urlToAnalyze);
   
-  // Fetch page content with improved fetcher
   const { content, success, error } = await fetchPageContent(urlToAnalyze);
   
-  // Prepare categories array
   const categories: Array<{title: string, items: SEOCheckItem[]}> = [];
   
-  // If content fetching failed, return detailed error
   if (!success || !content) {
     return {
       score: 0,
@@ -73,28 +67,22 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
 
   console.log("Content fetched successfully, length:", content.length);
   
-  // Extract and log the title to verify we're getting the right page
   const pageTitle = extractTitle(content);
   console.log("Extracted page title for validation:", pageTitle);
   
-  // Basic URL Analysis
   const urlItems: SEOCheckItem[] = [];
   
-  // Check URL contains keyword
   if (keyword) {
-    // Check for exact keyword match in URL
     const keywordLower = keyword.toLowerCase().replace(/\s+/g, '-');
     const urlLower = url.toLowerCase();
     
     const exactKeywordInUrl = urlLower.includes(keywordLower) || 
                             urlLower.includes(keyword.toLowerCase().replace(/\s+/g, ''));
     
-    // Check for keyword variations in URL (words in different order)
     const keywordWords = keyword.toLowerCase().split(/\s+/).filter(w => w.length > 2);
     const allWordsInUrl = keywordWords.every(word => urlLower.includes(word));
     const someWordsInUrl = keywordWords.some(word => urlLower.includes(word));
     
-    // Determine status based on exact match or variations
     let urlKeywordStatus: "pass" | "fail" | "warning" | "info" = "fail";
     let urlKeywordMessage = `Your URL does not contain the target keyword "${keyword}". Consider including it for better SEO.`;
     let urlKeywordPoints = 0;
@@ -126,7 +114,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     });
   }
   
-  // Check URL length - Using the already defined urlPath variable
   const isUrlLengthGood = urlPath.length > 0 && urlPath.length <= 75;
   
   urlItems.push({
@@ -145,7 +132,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     }
   });
   
-  // Check URL readability
   const isUrlReadable = /^[a-z0-9-\/]+$/i.test(urlPath) && !urlPath.includes('__') && !urlPath.includes('--');
   
   urlItems.push({
@@ -167,10 +153,8 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     items: urlItems
   });
   
-  // Title and Meta Tags Analysis with improved parsing
   const titleTagItems: SEOCheckItem[] = [];
   
-  // Extract title and meta description with improved parser
   const title = extractTitle(content);
   console.log("Extracted title for analysis:", title);
   
@@ -180,7 +164,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   const metaDescription = metaTags['description'];
   console.log("Meta description:", metaDescription);
   
-  // Check title tag
   if (title) {
     titleTagItems.push({
       name: "Title tag",
@@ -194,7 +177,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       }
     });
     
-    // Check title length
     const titleLength = title.length;
     const isTitleLengthGood = titleLength >= 30 && titleLength <= 60;
     
@@ -214,12 +196,9 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       }
     });
     
-    // Check if keyword is in title
     if (keyword) {
-      // Check for exact keyword match in title
       const exactKeywordInTitle = isKeywordPresent(title, keyword);
       
-      // Check for keyword variations in title (words in different order)
       const titleLower = title.toLowerCase();
       const keywordWords = keyword.toLowerCase().split(/\s+/).filter(w => w.length > 2);
       const allKeywordWordsInTitle = keywordWords.every(word => titleLower.includes(word));
@@ -250,7 +229,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
         }
       });
       
-      // Check keyword position in title
       if (exactKeywordInTitle || allKeywordWordsInTitle) {
         const keywordAtBeginning = title.toLowerCase().startsWith(keyword.toLowerCase()) || 
                                   title.toLowerCase().startsWith(`the ${keyword.toLowerCase()}`) ||
@@ -300,7 +278,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     }
   }
   
-  // Check meta description
   if (metaDescription) {
     titleTagItems.push({
       name: "Meta description",
@@ -314,7 +291,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       }
     });
     
-    // Check meta description length
     const descriptionLength = metaDescription.length;
     const isDescriptionLengthGood = descriptionLength >= 120 && descriptionLength <= 160;
     
@@ -334,12 +310,9 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       }
     });
     
-    // Check if keyword is in meta description
     if (keyword) {
-      // Check for exact keyword in meta description
       const exactKeywordInDesc = isKeywordPresent(metaDescription, keyword);
       
-      // Check for keyword variations in description
       const descLower = metaDescription.toLowerCase();
       const keywordWords = keyword.toLowerCase().split(/\s+/).filter(w => w.length > 2);
       const allKeywordWordsInDesc = keywordWords.every(word => descLower.includes(word));
@@ -403,7 +376,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     items: titleTagItems
   });
   
-  // Headings Analysis with improved detection
   const headingsResult = await analyzeHeadings(content, keyword);
   console.log("Headings analysis:", {
     h1Count: headingsResult.h1Count,
@@ -415,7 +387,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   
   const headingItems: SEOCheckItem[] = [];
   
-  // Check H1 tag
   if (headingsResult.h1Count > 0) {
     headingItems.push({
       name: "Page has an H1 tag",
@@ -429,7 +400,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       }
     });
     
-    // Check if there's only one H1
     headingItems.push({
       name: "Use only one H1 tag per page",
       status: headingsResult.h1Count === 1 ? "pass" : "warning",
@@ -444,13 +414,10 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       }
     });
     
-    // Check if keyword is in H1
     if (keyword) {
-      // Check for exact keyword in H1
-      const h1Texts = headingsResult.headings.h1.join(' ');
       const exactKeywordInH1 = headingsResult.h1WithKeyword;
       
-      // Check for keyword variations in H1
+      const h1Texts = headingsResult.headings.h1.join(' ');
       const h1Lower = h1Texts.toLowerCase();
       const keywordWords = keyword.toLowerCase().split(/\s+/).filter(w => w.length > 2);
       const allKeywordWordsInH1 = keywordWords.every(word => h1Lower.includes(word));
@@ -509,7 +476,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     }
   }
   
-  // Check H2 and H3 tags
   if (headingsResult.h2Count > 0 || headingsResult.h3Count > 0) {
     headingItems.push({
       name: "Use H2 and H3 headings for content structure",
@@ -523,7 +489,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       }
     });
     
-    // Check heading hierarchy
     headingItems.push({
       name: "Maintain proper heading hierarchy (H1 → H2 → H3)",
       status: headingsResult.hasProperHierarchy ? "pass" : "warning",
@@ -538,12 +503,9 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       }
     });
     
-    // Check if keyword is in H2
     if (keyword && headingsResult.h2Count > 0) {
-      // Check for exact keyword in H2
       const exactKeywordInH2 = headingsResult.h2WithKeyword;
       
-      // Check for keyword variations in H2
       const h2Texts = headingsResult.headings.h2.join(' ');
       const h2Lower = h2Texts.toLowerCase();
       const keywordWords = keyword.toLowerCase().split(/\s+/).filter(w => w.length > 2);
@@ -594,7 +556,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     items: headingItems
   });
   
-  // Images Analysis with improved detection
   const imageResults = analyzeImages(content, keyword);
   console.log("Image analysis:", imageResults);
   
@@ -692,10 +653,8 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     items: imageItems
   });
   
-  // Technical SEO
   const technicalItems: SEOCheckItem[] = [];
   
-  // Check HTTPS
   const isHttps = hasHttps(url);
   technicalItems.push({
     name: "Site uses HTTPS",
@@ -711,7 +670,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     }
   });
   
-  // Check canonical tag
   const canonical = checkCanonicalTag(content);
   console.log("Canonical check:", canonical);
   
@@ -729,7 +687,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     }
   });
   
-  // Check schema markup
   const hasSchema = checkSchemaMarkup(content);
   console.log("Schema markup check:", hasSchema);
   
@@ -747,7 +704,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     }
   });
   
-  // Add Social Media Tags Check
   const socialMedia = checkSocialMediaTags(content);
   console.log("Social media tags check:", socialMedia);
   
@@ -784,10 +740,8 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     items: technicalItems
   });
   
-  // SEO Content Analysis
   const contentItems: SEOCheckItem[] = [];
   
-  // Check keyword density
   if (keyword) {
     const keywordDensity = calculateKeywordDensity(content, keyword);
     console.log("Keyword density:", keywordDensity);
@@ -832,7 +786,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       }
     });
     
-    // Check if keyword is in first paragraph
     const paragraphs = content.match(/<p[^>]*>(.*?)<\/p>/gi) || [];
     let keywordInFirstParagraph = false;
     
@@ -855,7 +808,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
       });
     }
     
-    // Content length check
     contentItems.push({
       name: "Content length",
       status: keywordDensity.totalWords >= 300 ? "pass" : "warning",
@@ -876,10 +828,6 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     items: contentItems
   });
   
-  // Link Analysis
-  // This section would analyze internal and external links on the page
-  
-  // Calculate SEO score based on all checks
   const allChecks = [
     ...urlItems,
     ...titleTagItems,
