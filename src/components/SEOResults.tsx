@@ -146,8 +146,8 @@ const SEOResults = ({
           transition={{ duration: 0.4 }}
           className="text-center"
         >
-          <h2 className="text-2xl font-semibold mb-2">SEO Audit Results</h2>
-          <p className="text-muted-foreground">
+          <h2 className="text-2xl md:text-5xl font-semibold mb-2">SEO Audit Results</h2>
+          <p className="text-lg text-muted-foreground">
             For: <span className="font-medium text-foreground">{url}</span>
             {keyword && (
               <> | Keyword: <span className="font-medium text-foreground">{keyword}</span></>
@@ -174,7 +174,7 @@ const SEOResults = ({
           <CheckCircle2 className="h-4 w-4 text-green-500" />
           <AlertTitle className="text-green-600 dark:text-green-400">Complete Analysis</AlertTitle>
           <AlertDescription className="text-sm text-green-700 dark:text-green-300">
-            We successfully accessed your page content. This analysis includes an evaluation of your content, meta tags, images, 
+            We successfully accessed your page content. This analysis includes a thorough evaluation of your content, meta tags, images, 
             and technical elements for a comprehensive SEO assessment.
           </AlertDescription>
         </Alert>

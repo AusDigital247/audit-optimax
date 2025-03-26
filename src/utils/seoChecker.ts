@@ -1,4 +1,3 @@
-
 import { URL } from 'url';
 
 // Improved fetcher for actual content validation with multiple fallback approaches
@@ -358,20 +357,96 @@ export const extractLinks = (content: string, domain: string): {
   };
 };
 
-// Analyze content for keyword density with better text extraction
+// New: Analyze keyword presence in text with exact and variation matching
+export const analyzeKeywordInText = (text: string, keyword: string): {
+  hasExactMatch: boolean,
+  hasPartialMatch: boolean,
+  exactMatches: number,
+  partialMatches: number,
+  variations: string[]
+} => {
+  if (!keyword || !text) {
+    return { hasExactMatch: false, hasPartialMatch: false, exactMatches: 0, partialMatches: 0, variations: [] };
+  }
+  
+  const normalizedText = text.toLowerCase();
+  const keywordLower = keyword.toLowerCase();
+  
+  // Check for exact matches (case insensitive)
+  const exactPattern = new RegExp(`\\b${keyword.replace(/\s+/g, '\\s+')}\\b`, 'gi');
+  const exactMatches = (normalizedText.match(exactPattern) || []).length;
+  
+  // Check for keyword variations and partial matches
+  const keywordWords = keywordLower.split(/\s+/).filter(word => word.length > 3);
+  const variations: string[] = [];
+  let partialMatches = 0;
+  
+  // Look for partial matches and variations
+  const allWords = normalizedText.split(/\s+/);
+  for (const word of allWords) {
+    if (word.length > 3) {
+      for (const keywordWord of keywordWords) {
+        // Check for stems of keyword words (simple stemming approach)
+        if (keywordWord.length > 4 && (
+            word.includes(keywordWord) || 
+            keywordWord.includes(word) ||
+            // Common stemming: check if one word is a stem of another (very simplified approach)
+            (keywordWord.length > 5 && word.startsWith(keywordWord.substring(0, keywordWord.length - 2))) || 
+            (word.length > 5 && keywordWord.startsWith(word.substring(0, word.length - 2)))
+          )) {
+          if (!variations.includes(word) && word !== keywordLower) {
+            variations.push(word);
+            partialMatches++;
+          }
+        }
+      }
+    }
+  }
+  
+  // For multi-word keywords, check for proximity matches
+  if (keywordWords.length > 1) {
+    // This simplified proximity check looks for keyword words within close positions
+    let foundProximity = false;
+    for (let i = 0; i < allWords.length - keywordWords.length + 1; i++) {
+      const segment = allWords.slice(i, i + keywordWords.length + 2).join(' ');
+      let matchCount = 0;
+      for (const keywordWord of keywordWords) {
+        if (segment.includes(keywordWord)) {
+          matchCount++;
+        }
+      }
+      
+      // If we found most of the keyword words in close proximity, count it as a variation
+      if (matchCount >= keywordWords.length - 1 && !foundProximity) {
+        partialMatches += 1;
+        foundProximity = true; // Only count one proximity match to avoid overcounting
+      }
+    }
+  }
+  
+  return {
+    hasExactMatch: exactMatches > 0,
+    hasPartialMatch: partialMatches > 0,
+    exactMatches,
+    partialMatches,
+    variations
+  };
+};
+
+// Analyze content for keyword density with better text extraction and analysis
 export const analyzeKeywordDensity = (content: string, keyword: string): {
   density: number,
   count: number,
   totalWords: number,
   exactMatchCount: number,
-  partialMatchCount: number
+  partialMatchCount: number,
+  importance: 'high' | 'medium' | 'low' | 'none'
 } => {
   if (!keyword || !content) {
-    return { density: 0, count: 0, totalWords: 0, exactMatchCount: 0, partialMatchCount: 0 };
+    return { density: 0, count: 0, totalWords: 0, exactMatchCount: 0, partialMatchCount: 0, importance: 'none' };
   }
   
-  // Better HTML content extraction
-  // Get text from the body if possible
+  // Better HTML content extraction - get text from the body if possible
   const bodyMatch = content.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
   const textContent = bodyMatch 
     ? bodyMatch[1].replace(/<script[\s\S]*?<\/script>/gi, ' ')
@@ -388,35 +463,77 @@ export const analyzeKeywordDensity = (content: string, keyword: string): {
   const words = normalizedText.split(/\s+/);
   const totalWords = words.length;
   
-  // Prepare keyword for search (handle multi-word keywords)
-  const keywordLower = keyword.toLowerCase();
-  const keywordPattern = new RegExp(`\\b${keyword.replace(/\s+/g, '\\s+')}\\b`, 'gi');
-  
-  // Count exact matches
-  const exactMatches = normalizedText.match(keywordPattern) || [];
-  const exactMatchCount = exactMatches.length;
-  
-  // Count partial matches
-  const keywordParts = keywordLower.split(/\s+/).filter(part => part.length > 3);
-  let partialMatchCount = 0;
-  
-  if (keywordParts.length > 0) {
-    for (const part of keywordParts) {
-      const partPattern = new RegExp(`\\b${part}\\b`, 'gi');
-      const partMatches = normalizedText.match(partPattern) || [];
-      partialMatchCount += partMatches.length;
-    }
-    // Subtract exact matches so we don't double count
-    partialMatchCount = Math.max(0, partialMatchCount - (exactMatchCount * keywordParts.length));
-  }
+  // Use the new keyword analysis function
+  const keywordAnalysis = analyzeKeywordInText(normalizedText, keyword);
   
   // Calculate total keyword occurrence count (exact + partial)
-  const count = exactMatchCount + partialMatchCount;
+  const count = keywordAnalysis.exactMatches + keywordAnalysis.partialMatches;
   
   // Calculate density as percentage
   const density = totalWords > 0 ? (count / totalWords) * 100 : 0;
   
-  return { density, count, totalWords, exactMatchCount, partialMatchCount };
+  // Determine keyword importance based on density
+  let importance: 'high' | 'medium' | 'low' | 'none' = 'none';
+  
+  if (density === 0) {
+    importance = 'none';
+  } else if (density < 0.5) {
+    importance = 'low';
+  } else if (density <= 2.5) {
+    importance = 'medium';
+  } else {
+    importance = 'high'; // Could be too high if > 5%
+  }
+  
+  return { 
+    density, 
+    count, 
+    totalWords, 
+    exactMatchCount: keywordAnalysis.exactMatches, 
+    partialMatchCount: keywordAnalysis.partialMatches,
+    importance
+  };
+};
+
+// Analyze keyword presence in title
+export const analyzeKeywordInTitle = (title: string | null, keyword: string): {
+  present: boolean,
+  atBeginning: boolean,
+  exactMatch: boolean,
+  partialMatch: boolean
+} => {
+  if (!title || !keyword) {
+    return { present: false, atBeginning: false, exactMatch: false, partialMatch: false };
+  }
+  
+  const titleLower = title.toLowerCase();
+  const keywordLower = keyword.toLowerCase();
+  
+  // Check for exact match
+  const exactMatch = titleLower.includes(keywordLower);
+  
+  // Check if keyword is at the beginning
+  const atBeginning = titleLower.startsWith(keywordLower) || 
+                     titleLower.startsWith(`the ${keywordLower}`) || 
+                     titleLower.startsWith(`a ${keywordLower}`);
+  
+  // Check for partial match with keyword parts
+  const keywordParts = keywordLower.split(/\s+/).filter(part => part.length > 3);
+  let partialMatch = false;
+  
+  for (const part of keywordParts) {
+    if (titleLower.includes(part)) {
+      partialMatch = true;
+      break;
+    }
+  }
+  
+  return {
+    present: exactMatch || partialMatch,
+    atBeginning,
+    exactMatch,
+    partialMatch: partialMatch && !exactMatch // Only count as partial if not exact
+  };
 };
 
 // Check for mobile-friendly indicators with better detection
@@ -437,7 +554,7 @@ export const hasMobileFriendlyIndicators = (content: string): {
   };
 };
 
-// Extract favicon information
+// Extract favicon information with improved detection
 export const hasFavicon = (content: string): { has: boolean, url: string | null } => {
   const faviconMatch = content.match(/<link[^>]*rel\s*=\s*["'](icon|shortcut icon)["'][^>]*href\s*=\s*["']([^"']*)["'][^>]*>/i) ||
                       content.match(/<link[^>]*href\s*=\s*["']([^"']*)["'][^>]*rel\s*=\s*["'](icon|shortcut icon)["'][^>]*>/i);
@@ -458,7 +575,7 @@ export const checkHttps = (url: string): boolean => {
   return url.toLowerCase().startsWith('https://');
 };
 
-// Detect page language
+// Detect page language with improved detection
 export const detectLanguage = (content: string): string | null => {
   const htmlLangMatch = content.match(/<html[^>]*lang\s*=\s*["']([^"']*)["'][^>]*>/i);
   if (htmlLangMatch) {
@@ -473,7 +590,7 @@ export const detectLanguage = (content: string): string | null => {
   return null;
 };
 
-// Extract hreflang tags
+// Extract hreflang tags with improved detection
 export const getHreflangTags = (content: string): Array<{ language: string, url: string }> => {
   const hreflangTags: Array<{ language: string, url: string }> = [];
   const hreflangPattern = /<link[^>]*rel\s*=\s*["']alternate["'][^>]*hreflang\s*=\s*["']([^"']*)["'][^>]*href\s*=\s*["']([^"']*)["'][^>]*>/gi;
@@ -489,7 +606,7 @@ export const getHreflangTags = (content: string): Array<{ language: string, url:
   return hreflangTags;
 };
 
-// Detect if page is targeting specific locations
+// Detect if page is targeting specific locations with improved detection
 export const detectGeoTargeting = (content: string): boolean => {
   // Check for location-specific meta
   const hasGeoMeta = /<meta[^>]*name\s*=\s*["'](geo\.|ICBM|geo.position)["'][^>]*>/i.test(content);
@@ -506,7 +623,7 @@ export const detectGeoTargeting = (content: string): boolean => {
   return hasGeoMeta || hasHreflang || hasLocationSchema;
 };
 
-// Detect page loading speed indicators (not 100% accurate from HTML alone)
+// Detect page loading speed indicators with improved detection
 export const detectPageSpeedIndicators = (content: string): {
   resourceHints: boolean,
   asyncDeferScripts: boolean,
