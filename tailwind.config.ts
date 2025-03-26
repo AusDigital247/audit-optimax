@@ -59,6 +59,12 @@ const config = {
         'seo-warning': '#f59e0b',  // Amber for warnings
         'seo-bad': '#ef4444',      // Red for failed checks
         'seo-blue': '#3b82f6',     // Blue for info
+        // New theme colors
+        'navy': '#121a2e',        // Dark navy background
+        'navy-light': '#1e2b4a',  // Lighter navy for cards
+        'teal': '#4ce2cd',        // Teal accent color
+        'teal-light': '#5ff4df',  // Lighter teal for hover states
+        'magenta': '#fe00fe',     // Magenta accent (for buttons)
       },
       borderRadius: {
         lg: "var(--radius)",

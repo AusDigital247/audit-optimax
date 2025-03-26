@@ -47,13 +47,13 @@ const SEOForm = ({ onSubmit, isLoading, className }: SEOFormProps) => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className={cn("w-full max-w-3xl mx-auto glass p-6 rounded-xl shadow-lg", className)}
+      className={cn("w-full max-w-3xl mx-auto glass p-8 rounded-xl shadow-lg", className)}
     >
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
           <div className="flex items-center">
-            <Globe className="w-5 h-5 mr-2 text-primary" />
-            <Label htmlFor="url" className="text-base font-medium">
+            <Globe className="w-5 h-5 mr-2 text-teal" />
+            <Label htmlFor="url" className="text-base font-medium text-white">
               Website URL
             </Label>
           </div>
@@ -65,8 +65,8 @@ const SEOForm = ({ onSubmit, isLoading, className }: SEOFormProps) => {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               className={cn(
-                "pl-4 pr-10 py-6 bg-background/50 border-input rounded-lg text-base placeholder:text-muted-foreground",
-                error ? "border-red-300 focus-visible:ring-red-300" : ""
+                "pl-4 pr-10 py-6 bg-navy border-teal/30 focus:border-teal rounded-lg text-base placeholder:text-muted-foreground",
+                error ? "border-red-500 focus-visible:ring-red-500" : "focus-visible:ring-teal"
               )}
             />
           </div>
@@ -83,8 +83,8 @@ const SEOForm = ({ onSubmit, isLoading, className }: SEOFormProps) => {
 
         <div className="space-y-2">
           <div className="flex items-center">
-            <Search className="w-5 h-5 mr-2 text-primary" />
-            <Label htmlFor="keyword" className="text-base font-medium">
+            <Search className="w-5 h-5 mr-2 text-teal" />
+            <Label htmlFor="keyword" className="text-base font-medium text-white">
               Target Keyword (Optional)
             </Label>
           </div>
@@ -94,17 +94,33 @@ const SEOForm = ({ onSubmit, isLoading, className }: SEOFormProps) => {
             placeholder="Enter a keyword to check keyword optimization"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            className="pl-4 pr-10 py-6 bg-background/50 border-input rounded-lg text-base placeholder:text-muted-foreground"
+            className="pl-4 pr-10 py-6 bg-navy border-teal/30 focus:border-teal rounded-lg text-base placeholder:text-muted-foreground focus-visible:ring-teal"
           />
         </div>
 
-        <Button 
-          type="submit" 
-          className="w-full py-6 text-base font-medium rounded-lg transition-all"
-          disabled={isLoading}
-        >
-          {isLoading ? 'Analyzing...' : 'Analyze SEO'}
-        </Button>
+        <div className="flex flex-col md:flex-row gap-4">
+          <Button 
+            type="submit" 
+            className="w-full py-6 text-base font-medium rounded-lg transition-all"
+            disabled={isLoading}
+            size="lg"
+          >
+            {isLoading ? 'Analyzing...' : 'Analyze SEO'}
+          </Button>
+          
+          <Button 
+            type="button"
+            variant="magenta" 
+            className="w-full py-6 text-base font-medium rounded-lg transition-all"
+            onClick={() => {
+              setUrl('https://example.com');
+              setKeyword('example');
+            }}
+            size="lg"
+          >
+            Try Demo
+          </Button>
+        </div>
       </form>
     </motion.div>
   );
