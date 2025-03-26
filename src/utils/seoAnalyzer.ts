@@ -1,4 +1,3 @@
-
 import { SEOCategory } from '../components/SEOResults';
 import { SEOCheckItem } from '../components/SEOCategoryCard';
 
@@ -45,7 +44,7 @@ export const analyzeSEO = async (url: string, keyword?: string): Promise<Analysi
     },
     {
       title: "Technical SEO",
-      items: generateTechnicalSEOChecks(isDemoSite, randomFactor)
+      items: generateTechnicalSEOChecks(url, isDemoSite, randomFactor)
     },
     {
       title: "Content Optimization",
@@ -230,7 +229,7 @@ const generateImageChecks = (isDemoSite = false, randomFactor = 0.5): SEOCheckIt
   return items;
 };
 
-const generateTechnicalSEOChecks = (isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
+const generateTechnicalSEOChecks = (url: string, isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
   const items: SEOCheckItem[] = [];
   
   // Mobile-friendliness check

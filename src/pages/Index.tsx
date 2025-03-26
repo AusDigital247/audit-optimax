@@ -5,24 +5,32 @@ import SEOForm from '@/components/SEOForm';
 import SEOResults from '@/components/SEOResults';
 import Loader from '@/components/Loader';
 import { analyzeSEO, AnalysisResult } from '@/utils/seoAnalyzer';
+import { toast } from "@/hooks/use-toast";
 
 const Index = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [currentUrl, setCurrentUrl] = useState('');
   const [currentKeyword, setCurrentKeyword] = useState<string | undefined>(undefined);
   const [results, setResults] = useState<AnalysisResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (url: string, keyword?: string) => {
     setIsAnalyzing(true);
     setCurrentUrl(url);
     setCurrentKeyword(keyword);
+    setError(null);
     
     try {
       const analysisResults = await analyzeSEO(url, keyword);
       setResults(analysisResults);
     } catch (error) {
       console.error('Error analyzing SEO:', error);
-      // In a real app, you would handle this error properly
+      setError('An error occurred while analyzing the website. Please try again.');
+      toast({
+        title: "Analysis Failed",
+        description: "There was an error analyzing the website. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsAnalyzing(false);
     }
@@ -32,6 +40,7 @@ const Index = () => {
     setResults(null);
     setCurrentUrl('');
     setCurrentKeyword(undefined);
+    setError(null);
   };
 
   return (
@@ -66,7 +75,20 @@ const Index = () => {
             </div>
           )}
 
-          {results && !isAnalyzing && (
+          {error && !isAnalyzing && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="w-full max-w-3xl mx-auto glass p-6 rounded-xl shadow-lg text-center"
+            >
+              <p className="text-red-500 mb-3">{error}</p>
+              <Button onClick={handleReset} variant="outline">
+                Try Again
+              </Button>
+            </motion.div>
+          )}
+
+          {results && !isAnalyzing && !error && (
             <SEOResults
               url={currentUrl}
               keyword={currentKeyword}
@@ -94,3 +116,4 @@ const Index = () => {
 };
 
 export default Index;
+
