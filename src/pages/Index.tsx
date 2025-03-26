@@ -6,6 +6,7 @@ import SEOResults from '@/components/SEOResults';
 import Loader from '@/components/Loader';
 import { analyzeSEO, AnalysisResult } from '@/utils/seoAnalyzer';
 import { toast } from "@/hooks/use-toast";
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -44,7 +45,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-light dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 to-gray-100 dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800">
       <div className="container max-w-7xl px-4 py-12 mx-auto">
         {/* Header */}
         <motion.div 
@@ -116,4 +117,3 @@ const Index = () => {
 };
 
 export default Index;
-

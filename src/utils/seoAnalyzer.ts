@@ -49,6 +49,22 @@ export const analyzeSEO = async (url: string, keyword?: string): Promise<Analysi
     {
       title: "Content Optimization",
       items: generateContentOptimizationChecks(keyword, isDemoSite, randomFactor)
+    },
+    {
+      title: "Mobile Optimization",
+      items: generateMobileOptimizationChecks(isDemoSite, randomFactor)
+    },
+    {
+      title: "Local SEO",
+      items: generateLocalSEOChecks(isDemoSite, randomFactor)
+    },
+    {
+      title: "Social Media",
+      items: generateSocialMediaChecks(isDemoSite, randomFactor)
+    },
+    {
+      title: "Security & Performance",
+      items: generateSecurityPerformanceChecks(url, isDemoSite, randomFactor)
     }
   ];
   
@@ -104,6 +120,26 @@ const generateTitleMetaChecks = (url: string, keyword?: string, isDemoSite = fal
         : "Meta description is missing or too short"
   });
   
+  // Meta description length check
+  items.push({
+    name: "Ensure meta description is under 160 characters",
+    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.6
+      ? "Meta description length is good (145 characters)"
+      : randomFactor > 0.3
+        ? "Meta description is slightly long (168 characters)"
+        : "Meta description is too long (215 characters). Keep it under 160 characters"
+  });
+  
+  // Open Graph Tags
+  items.push({
+    name: "Implement Open Graph tags for social sharing",
+    status: isDemoSite || randomFactor > 0.5 ? 'pass' : 'fail',
+    message: isDemoSite || randomFactor > 0.5
+      ? "Open Graph tags are properly implemented"
+      : "Open Graph tags are missing - add og:title, og:description, og:image tags"
+  });
+  
   return items;
 };
 
@@ -151,6 +187,17 @@ const generateHeadingContentChecks = (url: string, keyword?: string, isDemoSite 
         : "Inadequate use of H2/H3 headings"
   });
   
+  // Heading hierarchy check
+  items.push({
+    name: "Maintain proper heading hierarchy (H1 → H2 → H3)",
+    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.6
+      ? "Heading hierarchy is properly structured"
+      : randomFactor > 0.3
+        ? "Some heading hierarchy issues (H3 before H2)"
+        : "Poor heading structure - headings not in correct order"
+  });
+  
   return items;
 };
 
@@ -189,6 +236,24 @@ const generateUrlChecks = (url: string, keyword?: string, isDemoSite = false, ra
       : "URL is slightly long (82 characters) - consider shortening"
   });
   
+  // Hyphens in URL check
+  items.push({
+    name: "Use hyphens to separate words in URLs",
+    status: isDemoSite || randomFactor > 0.6 ? 'pass' : 'fail',
+    message: isDemoSite || randomFactor > 0.6
+      ? "URLs correctly use hyphens to separate words"
+      : "URLs use underscores or no separators - switch to hyphens"
+  });
+  
+  // Avoid dynamic parameters
+  items.push({
+    name: "Avoid dynamic parameters in URLs",
+    status: url.includes('?') ? 'warning' : 'pass',
+    message: url.includes('?')
+      ? "URL contains query parameters - consider creating clean URLs"
+      : "URL does not contain dynamic parameters"
+  });
+  
   return items;
 };
 
@@ -224,6 +289,26 @@ const generateImageChecks = (isDemoSite = false, randomFactor = 0.5): SEOCheckIt
     message: isDemoSite || randomFactor > 0.7
       ? "Lazy loading is properly implemented for all media"
       : "Lazy loading is not implemented - add the loading='lazy' attribute"
+  });
+  
+  // Image size attributes
+  items.push({
+    name: "Specify image dimensions (width/height attributes)",
+    status: isDemoSite || randomFactor > 0.5 ? 'pass' : 'fail',
+    message: isDemoSite || randomFactor > 0.5
+      ? "Image dimensions are properly specified"
+      : "Images are missing width/height attributes - add them to prevent layout shifts"
+  });
+  
+  // Image format check
+  items.push({
+    name: "Use modern image formats (WebP, AVIF)",
+    status: isDemoSite || randomFactor > 0.7 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.7
+      ? "Modern image formats are used where appropriate"
+      : randomFactor > 0.3
+        ? "Some images could use modern formats for better compression"
+        : "Images are using older formats - consider converting to WebP or AVIF"
   });
   
   return items;
@@ -292,6 +377,26 @@ const generateTechnicalSEOChecks = (url: string, isDemoSite = false, randomFacto
       : randomFactor > 0.4
         ? "Page is indexed but has low visibility"
         : "Page is not indexed or is blocked by robots.txt"
+  });
+  
+  // XML Sitemap
+  items.push({
+    name: "Create and submit XML sitemap",
+    status: isDemoSite || randomFactor > 0.6 ? 'pass' : 'fail',
+    message: isDemoSite || randomFactor > 0.6
+      ? "XML sitemap is properly implemented and submitted to search engines"
+      : "XML sitemap is missing or not submitted to search engines"
+  });
+  
+  // Robots.txt
+  items.push({
+    name: "Implement proper robots.txt file",
+    status: isDemoSite || randomFactor > 0.7 ? 'pass' : randomFactor > 0.4 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.7
+      ? "Robots.txt is properly configured"
+      : randomFactor > 0.4
+        ? "Robots.txt exists but could be optimized"
+        : "Robots.txt is missing or incorrectly blocking important content"
   });
   
   return items;
@@ -387,6 +492,247 @@ const generateContentOptimizationChecks = (keyword?: string, isDemoSite = false,
       : randomFactor > 0.4
         ? "Some external links could be improved with more authoritative sources"
         : "External links missing or pointing to low-quality sources"
+  });
+  
+  return items;
+};
+
+const generateMobileOptimizationChecks = (isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
+  const items: SEOCheckItem[] = [];
+  
+  // Viewport configuration
+  items.push({
+    name: "Configure viewport tag correctly",
+    status: isDemoSite || randomFactor > 0.7 ? 'pass' : 'fail',
+    message: isDemoSite || randomFactor > 0.7
+      ? "Viewport meta tag is properly configured"
+      : "Viewport meta tag is missing or incorrectly configured"
+  });
+  
+  // Touch elements
+  items.push({
+    name: "Ensure proper size and spacing for touch elements",
+    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.6
+      ? "Touch elements are properly sized and spaced"
+      : randomFactor > 0.3
+        ? "Some touch elements are too small or close together"
+        : "Touch elements are too small and difficult to tap accurately"
+  });
+  
+  // Mobile font size
+  items.push({
+    name: "Use readable font sizes on mobile (16px+)",
+    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.5
+      ? "Font sizes are appropriate for mobile viewing"
+      : randomFactor > 0.3
+        ? "Some text is slightly small for mobile (14px)"
+        : "Font sizes are too small for mobile devices (below 12px)"
+  });
+  
+  // Mobile content parity
+  items.push({
+    name: "Ensure content parity between mobile and desktop",
+    status: isDemoSite || randomFactor > 0.8 ? 'pass' : randomFactor > 0.5 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.8
+      ? "Mobile and desktop versions contain the same content"
+      : randomFactor > 0.5
+        ? "Some content is hidden on mobile version"
+        : "Significant content differences between mobile and desktop versions"
+  });
+  
+  // Mobile page speed
+  items.push({
+    name: "Optimize specifically for mobile page speed",
+    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.6
+      ? "Mobile page speed is optimized well (2.1s load time)"
+      : randomFactor > 0.3
+        ? "Mobile load time could be improved (4.2s)"
+        : "Mobile page load time is poor (7.5s) - needs significant optimization"
+  });
+  
+  return items;
+};
+
+const generateLocalSEOChecks = (isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
+  const items: SEOCheckItem[] = [];
+  
+  // Google Business Profile
+  items.push({
+    name: "Create and optimize Google Business Profile",
+    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.6
+      ? "Google Business Profile is claimed and fully optimized"
+      : randomFactor > 0.3
+        ? "Google Business Profile exists but needs more information"
+        : "No Google Business Profile found - create and optimize one"
+  });
+  
+  // Local keywords
+  items.push({
+    name: "Use local keywords throughout website content",
+    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.5
+      ? "Local keywords are well integrated throughout the content"
+      : randomFactor > 0.3
+        ? "Some local keywords present but could be better integrated"
+        : "Few or no local keywords found in the content"
+  });
+  
+  // NAP consistency
+  items.push({
+    name: "Maintain consistent NAP (Name, Address, Phone) across the web",
+    status: isDemoSite || randomFactor > 0.7 ? 'pass' : randomFactor > 0.4 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.7
+      ? "NAP information is consistent across all citations"
+      : randomFactor > 0.4
+        ? "Some NAP inconsistencies found across citations"
+        : "Significant NAP inconsistencies found - needs correction"
+  });
+  
+  // Local business schema
+  items.push({
+    name: "Implement local business schema markup",
+    status: isDemoSite || randomFactor > 0.6 ? 'pass' : 'fail',
+    message: isDemoSite || randomFactor > 0.6
+      ? "Local business schema markup is properly implemented"
+      : "Local business schema markup is missing - implement to improve local visibility"
+  });
+  
+  // Local reviews
+  items.push({
+    name: "Incorporate customer reviews and testimonials",
+    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.5
+      ? "Customer reviews are well-integrated on the website"
+      : randomFactor > 0.3
+        ? "Some customer reviews present but could be better showcased"
+        : "No customer reviews or testimonials found on the website"
+  });
+  
+  return items;
+};
+
+const generateSocialMediaChecks = (isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
+  const items: SEOCheckItem[] = [];
+  
+  // Social media presence
+  items.push({
+    name: "Maintain active social media profiles",
+    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.5
+      ? "Social media profiles are active and regularly updated"
+      : randomFactor > 0.3
+        ? "Social media profiles exist but are infrequently updated"
+        : "Social media profiles are inactive or missing"
+  });
+  
+  // Social share buttons
+  items.push({
+    name: "Add social sharing buttons to content",
+    status: isDemoSite || randomFactor > 0.6 ? 'pass' : 'fail',
+    message: isDemoSite || randomFactor > 0.6
+      ? "Social sharing buttons are properly implemented"
+      : "Social sharing buttons are missing - add them to increase content reach"
+  });
+  
+  // Twitter cards
+  items.push({
+    name: "Implement Twitter Card markup",
+    status: isDemoSite || randomFactor > 0.5 ? 'pass' : 'fail',
+    message: isDemoSite || randomFactor > 0.5
+      ? "Twitter Card markup is properly implemented"
+      : "Twitter Card markup is missing - add for better Twitter sharing"
+  });
+  
+  // Facebook Open Graph
+  items.push({
+    name: "Implement Facebook Open Graph tags",
+    status: isDemoSite || randomFactor > 0.5 ? 'pass' : 'fail',
+    message: isDemoSite || randomFactor > 0.5
+      ? "Facebook Open Graph tags are properly implemented"
+      : "Facebook Open Graph tags are missing - add for better Facebook sharing"
+  });
+  
+  // Social links
+  items.push({
+    name: "Include social profile links in website footer/header",
+    status: isDemoSite || randomFactor > 0.7 ? 'pass' : 'fail',
+    message: isDemoSite || randomFactor > 0.7
+      ? "Social profile links are properly displayed on the website"
+      : "Social profile links are missing from the website"
+  });
+  
+  return items;
+};
+
+const generateSecurityPerformanceChecks = (url: string, isDemoSite = false, randomFactor = 0.5): SEOCheckItem[] => {
+  const items: SEOCheckItem[] = [];
+  
+  // Core Web Vitals
+  items.push({
+    name: "Optimize Core Web Vitals (LCP, FID, CLS)",
+    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.6
+      ? "Core Web Vitals metrics are within good thresholds"
+      : randomFactor > 0.3
+        ? "Some Core Web Vitals metrics need improvement"
+        : "Core Web Vitals metrics are poor - needs significant optimization"
+  });
+  
+  // JavaScript and CSS minification
+  items.push({
+    name: "Minify JavaScript and CSS files",
+    status: isDemoSite || randomFactor > 0.7 ? 'pass' : randomFactor > 0.4 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.7
+      ? "JavaScript and CSS files are properly minified"
+      : randomFactor > 0.4
+        ? "Some JavaScript and CSS files are minified, others are not"
+        : "JavaScript and CSS files are not minified - implement minification"
+  });
+  
+  // HTTPS implementation
+  items.push({
+    name: "Ensure proper HTTPS implementation (no mixed content)",
+    status: isDemoSite || (url.startsWith('https') && randomFactor > 0.5) ? 'pass' : 'fail',
+    message: isDemoSite || (url.startsWith('https') && randomFactor > 0.5)
+      ? "HTTPS is properly implemented with no mixed content issues"
+      : url.startsWith('https')
+        ? "HTTPS is enabled but mixed content issues detected"
+        : "HTTPS is not implemented - install SSL certificate"
+  });
+  
+  // Gzip compression
+  items.push({
+    name: "Enable Gzip or Brotli compression",
+    status: isDemoSite || randomFactor > 0.6 ? 'pass' : 'fail',
+    message: isDemoSite || randomFactor > 0.6
+      ? "Compression is properly enabled for faster page loading"
+      : "Compression is not enabled - configure server to use Gzip/Brotli"
+  });
+  
+  // Image optimization
+  items.push({
+    name: "Use next-gen image formats and optimization",
+    status: isDemoSite || randomFactor > 0.5 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.5
+      ? "Next-gen image formats are used with proper optimization"
+      : randomFactor > 0.3
+        ? "Some images use older formats or are not fully optimized"
+        : "Images need significant optimization - convert to WebP/AVIF formats"
+  });
+  
+  // Browser caching
+  items.push({
+    name: "Implement proper browser caching",
+    status: isDemoSite || randomFactor > 0.6 ? 'pass' : randomFactor > 0.3 ? 'warning' : 'fail',
+    message: isDemoSite || randomFactor > 0.6
+      ? "Browser caching is properly configured"
+      : randomFactor > 0.3
+        ? "Browser caching is enabled but cache periods are too short"
+        : "Browser caching is not configured - set appropriate cache headers"
   });
   
   return items;

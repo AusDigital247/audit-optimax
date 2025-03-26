@@ -19,14 +19,14 @@ const SEOScoreCard = ({ score, className }: SEOScoreCardProps) => {
   };
 
   const getScoreBackground = (value: number) => {
-    if (value >= 80) return "from-green-100 to-green-50";
-    if (value >= 60) return "from-amber-100 to-amber-50";
-    return "from-red-100 to-red-50";
+    if (value >= 80) return "from-green-100 to-green-50 dark:from-green-900/20 dark:to-green-800/10";
+    if (value >= 60) return "from-amber-100 to-amber-50 dark:from-amber-900/20 dark:to-amber-800/10";
+    return "from-red-100 to-red-50 dark:from-red-900/20 dark:to-red-800/10";
   };
 
   // Animate the score counting up
   useEffect(() => {
-    const duration = 1000; // 1 second animation
+    const duration = 1500; // 1.5 second animation
     const frameRate = 1000 / 60; // 60fps
     const totalFrames = Math.round(duration / frameRate);
     const increment = score / totalFrames;
@@ -58,53 +58,72 @@ const SEOScoreCard = ({ score, className }: SEOScoreCardProps) => {
         className
       )}
     >
-      <div className="absolute inset-0 bg-gradient-to-br opacity-10"
-        style={{
-          backgroundImage: `linear-gradient(to bottom right, 
-            var(--tw-gradient-stops))`,
-        }}
-      />
+      <div className={cn(
+        "absolute inset-0 bg-gradient-to-br opacity-20", 
+        getScoreBackground(score)
+      )} />
       
-      <h3 className="text-xl font-semibold mb-3 text-center">Overall SEO Score</h3>
+      <h3 className="text-xl font-semibold mb-3 text-center relative z-10">Overall SEO Score</h3>
       
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center relative z-10">
         <div className="relative flex items-center justify-center">
-          <svg width="120" height="120" viewBox="0 0 120 120">
+          <svg width="140" height="140" viewBox="0 0 140 140">
             {/* Background circle */}
             <circle
-              cx="60"
-              cy="60"
-              r="45"
+              cx="70"
+              cy="70"
+              r="55"
               fill="none"
               stroke="rgba(0,0,0,0.1)"
-              strokeWidth="10"
+              strokeWidth="12"
+              className="dark:stroke-gray-700"
             />
-            {/* Progress circle */}
+            {/* Progress circle with gradient */}
+            <defs>
+              <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor={score >= 80 ? "#22c55e" : score >= 60 ? "#f59e0b" : "#ef4444"} />
+                <stop offset="100%" stopColor={score >= 80 ? "#4ade80" : score >= 60 ? "#fbbf24" : "#f87171"} />
+              </linearGradient>
+            </defs>
             <circle
-              cx="60"
-              cy="60"
-              r="45"
+              cx="70"
+              cy="70"
+              r="55"
               fill="none"
-              stroke={score >= 80 ? "#4ade80" : score >= 60 ? "#fbbf24" : "#f87171"}
-              strokeWidth="10"
+              stroke="url(#scoreGradient)"
+              strokeWidth="12"
               strokeDasharray={circleCircumference}
               strokeDashoffset={strokeDashoffset}
               strokeLinecap="round"
               className="progress-ring-circle"
-              transform="rotate(-90 60 60)"
-            />
+              transform="rotate(-90 70 70)"
+            >
+              <animate
+                attributeName="stroke-dashoffset"
+                from={circleCircumference}
+                to={strokeDashoffset}
+                dur="1.5s"
+                fill="freeze"
+                calcMode="spline"
+                keySplines="0.4 0 0.2 1"
+              />
+            </circle>
           </svg>
           <div className="absolute flex flex-col items-center justify-center">
-            <span className={`text-3xl font-bold ${getScoreColor(animatedScore)}`}>
+            <span className={cn("text-4xl font-bold", getScoreColor(animatedScore))}>
               {animatedScore}
             </span>
-            <span className="text-sm text-muted-foreground">out of 100</span>
+            <span className="text-sm text-muted-foreground mt-1">out of 100</span>
           </div>
         </div>
       </div>
       
-      <div className="mt-4 text-center">
-        <p className="text-sm text-muted-foreground">
+      <div className="mt-4 text-center relative z-10">
+        <p className={cn("text-sm", 
+          score >= 80 ? "text-green-800 dark:text-green-400" : 
+          score >= 60 ? "text-amber-800 dark:text-amber-400" : 
+          "text-red-800 dark:text-red-400"
+        )}>
           {score >= 80 
             ? "Excellent! Your site is well-optimized."
             : score >= 60 

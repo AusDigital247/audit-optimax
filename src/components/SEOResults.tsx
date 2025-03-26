@@ -1,11 +1,17 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import SEOScoreCard from './SEOScoreCard';
 import SEOCategoryCard, { SEOCheckItem } from './SEOCategoryCard';
 import { Button } from '@/components/ui/button';
-import { Download, RefreshCw } from 'lucide-react';
+import { Download, RefreshCw, FileText, PieChart } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import SEOSummaryChart from './SEOSummaryChart';
+import SEOCategoryChart from './SEOCategoryChart';
+import { toast } from "@/hooks/use-toast";
+import html2pdf from 'html2pdf.js';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
 
 export interface SEOCategory {
   title: string;
@@ -29,6 +35,7 @@ const SEOResults = ({
   onReset,
   className 
 }: SEOResultsProps) => {
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   
   // Generate a date string for the report
   const reportDate = new Date().toLocaleDateString('en-US', {
@@ -37,36 +44,89 @@ const SEOResults = ({
     day: 'numeric',
   });
   
-  // Function to generate and download a simple text report
-  const downloadReport = () => {
-    let reportContent = `SEO Audit Report\n`;
-    reportContent += `URL: ${url}\n`;
-    if (keyword) reportContent += `Target Keyword: ${keyword}\n`;
-    reportContent += `Date: ${reportDate}\n`;
-    reportContent += `Overall Score: ${score}/100\n\n`;
+  // Calculate statistics for each category
+  const categoryStats = categories.map(category => {
+    const total = category.items.length;
+    const passed = category.items.filter(item => item.status === 'pass').length;
+    const warnings = category.items.filter(item => item.status === 'warning').length;
+    const failed = category.items.filter(item => item.status === 'fail').length;
+    const score = Math.round((passed / total) * 100);
     
-    categories.forEach(category => {
-      reportContent += `${category.title}\n`;
-      reportContent += `${'='.repeat(category.title.length)}\n`;
+    return {
+      title: category.title,
+      total,
+      passed,
+      warnings,
+      failed,
+      score
+    };
+  });
+  
+  // Function to generate and download a PDF report
+  const downloadPdfReport = async () => {
+    setIsGeneratingPdf(true);
+    
+    try {
+      // Clone the report container to modify for PDF
+      const reportElement = document.getElementById('seo-report-container');
+      if (!reportElement) {
+        throw new Error('Report element not found');
+      }
       
-      category.items.forEach(item => {
-        reportContent += `- ${item.name}: ${item.status.toUpperCase()}\n`;
-        reportContent += `  ${item.message}\n`;
+      const reportClone = reportElement.cloneNode(true) as HTMLElement;
+      
+      // Add a title page
+      const titlePage = document.createElement('div');
+      titlePage.innerHTML = `
+        <div style="text-align: center; padding: 40px 20px; page-break-after: always;">
+          <h1 style="font-size: 28px; margin-bottom: 20px;">SEO Audit Report</h1>
+          <p style="font-size: 18px; margin-bottom: 10px;">${url}</p>
+          ${keyword ? `<p style="font-size: 16px; margin-bottom: 30px;">Target Keyword: ${keyword}</p>` : ''}
+          <p style="font-size: 14px;">Generated on ${reportDate}</p>
+          <div style="margin: 40px 0;">
+            <div style="width: 120px; height: 120px; border-radius: 50%; background-color: ${
+              score >= 80 ? '#22c55e' : score >= 60 ? '#f59e0b' : '#ef4444'
+            }; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+              <span style="color: white; font-size: 36px; font-weight: bold;">${score}</span>
+            </div>
+          </div>
+          <p style="font-size: 16px; max-width: 600px; margin: 0 auto;">
+            This report provides a comprehensive analysis of your website's SEO performance
+            with actionable recommendations for improvement.
+          </p>
+        </div>
+      `;
+      
+      // Create a temporary div to hold everything
+      const container = document.createElement('div');
+      container.appendChild(titlePage);
+      container.appendChild(reportClone);
+      
+      // Generate PDF
+      const pdfOptions = {
+        margin: [10, 10, 10, 10],
+        filename: `seo-report-${url.replace(/https?:\/\//i, '').replace(/[/:.]/g, '-')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      
+      await html2pdf().from(container).set(pdfOptions).save();
+      
+      toast({
+        title: "Report Generated",
+        description: "Your SEO report has been downloaded successfully.",
       });
-      
-      reportContent += `\n`;
-    });
-    
-    // Create a blob and download link
-    const blob = new Blob([reportContent], { type: 'text/plain' });
-    const downloadUrl = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = downloadUrl;
-    a.download = `seo-report-${new Date().toISOString().split('T')[0]}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast({
+        title: "Error Generating Report",
+        description: "There was a problem creating your PDF report. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingPdf(false);
+    }
   };
   
   return (
@@ -75,6 +135,7 @@ const SEOResults = ({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
       className={cn("w-full max-w-5xl mx-auto", className)}
+      id="seo-report-container"
     >
       <div className="mb-8">
         <motion.div
@@ -145,16 +206,56 @@ const SEOResults = ({
         </motion.div>
       </div>
       
-      <div className="space-y-6 mb-8">
-        {categories.map((category, index) => (
-          <SEOCategoryCard
-            key={category.title}
-            title={category.title}
-            items={category.items}
-            delay={index + 2}
-          />
-        ))}
-      </div>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.3 }}
+        className="mb-8"
+      >
+        <Tabs defaultValue="charts" className="w-full">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
+            <TabsTrigger value="charts" className="flex items-center gap-2">
+              <PieChart className="h-4 w-4" />
+              <span>Charts & Analysis</span>
+            </TabsTrigger>
+            <TabsTrigger value="details" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              <span>Detailed Report</span>
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="charts" className="mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <Card>
+                <CardContent className="pt-6">
+                  <h3 className="text-lg font-medium mb-4">Overall SEO Performance</h3>
+                  <SEOSummaryChart score={score} />
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="pt-6">
+                  <h3 className="text-lg font-medium mb-4">Category Performance</h3>
+                  <SEOCategoryChart categories={categoryStats} />
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="details" className="mt-6">
+            <div className="space-y-6">
+              {categories.map((category, index) => (
+                <SEOCategoryCard
+                  key={category.title}
+                  title={category.title}
+                  items={category.items}
+                  delay={index + 2}
+                />
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </motion.div>
       
       <motion.div
         initial={{ opacity: 0 }}
@@ -172,11 +273,12 @@ const SEOResults = ({
         </Button>
         
         <Button 
-          onClick={downloadReport}
+          onClick={downloadPdfReport}
           className="flex items-center gap-2"
+          disabled={isGeneratingPdf}
         >
           <Download className="h-4 w-4" />
-          Download Report
+          {isGeneratingPdf ? 'Generating PDF...' : 'Download PDF Report'}
         </Button>
       </motion.div>
     </motion.div>
