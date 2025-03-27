@@ -31,8 +31,8 @@ function App() {
             <Route path="/seo-toronto" element={<SeoToronto />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <Toaster />
         </Router>
-        <Toaster />
       </LanguageProvider>
     </QueryClientProvider>
   );

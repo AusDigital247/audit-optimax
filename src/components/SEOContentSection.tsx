@@ -5,7 +5,7 @@ import { CheckCircle, BarChart3, LineChart, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const SEOContentSection: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   return (
     <section className="py-16 bg-light-bg">
@@ -79,28 +79,44 @@ const SEOContentSection: React.FC = () => {
         <div className="mt-12">
           <section className="text-navy">
             <div className="prose max-w-none">
-              <h2>{t('hero_title')}</h2>
+              <h2>{language === 'en' ? 'Free SEO Audit Tool for Your Website' : 'Outil d\'audit SEO gratuit pour votre site Web'}</h2>
               <p>
-                Our free SEO audit tool provides a comprehensive analysis of your website's search engine optimization. Get detailed insights into your site's performance, content, technical issues, and recommendations for improvement.
+                {language === 'en' 
+                  ? 'Our free SEO audit tool provides a comprehensive analysis of your website\'s search engine optimization. Get detailed insights into your site\'s performance, content, technical issues, and recommendations for improvement.'
+                  : 'Notre outil d\'audit SEO gratuit fournit une analyse complète de l\'optimisation pour les moteurs de recherche de votre site Web. Obtenez des informations détaillées sur les performances, le contenu et les problèmes techniques de votre site, ainsi que des recommandations d\'amélioration.'}
               </p>
               
-              <h3>What Our Free SEO Tool Analyzes:</h3>
+              <h3>{language === 'en' ? 'What Our Free SEO Tool Analyzes:' : 'Ce que notre outil SEO gratuit analyse:'}</h3>
               <ul>
-                <li>On-page SEO factors including meta tags, headings, and content quality</li>
-                <li>Technical SEO issues that could be hurting your rankings</li>
-                <li>Performance metrics that impact user experience and search visibility</li>
-                <li>Mobile-friendliness and responsive design evaluation</li>
-                <li>Content relevance and keyword optimization assessment</li>
+                <li>{language === 'en' 
+                  ? 'On-page SEO factors including meta tags, headings, and content quality'
+                  : 'Facteurs SEO sur page, y compris les balises méta, les titres et la qualité du contenu'}</li>
+                <li>{language === 'en' 
+                  ? 'Technical SEO issues that could be hurting your rankings'
+                  : 'Problèmes techniques de SEO qui pourraient nuire à votre classement'}</li>
+                <li>{language === 'en' 
+                  ? 'Performance metrics that impact user experience and search visibility'
+                  : 'Métriques de performance qui impactent l\'expérience utilisateur et la visibilité dans les recherches'}</li>
+                <li>{language === 'en' 
+                  ? 'Mobile-friendliness and responsive design evaluation'
+                  : 'Évaluation de la convivialité mobile et de la conception responsive'}</li>
+                <li>{language === 'en' 
+                  ? 'Content relevance and keyword optimization assessment'
+                  : 'Évaluation de la pertinence du contenu et de l\'optimisation des mots-clés'}</li>
               </ul>
               
-              <h3>Why Choose Our SEO Audit Tool:</h3>
+              <h3>{language === 'en' ? 'Why Choose Our SEO Audit Tool:' : 'Pourquoi choisir notre outil d\'audit SEO:'}</h3>
               <p>
-                Unlike other basic SEO checkers, our tool provides in-depth analysis with actionable recommendations. We don't just identify problems - we provide clear guidance on how to fix them and improve your search rankings.
+                {language === 'en'
+                  ? 'Unlike other basic SEO checkers, our tool provides in-depth analysis with actionable recommendations. We don\'t just identify problems - we provide clear guidance on how to fix them and improve your search rankings.'
+                  : 'Contrairement à d\'autres vérificateurs SEO de base, notre outil fournit une analyse approfondie avec des recommandations pratiques. Nous n\'identifions pas seulement les problèmes - nous fournissons des conseils clairs sur la façon de les résoudre et d\'améliorer votre classement dans les recherches.'}
               </p>
               
-              <h3>Get Started With Your Free SEO Audit Today:</h3>
+              <h3>{language === 'en' ? 'Get Started With Your Free SEO Audit Today:' : 'Commencez votre audit SEO gratuit aujourd\'hui:'}</h3>
               <p>
-                Simply enter your website URL and optional target keyword above to receive your comprehensive SEO analysis. No sign-up required, no credit card needed - just instant, valuable insights to help improve your website's performance in search engines.
+                {language === 'en'
+                  ? 'Simply enter your website URL and optional target keyword above to receive your comprehensive SEO analysis. No sign-up required, no credit card needed - just instant, valuable insights to help improve your website\'s performance in search engines.'
+                  : 'Entrez simplement l\'URL de votre site Web et le mot-clé cible facultatif ci-dessus pour recevoir votre analyse SEO complète. Aucune inscription requise, aucune carte de crédit nécessaire - juste des informations instantanées et précieuses pour vous aider à améliorer les performances de votre site Web dans les moteurs de recherche.'}
               </p>
             </div>
           </section>

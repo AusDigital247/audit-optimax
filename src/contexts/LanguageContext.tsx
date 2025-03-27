@@ -27,14 +27,31 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     localStorage.setItem('preferred-language', language);
     // Update HTML lang attribute for SEO
     document.documentElement.lang = language;
+    
+    // Update meta tags for the current language
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 
+        language === 'en' 
+          ? 'Free SEO audit tool to analyze your website and get actionable recommendations to improve your search rankings.'
+          : 'Outil d\'audit SEO gratuit pour analyser votre site Web et obtenir des recommandations pratiques pour améliorer votre classement dans les moteurs de recherche.');
+    }
+    
+    // Update page title for the current language
+    document.title = language === 'en' ? 'AUS Digital - SEO Audit Tool' : 'AUS Digital - Outil d\'Audit SEO';
   }, [language]);
 
   // Simple translation function
   const t = (key: string): string => {
-    if (language === 'en') {
-      return translations.en[key] || key;
-    } else {
-      return translations.fr[key] || translations.en[key] || key;
+    try {
+      if (language === 'en') {
+        return translations.en[key] || key;
+      } else {
+        return translations.fr[key] || translations.en[key] || key;
+      }
+    } catch (error) {
+      console.error(`Translation error for key "${key}"`, error);
+      return key; // Return the key as fallback
     }
   };
 
