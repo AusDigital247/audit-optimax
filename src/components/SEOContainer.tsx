@@ -13,10 +13,10 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
   const { t } = useLanguage();
   
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col w-full">
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-navy to-navy-light pt-10 pb-16 md:pt-16 md:pb-24">
-        <div className="container max-w-7xl mx-auto px-4">
+      <section className="bg-gradient-to-b from-navy to-navy-light pt-10 pb-16 md:pt-16 md:pb-24 w-full">
+        <div className="container-custom">
           <div className="flex flex-col items-center text-center mb-8">
             <div className="mb-4">
               <h1 className="text-3xl md:text-5xl font-bold mb-3 gradient-text">

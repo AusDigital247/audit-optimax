@@ -33,11 +33,17 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
   
   body {
     @apply bg-light-bg text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -51,7 +57,8 @@
 
 @layer components {
   .container-custom {
-    @apply container max-w-7xl px-4 mx-auto;
+    @apply container mx-auto px-4 md:px-6;
+    max-width: 100%;
   }
   
   .text-highlight {
@@ -87,15 +94,15 @@
   }
   
   .content-section-light {
-    @apply bg-gradient-light text-navy py-12 md:py-16;
+    @apply bg-gradient-light text-navy py-12 md:py-16 w-full;
   }
   
   .content-section-dark {
-    @apply bg-gradient-to-b from-navy to-navy-light text-white py-12 md:py-16;
+    @apply bg-gradient-to-b from-navy to-navy-light text-white py-12 md:py-16 w-full;
   }
   
   .content-section-alt {
-    @apply bg-gradient-to-b from-navy to-navy-light text-white py-12 md:py-16;
+    @apply bg-gradient-to-b from-navy to-navy-light text-white py-12 md:py-16 w-full;
   }
   
   .glassmorphism-card {
@@ -111,7 +118,7 @@
   }
   
   .section-padding {
-    @apply py-12 md:py-20;
+    @apply py-12 md:py-20 w-full;
   }
   
   .section-title {
@@ -121,4 +128,66 @@
   .section-subtitle {
     @apply text-lg text-center max-w-3xl mx-auto mb-10 text-navy/70;
   }
+  
+  /* Fix for horizontal tabs */
+  .tabs-container {
+    @apply w-full overflow-x-auto pb-2;
+  }
+  
+  .tabs-list {
+    @apply flex min-w-full gap-2 md:gap-4;
+  }
+  
+  .tab-item {
+    @apply whitespace-nowrap px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors;
+  }
+  
+  .tab-item.active {
+    @apply bg-teal text-white border-teal;
+  }
+}
+
+/* Remove the old root max-width that was constraining everything */
+#root {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+}
+
+/* Keep the other styles from App.css but remove constraining widths */
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
 }

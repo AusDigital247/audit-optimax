@@ -27,9 +27,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
         <Router>
-          <div className="flex flex-col min-h-screen">
+          <div className="flex flex-col min-h-screen w-full">
             <Header />
-            <main className="flex-grow">
+            <main className="flex-grow w-full">
               <LanguageSwitcher />
               <Routes>
                 <Route path="/" element={<Index />} />
