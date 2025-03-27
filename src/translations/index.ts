@@ -300,4 +300,5 @@ const translations = {
   }
 };
 
+// Use default export instead of named export
 export default translations;

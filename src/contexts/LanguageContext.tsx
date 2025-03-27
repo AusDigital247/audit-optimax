@@ -100,5 +100,5 @@ export const useLanguage = (): LanguageContextType => {
   return context;
 };
 
-// Import translations
-import { translations } from '../translations';
+// Import translations - fix the import statement
+import translations from '../translations';
