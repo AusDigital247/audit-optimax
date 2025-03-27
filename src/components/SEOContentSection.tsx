@@ -75,7 +75,7 @@ const SEOContentSection: React.FC = () => {
           </TabsContent>
         </Tabs>
         
-        {/* Hidden SEO Content for Search Engines */}
+        {/* Hidden SEO Content for Search Engines - Properly translated */}
         <div className="mt-12">
           <section className="text-navy">
             <div className="prose max-w-none">

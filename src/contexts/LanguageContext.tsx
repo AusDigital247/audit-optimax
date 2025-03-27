@@ -37,16 +37,46 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
           : 'Outil d\'audit SEO gratuit pour analyser votre site Web et obtenir des recommandations pratiques pour améliorer votre classement dans les moteurs de recherche.');
     }
     
+    // Update Open Graph meta tags
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    
+    if (ogTitle) {
+      ogTitle.setAttribute('content', 
+        language === 'en' 
+          ? 'AUS Digital - Free SEO Audit Tool'
+          : 'AUS Digital - Outil d\'Audit SEO Gratuit');
+    }
+    
+    if (ogDescription) {
+      ogDescription.setAttribute('content', 
+        language === 'en' 
+          ? 'Free SEO audit tool to analyze your website and get actionable recommendations to improve your search rankings.'
+          : 'Outil d\'audit SEO gratuit pour analyser votre site Web et obtenir des recommandations pratiques pour améliorer votre classement dans les moteurs de recherche.');
+    }
+    
     // Update page title for the current language
     document.title = language === 'en' ? 'AUS Digital - SEO Audit Tool' : 'AUS Digital - Outil d\'Audit SEO';
+    
+    // Update Twitter meta tags
+    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+    if (twitterTitle) {
+      twitterTitle.setAttribute('content', 
+        language === 'en' 
+          ? 'AUS Digital - Free SEO Audit Tool'
+          : 'AUS Digital - Outil d\'Audit SEO Gratuit');
+    }
   }, [language]);
 
-  // Simple translation function
+  // Simple translation function with improved error handling and fallback
   const t = (key: string): string => {
     try {
+      if (!key) return '';
+      
       if (language === 'en') {
         return translations.en[key] || key;
       } else {
+        // Check if the French translation exists, if not fall back to English
         return translations.fr[key] || translations.en[key] || key;
       }
     } catch (error) {
