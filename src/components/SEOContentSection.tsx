@@ -5,7 +5,7 @@ import { CheckCircle, BarChart3, LineChart, ArrowRight, Cog, FileText, Search, G
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const SEOContentSection: React.FC = () => {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   
   return (
     <section className="py-16 bg-light-bg w-full">
@@ -22,9 +22,9 @@ const SEOContentSection: React.FC = () => {
         <Tabs defaultValue="why-use" className="w-full mb-12">
           <div className="flex flex-col items-center mb-8">
             <TabsList className="w-full max-w-md bg-white/80 shadow-sm">
-              <TabsTrigger value="why-use" className="flex-1 data-[state=active]:bg-teal data-[state=active]:text-white">Why Use Our SEO Tool</TabsTrigger>
-              <TabsTrigger value="benefits" className="flex-1 data-[state=active]:bg-teal data-[state=active]:text-white">Benefits of Regular Audits</TabsTrigger>
-              <TabsTrigger value="how-works" className="flex-1 data-[state=active]:bg-teal data-[state=active]:text-white">How Our Tool Works</TabsTrigger>
+              <TabsTrigger value="why-use" className="flex-1 data-[state=active]:bg-teal data-[state=active]:text-white">{t('why_use_tool')}</TabsTrigger>
+              <TabsTrigger value="benefits" className="flex-1 data-[state=active]:bg-teal data-[state=active]:text-white">{t('benefits_audits')}</TabsTrigger>
+              <TabsTrigger value="how-works" className="flex-1 data-[state=active]:bg-teal data-[state=active]:text-white">{t('how_tool_works')}</TabsTrigger>
             </TabsList>
           </div>
           
@@ -294,7 +294,7 @@ const SEOContentSection: React.FC = () => {
           </div>
         </div>
         
-        {/* Free SEO Audit Tool Section - This was previously broken */}
+        {/* Free SEO Audit Tool Section */}
         <div className="mt-16 glass-strong p-8 rounded-xl text-white">
           <h2 className="text-2xl font-bold mb-4 text-teal">{t('free_seo_audit_tool')}</h2>
           <p className="mb-6">{t('free_seo_audit_tool_text')}</p>

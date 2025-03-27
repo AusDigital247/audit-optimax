@@ -55,6 +55,134 @@ const translations = {
     mobile_optimization: "Mobile Optimization",
     security: "Security",
     
+    // SEO Content Section - Adding missing translations
+    why_choose_title: "Why Choose Our SEO Audit Tool",
+    why_choose_subtitle: "Discover how our comprehensive tool helps improve your website's search performance",
+    
+    // Tab content
+    comprehensive_analysis: "Comprehensive Analysis",
+    comprehensive_text: "Our tool examines every aspect of your website's SEO, from technical factors to content quality and user experience.",
+    
+    actionable_insights: "Actionable Insights",
+    actionable_text: "Get clear, practical recommendations that you can implement immediately to improve your search rankings.",
+    
+    competitor_benchmarking: "Competitor Benchmarking",
+    competitor_text: "Understand how your website performs compared to competitors and identify opportunities to gain an edge.",
+    
+    improve_visibility: "Improve Search Visibility",
+    visibility_text: "Regular SEO audits help you stay on top of search engine algorithm changes and maintain or improve your rankings.",
+    
+    stay_updated: "Stay Updated with Algorithm Changes",
+    updated_text: "Search engines constantly evolve their ranking factors. Regular audits help you adapt your strategy accordingly.",
+    
+    track_progress: "Track Your Progress",
+    progress_text: "Monitor your SEO improvements over time and see how your changes impact your overall search performance.",
+    
+    technical_seo_text: "Our tool checks for crawlability issues, indexing problems, site structure, and other technical factors that affect rankings.",
+    
+    on_page_elements: "On-Page Elements",
+    on_page_text: "We analyze title tags, meta descriptions, headings, content quality, keyword usage, and other on-page factors.",
+    
+    // SEO Best Practices Section
+    seo_best_practices: "SEO Best Practices",
+    
+    content_strategy: "Content Strategy",
+    technical_factors: "Technical Factors",
+    
+    user_experience_optimization: "User Experience Optimization",
+    user_experience_text: "Google prioritizes websites that provide excellent user experience. Our tool evaluates key UX factors that impact your SEO performance.",
+    
+    core_web_vitals: "Core Web Vitals",
+    core_web_vitals_text: "We assess loading performance, interactivity, and visual stability metrics that Google uses as ranking signals.",
+    
+    mobile_first: "Mobile-First Approach",
+    mobile_first_text: "With Google's mobile-first indexing, we evaluate how well your site performs on mobile devices and identify improvements.",
+    
+    site_navigation: "Site Navigation & Structure",
+    site_navigation_text: "Easy navigation helps users and search engines understand your site. We check for logical structure and clear pathways.",
+    
+    page_speed: "Page Speed Optimization",
+    page_speed_text: "Faster pages rank better and convert more. We identify speed bottlenecks that could be affecting your rankings.",
+    
+    content_strategy_optimization: "Content Strategy Optimization",
+    content_strategy_text: "Quality content is the foundation of SEO success. Our tool analyzes how well your content meets search intent and engages users.",
+    
+    keyword_research: "Keyword Research & Implementation",
+    keyword_research_text: "We evaluate how effectively you're targeting relevant keywords and provide suggestions for improvement.",
+    
+    content_quality_strategy: "Content Quality Assessment",
+    content_quality_strategy_text: "Our tool checks for readability, depth, originality, and engagement factors that influence rankings.",
+    
+    content_freshness: "Content Freshness",
+    content_freshness_text: "Regular updates signal relevance to search engines. We assess your content update frequency and consistency.",
+    
+    search_intent: "Search Intent Alignment",
+    search_intent_text: "We analyze how well your content matches what users are actually searching for, a critical factor for ranking success.",
+    
+    technical_optimization: "Technical Optimization",
+    technical_optimization_text: "Behind-the-scenes technical factors have a major impact on SEO. Our tool identifies technical issues that need attention.",
+    
+    site_structure: "Site Structure & Architecture",
+    site_structure_text: "We evaluate your site's organization, internal linking, and URL structure for SEO effectiveness.",
+    
+    schema_markup: "Schema Markup Implementation",
+    schema_markup_text: "Structured data helps search engines understand your content. We check for proper implementation and opportunities.",
+    
+    https_security: "HTTPS & Security",
+    https_security_text: "Secure sites rank better. We verify your security configuration and identify potential vulnerability issues.",
+    
+    xml_sitemap: "XML Sitemap & Robots.txt",
+    xml_sitemap_text: "These files guide search engines through your site. We ensure they're properly configured for optimal crawling.",
+    
+    // Comprehensive SEO Content
+    why_need_analysis: "Why You Need Regular SEO Analysis",
+    why_need_analysis_text: "Search engine algorithms are constantly evolving, and your competitors aren't standing still. Regular SEO analysis helps you stay competitive and identify new opportunities for improvement.",
+    
+    comprehensive_assessment: "Comprehensive Assessment",
+    comprehensive_assessment_text: "Our tool evaluates over 100 factors that influence your search rankings, providing a complete picture of your SEO health.",
+    
+    keyword_optimization: "Keyword Optimization",
+    keyword_optimization_text: "Discover which keywords are driving traffic to your site and identify new opportunities to expand your reach.",
+    
+    actionable_insights_long: "Actionable Insights",
+    actionable_insights_text_long: "Don't just get data—get clear, prioritized recommendations that you can implement immediately to improve your rankings.",
+    
+    what_our_tool_checks: "What Our SEO Audit Tool Checks",
+    
+    technical_seo_factors: "Technical SEO Factors",
+    technical_seo_factors_text: "Technical issues can prevent search engines from properly crawling and indexing your site, limiting your visibility.",
+    technical_seo_factors_list: "Page load speed|Mobile responsiveness|Crawlability issues|URL structure|XML sitemaps|Robots.txt configuration|HTTPS security|Structured data markup",
+    
+    on_page_seo_elements: "On-Page SEO Elements",
+    on_page_seo_elements_text: "On-page optimization ensures that search engines understand your content and its relevance to user queries.",
+    on_page_seo_elements_list: "Title tags & meta descriptions|Heading structure (H1, H2, etc.)|Keyword usage & density|Content quality & length|Image optimization|Internal linking structure|Schema markup implementation",
+    
+    // Free SEO Audit Tool Section
+    free_seo_audit_tool: "Free SEO Audit Tool",
+    free_seo_audit_tool_text: "Our comprehensive SEO audit tool provides detailed insights into your website's search engine optimization performance—completely free.",
+    
+    what_analyzes: "What Our Tool Analyzes",
+    what_analyzes_list: "Technical SEO factors like site speed, mobile-friendliness, and crawlability|On-page elements including content quality, meta tags, and headings|User experience signals that impact search rankings|Security issues that could affect your visibility|Competitive analysis to benchmark against similar sites",
+    
+    why_choose_our_tool: "Why Choose Our Tool",
+    why_choose_our_tool_text: "Unlike many free SEO tools that provide only surface-level analysis, our comprehensive audit digs deep into all factors that affect your search rankings. We provide clear, actionable recommendations instead of confusing technical jargon.",
+    
+    get_started: "How to Get Started",
+    get_started_text: "Simply enter your website URL in the tool above, add an optional target keyword for more specific analysis, and click 'Analyze Website'. Within minutes, you'll receive a detailed report with actionable recommendations.",
+    
+    // SEO Resources Section
+    seo_resources: "SEO Resources & Guides",
+    seo_resources_text: "Explore our collection of free SEO resources to help you implement best practices and improve your search rankings.",
+    
+    seo_guide: "Ultimate SEO Guide",
+    seo_guide_text: "Our comprehensive guide covers everything from SEO basics to advanced techniques for improving your search visibility.",
+    
+    keyword_tips: "Keyword Research Tips",
+    keyword_tips_text: "Learn how to find the most valuable keywords for your business and implement them effectively in your content.",
+    
+    technical_checklist: "Technical SEO Checklist",
+    technical_checklist_text: "A step-by-step checklist to ensure you've covered all the technical aspects that impact your site's search performance.",
+    
     // SEO Toronto Page
     toronto_hero_title: "Expert SEO Services in Toronto",
     toronto_hero_subtitle: "Drive more traffic, leads, and sales with our data-driven Toronto SEO strategies",

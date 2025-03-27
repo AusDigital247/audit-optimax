@@ -3,7 +3,7 @@ import React from 'react';
 import SEOForm from './SEOForm';
 import SEOContentSection from './SEOContentSection';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Search, Zap, BarChart3, Globe, LineChart, LightbulbIcon } from 'lucide-react';
+import { Search, Zap, BarChart3, LineChart, LightbulbIcon } from 'lucide-react';
 
 interface SEOContainerProps {
   onSubmit: (url: string, keyword?: string) => void;
@@ -25,7 +25,7 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
             
             <div className="mb-6">
               <h1 className="text-4xl md:text-6xl font-bold mb-4 gradient-text">
-                SEO Audit Tool
+                {t('seo_tool_title')}
               </h1>
               <h2 className="text-xl md:text-2xl text-white/90 font-light max-w-3xl mx-auto">
                 {t('hero_subtitle')}
@@ -54,24 +54,24 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
               <div className="bg-teal/20 p-3 rounded-full w-fit mb-4">
                 <BarChart3 className="h-6 w-6 text-teal-light" />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">Comprehensive Analysis</h3>
-              <p className="text-white/80">Get detailed insights into your website's SEO performance across multiple factors.</p>
+              <h3 className="text-xl font-semibold mb-2 text-white">{t('comprehensive_analysis')}</h3>
+              <p className="text-white/80">{t('comprehensive_text')}</p>
             </div>
             
             <div className="glass-card p-6 rounded-xl animated-card">
               <div className="bg-teal/20 p-3 rounded-full w-fit mb-4">
                 <LightbulbIcon className="h-6 w-6 text-teal-light" />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">Actionable Recommendations</h3>
-              <p className="text-white/80">Receive clear guidance on how to improve your site's search engine rankings.</p>
+              <h3 className="text-xl font-semibold mb-2 text-white">{t('actionable_insights')}</h3>
+              <p className="text-white/80">{t('actionable_text')}</p>
             </div>
             
             <div className="glass-card p-6 rounded-xl animated-card">
               <div className="bg-teal/20 p-3 rounded-full w-fit mb-4">
                 <LineChart className="h-6 w-6 text-teal-light" />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">Performance Tracking</h3>
-              <p className="text-white/80">Monitor your progress over time and see how your improvements affect your score.</p>
+              <h3 className="text-xl font-semibold mb-2 text-white">{t('track_progress')}</h3>
+              <p className="text-white/80">{t('progress_text')}</p>
             </div>
           </div>
         </div>
