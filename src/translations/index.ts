@@ -1,149 +1,303 @@
 
-interface TranslationDictionary {
-  [key: string]: string;
-}
-
-interface Translations {
-  en: TranslationDictionary;
-  fr: TranslationDictionary;
-}
-
-export const translations: Translations = {
+const translations = {
   en: {
     // Common
-    "site_title": "AUS Digital SEO Tools",
-    "analyze_button": "Analyze",
-    "reset_button": "Try Again",
-    "loading": "Analyzing",
-    "this_may_take": "This may take a few moments",
-    "error_message": "An error occurred while analyzing the website. Please try again.",
-    "try_again": "Try Again",
+    home: "Home",
+    seo_toronto: "SEO Toronto",
+    about_us: "About Us",
+    blog: "Blog",
+    contact: "Contact",
+    analyze_button: "Analyze My Website",
+    loading: "Analyzing",
+    this_may_take: "This may take a minute...",
+    try_again: "Try Again",
+    error_message: "There was an error analyzing the website. Please try again.",
+    all_rights_reserved: "All rights reserved.",
+    privacy_policy: "Privacy Policy",
+    terms_conditions: "Terms & Conditions",
     
-    // Index page
-    "hero_title": "Free SEO Audit Tool for Your Website",
-    "hero_subtitle": "Identify issues affecting your search rankings and get actionable insights to improve your SEO performance",
-    "seo_tool_title": "Free SEO Checker & Website Analyzer",
-    "url_placeholder": "Enter your website URL",
-    "keyword_placeholder": "Enter target keyword (optional)",
-    "start_free_audit": "Start Free SEO Audit",
-    "why_use_our_tools": "Why Use Our SEO Tools",
-    "comprehensive_analysis": "Comprehensive Analysis",
-    "comprehensive_text": "Our tool performs a thorough analysis of your website's SEO performance, checking everything from meta tags to content quality and technical aspects.",
-    "actionable_insights": "Actionable Insights",
-    "actionable_text": "Get clear, practical recommendations that you can implement immediately to improve your website's visibility in search engines.",
-    "competitor_benchmarking": "Competitor Benchmarking",
-    "competitor_text": "See how your website stacks up against competitors and identify opportunities to gain a competitive edge in your industry.",
-    "benefits_title": "Benefits of Regular SEO Audits",
-    "improve_visibility": "Improve Search Visibility",
-    "visibility_text": "Regular SEO audits help you identify and fix issues that might be preventing your website from ranking well in search engines.",
-    "stay_updated": "Stay Updated With Algorithm Changes",
-    "updated_text": "Search engines constantly update their algorithms. Regular audits ensure your website remains compliant with the latest best practices.",
-    "track_progress": "Track Progress Over Time",
-    "progress_text": "Monitor how your SEO efforts are paying off and identify trends that can inform your future optimization strategy.",
+    // Hero section
+    hero_title: "Free Website SEO Analyzer",
+    hero_subtitle: "Check your website's SEO score and get actionable recommendations to improve your rankings",
     
-    // SEO Toronto page
-    "toronto_hero_title": "Toronto SEO Services: Dominate Local Search & Grow Your Business",
-    "toronto_hero_subtitle": "Data-Driven SEO Strategies for Toronto Businesses That Generate Real Results",
-    "get_free_audit": "Get Free SEO Audit",
-    "try_seo_tool": "Try Our SEO Tool",
-    "toronto_intro_title": "Toronto SEO Expertise: Elevate Your Online Presence",
-    "local_dominance": "Local SEO Dominance",
-    "local_dominance_text": "Capture the Toronto market with targeted local SEO strategies that put your business on the map where it matters most.",
-    "roi_results": "ROI-Focused Results",
-    "roi_results_text": "Data-driven SEO campaigns that deliver measurable returns and sustainable growth for your Toronto business.",
-    "comprehensive_strategy": "Comprehensive Strategy",
-    "comprehensive_strategy_text": "Full-service SEO solutions tailored to the unique needs of Toronto businesses and your specific industry.",
-    "toronto_content_title": "Toronto SEO Services: Everything You Need to Know",
-    "why_seo": "Why SEO Matters",
-    "our_process": "Our Process",
-    "local_seo": "Toronto Local SEO",
-    "case_studies": "Success Stories",
-    "faq_title": "Frequently Asked Questions About Toronto SEO",
-    "faq_subtitle": "Get answers to common questions about search engine optimization for Toronto businesses and how our SEO services can help you grow.",
-    "ready_title": "Ready to Dominate Toronto Search Results?",
-    "ready_subtitle": "Get your free, no-obligation SEO audit and discover how we can help your Toronto business reach new heights through strategic search optimization.",
+    // Form labels
+    url_label: "Website URL",
+    url_placeholder: "Enter your website URL (e.g., https://example.com)",
+    keyword_label: "Target Keyword (Optional)",
+    keyword_placeholder: "Enter your main target keyword",
     
-    // FAQ Items
-    "how_long_results": "How long does it take to see results from SEO?",
-    "how_long_results_text": "Most Toronto businesses begin to see initial improvements in rankings within 2-3 months, with significant traffic increases typically occurring between 4-6 months. However, this timeline varies based on your industry competitiveness, website history, and the scope of SEO work. We focus on delivering some quick wins early while building toward sustainable long-term growth.",
-    "how_much_cost": "How much do Toronto SEO services cost?",
-    "how_much_cost_text": "Our Toronto SEO packages start at $1,500/month for local businesses, with comprehensive programs ranging from $2,500-$5,000/month depending on your goals, competition, and timeline. We also offer project-based pricing for SEO audits, one-time optimizations, and specialized services. Every client receives a custom proposal based on their specific needs and competitive landscape.",
-    "what_different": "What makes your Toronto SEO services different?",
-    "what_different_text": "Unlike many Toronto SEO companies, we combine technical expertise with genuine Toronto market knowledge. Our team lives and works in the GTA, understands local search behavior, and builds strategies specifically for Toronto audiences. We also provide unmatched transparency with clear reporting, regular strategy calls, and no long-term contracts. Our focus is on genuine results, not vanity metrics.",
-    "do_guarantee": "Do you guarantee first-page rankings?",
-    "do_guarantee_text": "No ethical SEO company can guarantee specific rankings, as search algorithms consider hundreds of factors outside our direct control. What we do guarantee is implementing proven SEO best practices, complete transparency in our work, and measurable improvements in your website's performance and visibility. Our track record shows consistent improvements for Toronto businesses in competitive industries.",
-    "how_measure": "How do you measure SEO success?",
-    "how_measure_text": "We track multiple KPIs tailored to your business goals, including: keyword rankings (especially for high-value Toronto search terms), organic traffic growth, Google Business Profile performance, conversion metrics (leads, calls, form submissions), and ultimately, ROI. Our monthly reports provide clear insights into your campaign's performance with actionable next steps.",
-    "do_paid": "Do you also handle paid search advertising?",
-    "do_paid_text": "Yes, we offer comprehensive Toronto PPC management services that can complement your SEO strategy. Many clients benefit from our integrated approach, using paid search for immediate visibility while SEO builds sustainable organic results. Our team includes Google Ads certified specialists who develop Toronto-focused campaigns with geographic targeting, local ad extensions, and conversion-optimized landing pages."
+    // Tabs section titles
+    why_choose_title: "Why Choose Our SEO Analysis Tool",
+    why_choose_subtitle: "Our comprehensive SEO toolkit helps businesses improve their search engine visibility and drive organic traffic.",
+    why_use_our_tools: "Why Use Our SEO Tool",
+    benefits_title: "Benefits of Regular Audits",
+    how_it_works: "How Our Tool Works",
+    
+    // Why use our tools tab content
+    comprehensive_analysis: "Comprehensive Analysis",
+    comprehensive_text: "Our SEO audit examines over 100 factors that affect your search engine rankings, providing a complete picture of your website's performance.",
+    actionable_insights: "Actionable Insights",
+    actionable_text: "Get prioritized recommendations that help you focus on the changes that will have the biggest impact on your search visibility.",
+    competitor_benchmarking: "Competitor Benchmarking",
+    competitor_text: "See how your website stacks up against competitors in your industry and identify opportunities to gain an edge.",
+    
+    // Benefits tab content
+    improve_visibility: "Improve Search Visibility",
+    visibility_text: "Regular SEO audits help you identify and fix issues that may be preventing your site from ranking higher in search results.",
+    stay_updated: "Stay Updated with Algorithm Changes",
+    updated_text: "Keep pace with search engine algorithm updates by regularly checking your site's compliance with the latest SEO best practices.",
+    track_progress: "Track Optimization Progress",
+    progress_text: "Monitor improvements in your website's SEO performance over time and see the impact of your optimization efforts.",
+    
+    // How it works tab content
+    technical_seo: "Technical SEO",
+    technical_seo_text: "We analyze technical aspects like page speed, mobile-friendliness, and crawlability.",
+    on_page_elements: "On-Page Elements",
+    on_page_text: "We check meta tags, headings, content quality, and keyword optimization.",
+    content_quality: "Content Quality",
+    content_quality_text: "We evaluate content relevance, readability, and engagement factors.",
+    
+    // SEO Best Practices section
+    seo_best_practices: "SEO Best Practices for 2023",
+    user_experience: "User Experience",
+    content_strategy: "Content Strategy",
+    technical_factors: "Technical Factors",
+    
+    // User Experience tab content
+    user_experience_optimization: "User Experience Optimization",
+    user_experience_text: "Google's algorithms increasingly prioritize websites that provide excellent user experiences. Our free SEO checker evaluates these critical user experience factors:",
+    core_web_vitals: "Core Web Vitals Optimization",
+    core_web_vitals_text: "Google's Core Web Vitals metrics measure loading performance, interactivity, and visual stability. Optimizing these factors improves both user experience and search rankings.",
+    mobile_first: "Mobile-First Design",
+    mobile_first_text: "With Google's mobile-first indexing, your website's mobile experience determines your rankings. Our SEO audit verifies that your site is fully optimized for mobile users.",
+    site_navigation: "Site Navigation and Structure",
+    site_navigation_text: "Intuitive navigation helps users find what they're looking for quickly. Our website analyzer evaluates your site structure for user-friendliness and search engine optimization.",
+    page_speed: "Page Speed Optimization",
+    page_speed_text: "Fast-loading pages improve user satisfaction and conversion rates. Our technical SEO audit identifies opportunities to improve page speed for better user experience and rankings.",
+    
+    // Content Strategy tab
+    content_strategy_optimization: "Content Strategy Optimization",
+    content_strategy_text: "High-quality, relevant content is essential for SEO success. Our tool evaluates your content strategy:",
+    keyword_research: "Keyword Research & Integration",
+    keyword_research_text: "Target the right search terms with proper keyword research and strategic placement throughout your content.",
+    content_quality_strategy: "Content Quality & Depth",
+    content_quality_strategy_text: "Create comprehensive, in-depth content that thoroughly addresses user search intent and questions.",
+    content_freshness: "Content Freshness",
+    content_freshness_text: "Regularly update your content to maintain relevance and show search engines your site is actively maintained.",
+    search_intent: "Search Intent Alignment",
+    search_intent_text: "Match your content to the underlying intent behind user searches—whether informational, navigational, or transactional.",
+    
+    // Technical tab
+    technical_optimization: "Technical Optimization",
+    technical_optimization_text: "The technical foundation of your website significantly impacts your SEO performance. Our tool checks these critical factors:",
+    site_structure: "Site Structure & Internal Linking",
+    site_structure_text: "Build an organized site structure with strategic internal linking to distribute page authority and help search engines understand your content hierarchy.",
+    schema_markup: "Schema Markup Implementation",
+    schema_markup_text: "Use structured data to help search engines better understand your content and display rich results in search listings.",
+    https_security: "HTTPS Security",
+    https_security_text: "Secure your website with HTTPS encryption, which is both a ranking factor and essential for user trust.",
+    xml_sitemap: "XML Sitemap & Robots.txt",
+    xml_sitemap_text: "Properly configure these technical files to guide search engines to your important content and prevent crawling of irrelevant pages.",
+    
+    // Why you need a website SEO analysis section
+    why_need_analysis: "Why You Need a Website SEO Analysis",
+    why_need_analysis_text: "In today's competitive digital landscape, a strong SEO strategy is essential for online visibility. Our free SEO checker helps you identify what's working and what needs improvement.",
+    comprehensive_assessment: "Comprehensive Assessment",
+    comprehensive_assessment_text: "Our free SEO checker evaluates over 100 on-page and technical SEO factors that impact your search engine rankings. From meta tags to content quality, we analyze every aspect of your website's SEO health.",
+    keyword_optimization: "Keyword Optimization",
+    keyword_optimization_text: "Discover how well your content is optimized for your target keywords. Our SEO audit tool checks keyword presence in critical locations and provides recommendations for better content relevance.",
+    actionable_insights_long: "Actionable Insights",
+    actionable_insights_text_long: "Get clear, prioritized recommendations to fix SEO issues. Our website SEO analysis tool doesn't just identify problems—it provides practical solutions to improve your search visibility.",
+    
+    // What our SEO audit tool checks section
+    what_our_tool_checks: "What Our SEO Audit Tool Checks",
+    technical_seo_factors: "Technical SEO Factors",
+    technical_seo_factors_text: "Technical SEO forms the foundation of your website's search performance. Our SEO analyzer examines critical technical elements that search engines use to crawl and index your site:",
+    technical_seo_factors_list: "Page loading speed and Core Web Vitals metrics|Mobile-friendliness and responsive design|SSL certificate implementation and security|XML sitemap and robots.txt configuration|URL structure and canonical tags|Schema markup implementation",
+    on_page_seo_elements: "On-Page SEO Elements",
+    on_page_seo_elements_text: "On-page SEO factors directly influence how search engines understand and rank your content. Our free SEO audit thoroughly evaluates:",
+    on_page_seo_elements_list: "Title tags and meta descriptions optimization|Heading structure (H1, H2, H3) and content organization|Keyword usage and content relevance|Image optimization with alt text|Internal linking structure and anchor text|Content quality, length, and readability",
+    
+    // Free SEO Audit Tool section
+    free_seo_audit_tool: "Free SEO Audit Tool for Your Website",
+    free_seo_audit_tool_text: "Our free SEO audit tool provides a comprehensive analysis of your website's search engine optimization. Get detailed insights into your site's performance, content, technical issues, and recommendations for improvement.",
+    what_analyzes: "What Our Free SEO Tool Analyzes:",
+    what_analyzes_list: "On-page SEO factors including meta tags, headings, and content quality|Technical SEO issues that could be hurting your rankings|Performance metrics that impact user experience and search visibility|Mobile-friendliness and responsive design evaluation|Content relevance and keyword optimization assessment",
+    why_choose_our_tool: "Why Choose Our SEO Audit Tool:",
+    why_choose_our_tool_text: "Unlike other basic SEO checkers, our tool provides in-depth analysis with actionable recommendations. We don't just identify problems - we provide clear guidance on how to fix them and improve your search rankings.",
+    get_started: "Get Started With Your Free SEO Audit Today:",
+    get_started_text: "Simply enter your website URL and optional target keyword above to receive your comprehensive SEO analysis. No sign-up required, no credit card needed - just instant, valuable insights to help improve your website's performance in search engines.",
+    
+    // SEO Resources
+    seo_resources: "SEO Resources & Learning",
+    seo_resources_text: "Explore our collection of SEO guides and resources to improve your search engine optimization strategy.",
+    seo_guide: "SEO Beginner's Guide",
+    seo_guide_text: "Learn the fundamentals of search engine optimization and how to implement them on your website.",
+    keyword_tips: "Keyword Research Tips",
+    keyword_tips_text: "Discover effective strategies for finding and targeting the right keywords for your business.",
+    technical_checklist: "Technical SEO Checklist",
+    technical_checklist_text: "A comprehensive checklist to ensure your website meets all technical SEO requirements.",
+    
+    // Footer
+    footer_description: "Helping businesses improve their online visibility through data-driven SEO strategies and tools.",
+    quick_links: "Quick Links",
+    services: "Services",
+    contact_us: "Contact Us",
+    seo_services: "SEO Services",
+    local_seo: "Local SEO",
+    content_marketing: "Content Marketing",
+    web_design: "Web Design",
+    ppc_management: "PPC Management",
   },
   fr: {
     // Common
-    "site_title": "Outils SEO AUS Digital",
-    "analyze_button": "Analyser",
-    "reset_button": "Réessayer",
-    "loading": "Analyse en cours",
-    "this_may_take": "Cela peut prendre quelques instants",
-    "error_message": "Une erreur s'est produite lors de l'analyse du site Web. Veuillez réessayer.",
-    "try_again": "Réessayer",
+    home: "Accueil",
+    seo_toronto: "SEO Toronto",
+    about_us: "À propos",
+    blog: "Blog",
+    contact: "Contact",
+    analyze_button: "Analyser mon site",
+    loading: "Analyse en cours",
+    this_may_take: "Cela peut prendre une minute...",
+    try_again: "Réessayer",
+    error_message: "Une erreur s'est produite lors de l'analyse du site. Veuillez réessayer.",
+    all_rights_reserved: "Tous droits réservés.",
+    privacy_policy: "Politique de confidentialité",
+    terms_conditions: "Conditions d'utilisation",
     
-    // Index page
-    "hero_title": "Outil d'audit SEO gratuit pour votre site Web",
-    "hero_subtitle": "Identifiez les problèmes affectant votre classement dans les moteurs de recherche et obtenez des conseils pratiques pour améliorer vos performances SEO",
-    "seo_tool_title": "Vérificateur SEO gratuit et Analyseur de sites Web",
-    "url_placeholder": "Entrez l'URL de votre site Web",
-    "keyword_placeholder": "Entrez le mot-clé cible (facultatif)",
-    "start_free_audit": "Commencer l'audit SEO gratuit",
-    "why_use_our_tools": "Pourquoi utiliser nos outils SEO",
-    "comprehensive_analysis": "Analyse complète",
-    "comprehensive_text": "Notre outil effectue une analyse approfondie des performances SEO de votre site Web, vérifiant tout, des balises méta à la qualité du contenu et aux aspects techniques.",
-    "actionable_insights": "Conseils pratiques",
-    "actionable_text": "Obtenez des recommandations claires et pratiques que vous pouvez mettre en œuvre immédiatement pour améliorer la visibilité de votre site Web dans les moteurs de recherche.",
-    "competitor_benchmarking": "Analyse comparative des concurrents",
-    "competitor_text": "Voyez comment votre site Web se compare à celui de vos concurrents et identifiez les opportunités pour obtenir un avantage concurrentiel dans votre secteur.",
-    "benefits_title": "Avantages des audits SEO réguliers",
-    "improve_visibility": "Améliorer la visibilité dans les recherches",
-    "visibility_text": "Des audits SEO réguliers vous aident à identifier et à résoudre les problèmes qui pourraient empêcher votre site Web d'être bien classé dans les moteurs de recherche.",
-    "stay_updated": "Restez à jour avec les changements d'algorithme",
-    "updated_text": "Les moteurs de recherche mettent constamment à jour leurs algorithmes. Des audits réguliers garantissent que votre site Web reste conforme aux dernières meilleures pratiques.",
-    "track_progress": "Suivez les progrès au fil du temps",
-    "progress_text": "Surveillez comment vos efforts SEO portent leurs fruits et identifiez les tendances qui peuvent guider votre future stratégie d'optimisation.",
+    // Hero section
+    hero_title: "Analyseur SEO de site web gratuit",
+    hero_subtitle: "Vérifiez le score SEO de votre site et obtenez des recommandations exploitables pour améliorer votre classement",
     
-    // SEO Toronto page
-    "toronto_hero_title": "Services SEO Toronto: Dominez la recherche locale et développez votre entreprise",
-    "toronto_hero_subtitle": "Stratégies SEO basées sur les données pour les entreprises de Toronto qui génèrent des résultats réels",
-    "get_free_audit": "Obtenez un audit SEO gratuit",
-    "try_seo_tool": "Essayez notre outil SEO",
-    "toronto_intro_title": "Expertise SEO Toronto: Élevez votre présence en ligne",
-    "local_dominance": "Domination du SEO local",
-    "local_dominance_text": "Capturez le marché de Toronto avec des stratégies SEO locales ciblées qui placent votre entreprise sur la carte là où cela compte le plus.",
-    "roi_results": "Résultats axés sur le ROI",
-    "roi_results_text": "Campagnes SEO basées sur les données qui offrent des rendements mesurables et une croissance durable pour votre entreprise à Toronto.",
-    "comprehensive_strategy": "Stratégie complète",
-    "comprehensive_strategy_text": "Solutions SEO complètes adaptées aux besoins uniques des entreprises de Toronto et à votre secteur spécifique.",
-    "toronto_content_title": "Services SEO Toronto: Tout ce que vous devez savoir",
-    "why_seo": "Pourquoi le SEO est important",
-    "our_process": "Notre processus",
-    "local_seo": "SEO local Toronto",
-    "case_studies": "Histoires de réussite",
-    "faq_title": "Questions fréquemment posées sur le SEO à Toronto",
-    "faq_subtitle": "Obtenez des réponses aux questions courantes sur l'optimisation pour les moteurs de recherche pour les entreprises de Toronto et comment nos services SEO peuvent vous aider à croître.",
-    "ready_title": "Prêt à dominer les résultats de recherche de Toronto?",
-    "ready_subtitle": "Obtenez votre audit SEO gratuit et sans obligation et découvrez comment nous pouvons aider votre entreprise de Toronto à atteindre de nouveaux sommets grâce à une optimisation stratégique des recherches.",
+    // Form labels
+    url_label: "URL du site web",
+    url_placeholder: "Entrez l'URL de votre site web (ex: https://exemple.com)",
+    keyword_label: "Mot-clé cible (Optionnel)",
+    keyword_placeholder: "Entrez votre mot-clé cible principal",
     
-    // FAQ Items
-    "how_long_results": "Combien de temps faut-il pour voir les résultats du SEO?",
-    "how_long_results_text": "La plupart des entreprises de Toronto commencent à voir des améliorations initiales dans les classements dans les 2 à 3 mois, avec des augmentations significatives du trafic se produisant généralement entre 4 et 6 mois. Cependant, ce délai varie en fonction de la compétitivité de votre secteur, de l'historique du site Web et de l'étendue du travail SEO. Nous nous concentrons sur l'obtention de quelques victoires rapides au début tout en construisant une croissance durable à long terme.",
-    "how_much_cost": "Combien coûtent les services SEO à Toronto?",
-    "how_much_cost_text": "Nos forfaits SEO Toronto commencent à 1500 $/mois pour les entreprises locales, avec des programmes complets allant de 2500 $ à 5000 $/mois selon vos objectifs, votre concurrence et votre calendrier. Nous proposons également des prix basés sur des projets pour les audits SEO, les optimisations ponctuelles et les services spécialisés. Chaque client reçoit une proposition personnalisée basée sur ses besoins spécifiques et son paysage concurrentiel.",
-    "what_different": "Qu'est-ce qui rend vos services SEO Toronto différents?",
-    "what_different_text": "Contrairement à de nombreuses entreprises SEO de Toronto, nous combinons expertise technique et connaissance authentique du marché de Toronto. Notre équipe vit et travaille dans la région du Grand Toronto, comprend le comportement de recherche local et élabore des stratégies spécifiquement pour les publics de Toronto. Nous offrons également une transparence inégalée avec des rapports clairs, des appels stratégiques réguliers et aucun contrat à long terme. Notre objectif est d'obtenir des résultats authentiques, pas des mesures de vanité.",
-    "do_guarantee": "Garantissez-vous les classements en première page?",
-    "do_guarantee_text": "Aucune entreprise SEO éthique ne peut garantir des classements spécifiques, car les algorithmes de recherche prennent en compte des centaines de facteurs hors de notre contrôle direct. Ce que nous garantissons, c'est la mise en œuvre des meilleures pratiques SEO éprouvées, une transparence totale dans notre travail et des améliorations mesurables dans les performances et la visibilité de votre site Web. Notre bilan montre des améliorations constantes pour les entreprises de Toronto dans des secteurs concurrentiels.",
-    "how_measure": "Comment mesurez-vous le succès du SEO?",
-    "how_measure_text": "Nous suivons plusieurs KPI adaptés à vos objectifs commerciaux, notamment: les classements des mots-clés (en particulier pour les termes de recherche de Toronto à forte valeur), la croissance du trafic organique, les performances de Google Business Profile, les métriques de conversion (prospects, appels, soumissions de formulaires) et, finalement, le ROI. Nos rapports mensuels fournissent des informations claires sur les performances de votre campagne avec les prochaines étapes exploitables.",
-    "do_paid": "Gérez-vous également la publicité par recherche payante?",
-    "do_paid_text": "Oui, nous proposons des services complets de gestion PPC à Toronto qui peuvent compléter votre stratégie SEO. De nombreux clients bénéficient de notre approche intégrée, utilisant la recherche payante pour une visibilité immédiate tandis que le SEO construit des résultats organiques durables. Notre équipe comprend des spécialistes certifiés Google Ads qui développent des campagnes axées sur Toronto avec un ciblage géographique, des extensions d'annonces locales et des pages de destination optimisées pour la conversion."
+    // Tabs section titles
+    why_choose_title: "Pourquoi choisir notre outil d'analyse SEO",
+    why_choose_subtitle: "Notre boîte à outils SEO complète aide les entreprises à améliorer leur visibilité dans les moteurs de recherche et à générer du trafic organique.",
+    why_use_our_tools: "Pourquoi utiliser notre outil",
+    benefits_title: "Avantages des audits réguliers",
+    how_it_works: "Comment fonctionne notre outil",
+    
+    // Why use our tools tab content
+    comprehensive_analysis: "Analyse complète",
+    comprehensive_text: "Notre audit SEO examine plus de 100 facteurs qui affectent votre classement dans les moteurs de recherche, offrant une image complète des performances de votre site web.",
+    actionable_insights: "Informations exploitables",
+    actionable_text: "Obtenez des recommandations priorisées qui vous aident à vous concentrer sur les changements qui auront le plus grand impact sur votre visibilité dans les recherches.",
+    competitor_benchmarking: "Analyse comparative des concurrents",
+    competitor_text: "Voyez comment votre site se compare à vos concurrents dans votre secteur et identifiez les opportunités pour gagner un avantage.",
+    
+    // Benefits tab content
+    improve_visibility: "Améliorer la visibilité",
+    visibility_text: "Des audits SEO réguliers vous aident à identifier et à corriger les problèmes qui pourraient empêcher votre site d'être mieux classé dans les résultats de recherche.",
+    stay_updated: "Rester à jour avec les algorithmes",
+    updated_text: "Suivez le rythme des mises à jour des algorithmes de recherche en vérifiant régulièrement la conformité de votre site avec les meilleures pratiques SEO les plus récentes.",
+    track_progress: "Suivre les progrès d'optimisation",
+    progress_text: "Surveillez les améliorations des performances SEO de votre site web au fil du temps et constatez l'impact de vos efforts d'optimisation.",
+    
+    // How it works tab content
+    technical_seo: "SEO Technique",
+    technical_seo_text: "Nous analysons les aspects techniques comme la vitesse de page, la convivialité mobile et la capacité d'exploration.",
+    on_page_elements: "Éléments sur page",
+    on_page_text: "Nous vérifions les balises méta, les titres, la qualité du contenu et l'optimisation des mots-clés.",
+    content_quality: "Qualité du contenu",
+    content_quality_text: "Nous évaluons la pertinence du contenu, la lisibilité et les facteurs d'engagement.",
+    
+    // SEO Best Practices section
+    seo_best_practices: "Meilleures pratiques SEO pour 2023",
+    user_experience: "Expérience utilisateur",
+    content_strategy: "Stratégie de contenu",
+    technical_factors: "Facteurs techniques",
+    
+    // User Experience tab content
+    user_experience_optimization: "Optimisation de l'expérience utilisateur",
+    user_experience_text: "Les algorithmes de Google donnent de plus en plus la priorité aux sites web qui offrent d'excellentes expériences utilisateur. Notre vérificateur SEO gratuit évalue ces facteurs critiques de l'expérience utilisateur :",
+    core_web_vitals: "Optimisation des Core Web Vitals",
+    core_web_vitals_text: "Les métriques Core Web Vitals de Google mesurent la performance de chargement, l'interactivité et la stabilité visuelle. L'optimisation de ces facteurs améliore à la fois l'expérience utilisateur et le classement dans les recherches.",
+    mobile_first: "Conception Mobile-First",
+    mobile_first_text: "Avec l'indexation mobile-first de Google, l'expérience mobile de votre site web détermine votre classement. Notre audit SEO vérifie que votre site est entièrement optimisé pour les utilisateurs mobiles.",
+    site_navigation: "Navigation et structure du site",
+    site_navigation_text: "Une navigation intuitive aide les utilisateurs à trouver rapidement ce qu'ils cherchent. Notre analyseur de site web évalue la structure de votre site pour la convivialité et l'optimisation pour les moteurs de recherche.",
+    page_speed: "Optimisation de la vitesse de page",
+    page_speed_text: "Les pages à chargement rapide améliorent la satisfaction des utilisateurs et les taux de conversion. Notre audit technique SEO identifie les opportunités d'améliorer la vitesse de page pour une meilleure expérience utilisateur et un meilleur classement.",
+    
+    // Content Strategy tab
+    content_strategy_optimization: "Optimisation de la stratégie de contenu",
+    content_strategy_text: "Un contenu de haute qualité et pertinent est essentiel pour le succès du SEO. Notre outil évalue votre stratégie de contenu :",
+    keyword_research: "Recherche et intégration de mots-clés",
+    keyword_research_text: "Ciblez les bons termes de recherche avec une recherche de mots-clés appropriée et un placement stratégique dans votre contenu.",
+    content_quality_strategy: "Qualité et profondeur du contenu",
+    content_quality_strategy_text: "Créez un contenu complet et approfondi qui répond parfaitement à l'intention de recherche des utilisateurs et à leurs questions.",
+    content_freshness: "Fraîcheur du contenu",
+    content_freshness_text: "Mettez régulièrement à jour votre contenu pour maintenir sa pertinence et montrer aux moteurs de recherche que votre site est activement entretenu.",
+    search_intent: "Alignement avec l'intention de recherche",
+    search_intent_text: "Adaptez votre contenu à l'intention sous-jacente des recherches des utilisateurs, qu'elle soit informationnelle, navigationnelle ou transactionnelle.",
+    
+    // Technical tab
+    technical_optimization: "Optimisation technique",
+    technical_optimization_text: "La base technique de votre site web a un impact significatif sur vos performances SEO. Notre outil vérifie ces facteurs critiques :",
+    site_structure: "Structure du site et liens internes",
+    site_structure_text: "Construisez une structure de site organisée avec des liens internes stratégiques pour distribuer l'autorité des pages et aider les moteurs de recherche à comprendre la hiérarchie de votre contenu.",
+    schema_markup: "Implémentation du balisage Schema",
+    schema_markup_text: "Utilisez des données structurées pour aider les moteurs de recherche à mieux comprendre votre contenu et à afficher des résultats enrichis dans les listes de recherche.",
+    https_security: "Sécurité HTTPS",
+    https_security_text: "Sécurisez votre site web avec le cryptage HTTPS, qui est à la fois un facteur de classement et essentiel pour la confiance des utilisateurs.",
+    xml_sitemap: "Sitemap XML et Robots.txt",
+    xml_sitemap_text: "Configurez correctement ces fichiers techniques pour guider les moteurs de recherche vers votre contenu important et empêcher l'exploration des pages non pertinentes.",
+    
+    // Why you need a website SEO analysis section
+    why_need_analysis: "Pourquoi vous avez besoin d'une analyse SEO de site web",
+    why_need_analysis_text: "Dans le paysage numérique concurrentiel d'aujourd'hui, une stratégie SEO solide est essentielle pour la visibilité en ligne. Notre vérificateur SEO gratuit vous aide à identifier ce qui fonctionne et ce qui doit être amélioré.",
+    comprehensive_assessment: "Évaluation complète",
+    comprehensive_assessment_text: "Notre vérificateur SEO gratuit évalue plus de 100 facteurs SEO techniques et sur page qui impactent votre classement dans les moteurs de recherche. Des balises méta à la qualité du contenu, nous analysons tous les aspects de la santé SEO de votre site web.",
+    keyword_optimization: "Optimisation des mots-clés",
+    keyword_optimization_text: "Découvrez comment votre contenu est optimisé pour vos mots-clés cibles. Notre outil d'audit SEO vérifie la présence des mots-clés dans les emplacements critiques et fournit des recommandations pour améliorer la pertinence du contenu.",
+    actionable_insights_long: "Informations exploitables",
+    actionable_insights_text_long: "Obtenez des recommandations claires et hiérarchisées pour résoudre les problèmes de SEO. Notre outil d'analyse SEO de site web ne se contente pas d'identifier les problèmes, il fournit des solutions pratiques pour améliorer votre visibilité dans les recherches.",
+    
+    // What our SEO audit tool checks section
+    what_our_tool_checks: "Ce que notre outil d'audit SEO vérifie",
+    technical_seo_factors: "Facteurs SEO techniques",
+    technical_seo_factors_text: "Le SEO technique constitue la base des performances de recherche de votre site web. Notre analyseur SEO examine les éléments techniques critiques que les moteurs de recherche utilisent pour explorer et indexer votre site :",
+    technical_seo_factors_list: "Vitesse de chargement de la page et métriques Core Web Vitals|Convivialité mobile et conception responsive|Implémentation du certificat SSL et sécurité|Configuration du plan du site XML et du robots.txt|Structure d'URL et balises canoniques|Implémentation du balisage de schéma",
+    on_page_seo_elements: "Éléments SEO sur page",
+    on_page_seo_elements_text: "Les facteurs SEO sur page influencent directement la façon dont les moteurs de recherche comprennent et classent votre contenu. Notre audit SEO gratuit évalue minutieusement :",
+    on_page_seo_elements_list: "Optimisation des balises de titre et des méta-descriptions|Structure des titres (H1, H2, H3) et organisation du contenu|Utilisation des mots-clés et pertinence du contenu|Optimisation des images avec texte alternatif|Structure de liens internes et texte d'ancrage|Qualité, longueur et lisibilité du contenu",
+    
+    // Free SEO Audit Tool section
+    free_seo_audit_tool: "Outil d'audit SEO gratuit pour votre site Web",
+    free_seo_audit_tool_text: "Notre outil d'audit SEO gratuit fournit une analyse complète de l'optimisation pour les moteurs de recherche de votre site Web. Obtenez des informations détaillées sur les performances, le contenu et les problèmes techniques de votre site, ainsi que des recommandations d'amélioration.",
+    what_analyzes: "Ce que notre outil SEO gratuit analyse :",
+    what_analyzes_list: "Facteurs SEO sur page, y compris les balises méta, les titres et la qualité du contenu|Problèmes techniques de SEO qui pourraient nuire à votre classement|Métriques de performance qui impactent l'expérience utilisateur et la visibilité dans les recherches|Évaluation de la convivialité mobile et de la conception responsive|Évaluation de la pertinence du contenu et de l'optimisation des mots-clés",
+    why_choose_our_tool: "Pourquoi choisir notre outil d'audit SEO :",
+    why_choose_our_tool_text: "Contrairement à d'autres vérificateurs SEO de base, notre outil fournit une analyse approfondie avec des recommandations pratiques. Nous n'identifions pas seulement les problèmes - nous fournissons des conseils clairs sur la façon de les résoudre et d'améliorer votre classement dans les recherches.",
+    get_started: "Commencez votre audit SEO gratuit aujourd'hui :",
+    get_started_text: "Entrez simplement l'URL de votre site Web et le mot-clé cible facultatif ci-dessus pour recevoir votre analyse SEO complète. Aucune inscription requise, aucune carte de crédit nécessaire - juste des informations instantanées et précieuses pour vous aider à améliorer les performances de votre site Web dans les moteurs de recherche.",
+    
+    // SEO Resources
+    seo_resources: "Ressources et apprentissage SEO",
+    seo_resources_text: "Explorez notre collection de guides et de ressources SEO pour améliorer votre stratégie d'optimisation pour les moteurs de recherche.",
+    seo_guide: "Guide SEO pour débutants",
+    seo_guide_text: "Apprenez les fondamentaux de l'optimisation pour les moteurs de recherche et comment les mettre en œuvre sur votre site web.",
+    keyword_tips: "Conseils de recherche de mots-clés",
+    keyword_tips_text: "Découvrez des stratégies efficaces pour trouver et cibler les bons mots-clés pour votre entreprise.",
+    technical_checklist: "Liste de contrôle SEO technique",
+    technical_checklist_text: "Une liste de contrôle complète pour s'assurer que votre site web répond à toutes les exigences techniques de SEO.",
+    
+    // Footer
+    footer_description: "Nous aidons les entreprises à améliorer leur visibilité en ligne grâce à des stratégies et des outils SEO basés sur les données.",
+    quick_links: "Liens rapides",
+    services: "Services",
+    contact_us: "Contactez-nous",
+    seo_services: "Services SEO",
+    local_seo: "SEO local",
+    content_marketing: "Marketing de contenu",
+    web_design: "Conception web",
+    ppc_management: "Gestion PPC",
   }
 };
 
+export default translations;
