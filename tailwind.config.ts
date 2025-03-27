@@ -62,7 +62,7 @@ const config = {
         // Theme colors
         'navy': '#121a2e',        // Dark navy background
         'navy-light': '#1e2b4a',  // Lighter navy for cards
-        'teal': '#5D9EF0',        // Blue accent
+        'teal': '#5D9EF0',        // Blue accent (renamed from 'teal' but kept the variable name)
         'teal-light': '#7DBEFC',  // Lighter blue for hover states
         'light-bg': '#f8fafc',    // Light background
         'accent-purple': '#8b5cf6', // Purple accent
