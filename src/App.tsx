@@ -10,6 +10,14 @@ import Footer from "@/components/Footer";
 import Index from './pages/Index';
 import NotFound from './pages/NotFound';
 import SeoToronto from './pages/SeoToronto';
+import About from './pages/About';
+import Blog from './pages/Blog';
+import Contact from './pages/Contact';
+import Services from './pages/Services';
+import SeoServices from './pages/SeoServices';
+import LocalSeo from './pages/LocalSeo';
+import TermsConditions from './pages/TermsConditions';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -34,6 +42,14 @@ function App() {
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/seo-toronto" element={<SeoToronto />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/services/seo" element={<SeoServices />} />
+                <Route path="/services/local-seo" element={<LocalSeo />} />
+                <Route path="/terms" element={<TermsConditions />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>

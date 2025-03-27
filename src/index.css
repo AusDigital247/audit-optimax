@@ -53,6 +53,13 @@
   p, li, span, a {
     @apply font-body;
   }
+
+  #root {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
 }
 
 @layer components {
@@ -131,11 +138,11 @@
   
   /* Fix for horizontal tabs */
   .tabs-container {
-    @apply w-full overflow-x-auto pb-2;
+    @apply w-full overflow-x-auto pb-2 scrollbar-none;
   }
   
   .tabs-list {
-    @apply flex min-w-full gap-2 md:gap-4;
+    @apply flex w-full gap-2 md:gap-4;
   }
   
   .tab-item {
@@ -145,17 +152,42 @@
   .tab-item.active {
     @apply bg-teal text-white border-teal;
   }
+
+  /* Scrollbar styling */
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* New Tab Styles */
+  .custom-tabs {
+    @apply w-full;
+  }
+
+  .custom-tabs-list {
+    @apply flex bg-white/5 backdrop-blur-sm p-1 rounded-lg mb-6 overflow-x-auto scrollbar-none;
+  }
+
+  .custom-tab-trigger {
+    @apply flex-1 whitespace-nowrap px-4 py-2 rounded-lg font-medium text-sm data-[state=active]:bg-teal data-[state=active]:text-white transition-all;
+  }
+
+  /* New animated card styles */
+  .animated-card {
+    @apply transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl;
+  }
+
+  /* Better button styles */
+  .btn-gradient {
+    @apply bg-gradient-to-r from-teal to-teal-light text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg transition-all duration-300;
+  }
 }
 
-/* Remove the old root max-width that was constraining everything */
-#root {
-  width: 100%;
-  margin: 0 auto;
-  padding: 0;
-  text-align: center;
-}
-
-/* Keep the other styles from App.css but remove constraining widths */
+/* Keep the code for logo animations and keyframes */
 .logo {
   height: 6em;
   padding: 1.5em;
