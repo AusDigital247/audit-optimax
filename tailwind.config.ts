@@ -69,6 +69,9 @@ const config = {
         'accent-pink': '#ec4899',   // Pink accent
         'accent-orange': '#f97316', // Orange accent
         'magenta': '#fe00fe',     // Magenta accent (for buttons)
+        'text-highlight': '#5D9EF0', // Blue text highlight
+        'gradient-text-start': '#ffffff', // Start color for gradient text
+        'gradient-text-end': '#5D9EF0',   // End color for gradient text
       },
       borderRadius: {
         lg: "var(--radius)",

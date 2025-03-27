@@ -55,7 +55,7 @@ const Index = () => {
                 <div className="animate-pulse-glow mb-6">
                   <div className="h-16 w-16 rounded-full border-4 border-t-teal border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
                 </div>
-                <p className="text-lg font-medium">Analyzing {currentUrl}...</p>
+                <p className="text-lg font-medium text-white">Analyzing {currentUrl}...</p>
                 <p className="text-muted-foreground">This may take a few moments</p>
               </div>
             )}

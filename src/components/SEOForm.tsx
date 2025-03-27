@@ -52,10 +52,6 @@ const SEOForm = ({ onSubmit, isLoading, className }: SEOFormProps) => {
         className
       )}
     >
-      <h2 className="text-2xl font-display font-semibold mb-6 text-center text-white">
-        Free SEO Checker & Website Analyzer
-      </h2>
-      
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-3">
           <div className="flex items-center">

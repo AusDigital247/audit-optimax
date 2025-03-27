@@ -3,7 +3,7 @@ import React from 'react';
 import SEOContentSection from './SEOContentSection';
 import SEOForm from './SEOForm';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, CheckCircle, Info, AlertTriangle, PenTool, Search } from 'lucide-react';
+import { ArrowRight, CheckCircle, Info, PenTool, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
@@ -15,8 +15,8 @@ interface SEOContainerProps {
 const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
   return (
     <div className="min-h-screen">
-      {/* Hero section - Light theme */}
-      <div className="bg-gradient-light text-navy py-16">
+      {/* Hero section - Dark theme with branding */}
+      <div className="bg-gradient-to-b from-navy to-navy-light text-white py-16">
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -24,38 +24,25 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
             transition={{ duration: 0.6 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <h1 className="text-3xl md:text-5xl font-display font-bold mb-6 text-navy">
+            <div className="mb-6 flex justify-center">
+              <h1 className="text-2xl md:text-4xl font-display font-bold text-white">
+                AUS <span className="text-teal">Digital</span>
+              </h1>
+            </div>
+            
+            <h2 className="text-3xl md:text-5xl font-display font-bold mb-6 text-white">
               Free <span className="text-teal">SEO Audit Tool</span> for Your Website
-            </h1>
-            <p className="text-lg md:text-xl text-navy-light max-w-3xl mx-auto mb-8">
+            </h2>
+            
+            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-8">
               Analyze your website's SEO health, uncover critical issues, and get actionable recommendations to improve your search engine rankings.
             </p>
-            <Button size="lg" className="animate-pulse-glow" onClick={() => window.scrollTo({ top: document.getElementById('seo-form')?.offsetTop || 0, behavior: 'smooth' })}>
-              Start Free SEO Audit <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
             
-            <div className="flex flex-wrap justify-center gap-4 mt-8 text-sm text-navy-light">
-              <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 mr-1 text-teal" />
-                <span>100% Free</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 mr-1 text-teal" />
-                <span>No Sign-up Required</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 mr-1 text-teal" />
-                <span>Instant Results</span>
-              </div>
+            {/* SEO Form */}
+            <div id="seo-form">
+              <SEOForm onSubmit={onSubmit} isLoading={isLoading} />
             </div>
           </motion.div>
-        </div>
-      </div>
-      
-      {/* SEO Form - Dark theme */}
-      <div className="bg-gradient-to-b from-navy to-navy-light py-16" id="seo-form">
-        <div className="container-custom">
-          <SEOForm onSubmit={onSubmit} isLoading={isLoading} />
         </div>
       </div>
       
@@ -520,6 +507,49 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
         <div className="container-custom">
           <SEOContentSection />
         </div>
+      </div>
+      
+      {/* Additional SEO Content - Hidden for SEO but visible to search engines */}
+      <div className="sr-only" aria-hidden="true">
+        <h2>AUS Digital SEO Audit Tool: Complete Website SEO Analysis</h2>
+        <p>
+          Looking for a powerful free SEO checker and website analyzer? Our comprehensive SEO audit tool provides in-depth analysis of your website's search engine optimization factors. From technical SEO issues to content quality and keyword optimization, our tool examines all aspects that affect your search rankings.
+        </p>
+        
+        <h3>Why Choose Our Free SEO Analyzer</h3>
+        <p>
+          Unlike basic SEO checkers, our website SEO analysis tool evaluates over 100 ranking factors that impact your visibility in search engine results pages (SERPs). Our SEO optimization checker provides actionable recommendations to improve your organic search performance, increase website traffic, and boost your search engine rankings.
+        </p>
+        
+        <h3>Complete SEO Analysis For Your Website</h3>
+        <p>
+          Our website SEO analyzer provides comprehensive analysis of technical SEO elements, including page speed, mobile-friendliness, HTTPS implementation, XML sitemaps, canonical tags, and structured data markup. We also evaluate on-page SEO factors like title tags, meta descriptions, heading structure, and content quality to ensure your website communicates effectively with search engines.
+        </p>
+        
+        <h3>Keyword Optimization Analysis</h3>
+        <p>
+          Our SEO checker tool examines keyword usage throughout your website, including in title tags, meta descriptions, headings, content, URLs, and image alt text. We also analyze latent semantic indexing (LSI) keywords and related terms to help you demonstrate topic comprehensiveness and relevance to search engines.
+        </p>
+        
+        <h3>Content Quality Assessment</h3>
+        <p>
+          Google's algorithms prioritize high-quality, relevant content that satisfies user intent. Our SEO content analysis evaluates your content's relevance to target keywords, readability, depth, and E-E-A-T signals (Experience, Expertise, Authoritativeness, and Trustworthiness) to identify opportunities for improvement.
+        </p>
+        
+        <h3>Technical SEO Audit</h3>
+        <p>
+          Technical issues can prevent search engines from properly crawling, indexing, and ranking your website. Our website SEO analyzer identifies technical problems like slow loading times, mobile usability issues, crawl errors, duplicate content, and broken links that might affect your search performance.
+        </p>
+        
+        <h3>SEO Best Practices Implementation</h3>
+        <p>
+          Our SEO audit tool checks your website against current SEO best practices, including Core Web Vitals optimization, mobile-first design, structured data implementation, and secure HTTPS configuration, to ensure your site meets the latest requirements for search engine success.
+        </p>
+        
+        <h3>Start Your Free SEO Analysis Today</h3>
+        <p>
+          Don't leave your website's search performance to chance. Use our free SEO checker to identify issues and opportunities, and take your first step toward better search rankings and increased organic traffic. No sign-up required - start your analysis instantly with AUS Digital's comprehensive SEO audit tool.
+        </p>
       </div>
     </div>
   );
