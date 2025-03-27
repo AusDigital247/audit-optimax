@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { analyzeSEO, AnalysisResult } from '@/utils/seoAnalyzer';
 import { toast } from "@/hooks/use-toast";
 import SEOContainer from '@/components/SEOContainer';
@@ -44,7 +45,7 @@ const Index = () => {
   };
 
   // Add a special meta tag for language alternates (for SEO)
-  React.useEffect(() => {
+  useEffect(() => {
     // Create or update the alternate language link
     let linkEn = document.querySelector('link[hreflang="en"]');
     let linkFr = document.querySelector('link[hreflang="fr"]');
@@ -69,13 +70,20 @@ const Index = () => {
     linkFr.setAttribute('href', currentUrl);
     
     return () => {
-      document.head.removeChild(linkEn);
-      document.head.removeChild(linkFr);
+      if (linkEn && linkEn.parentNode) document.head.removeChild(linkEn);
+      if (linkFr && linkFr.parentNode) document.head.removeChild(linkFr);
     };
   }, []);
 
   return (
     <div className="min-h-screen w-full">
+      <Helmet>
+        <title>SEO Audit Tool by AUS Digital | Free Website Analysis</title>
+        <meta name="description" content="Free comprehensive SEO audit tool to analyze your website and get actionable recommendations to improve your search engine rankings." />
+        <meta name="keywords" content="SEO audit, website analysis, search engine optimization, SEO tool, website checker, SEO checker" />
+        <link rel="canonical" href={window.location.href} />
+      </Helmet>
+
       {!results && !error && (
         <SEOContainer onSubmit={handleSubmit} isLoading={isAnalyzing} />
       )}

@@ -25,7 +25,7 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
             
             <div className="mb-6">
               <h1 className="text-4xl md:text-6xl font-bold mb-4 gradient-text">
-                {t('hero_title')}
+                SEO Audit Tool
               </h1>
               <h2 className="text-xl md:text-2xl text-white/90 font-light max-w-3xl mx-auto">
                 {t('hero_subtitle')}
@@ -34,7 +34,7 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
             
             <div className="flex items-center justify-center py-2 px-6 bg-teal/20 backdrop-blur-sm rounded-full mb-8 animated-card">
               <Zap className="h-5 w-5 text-teal-light mr-2" />
-              <span className="text-white font-medium">AUS Digital</span>
+              <span className="text-white text-sm font-medium">by AUS Digital</span>
             </div>
           </div>
           

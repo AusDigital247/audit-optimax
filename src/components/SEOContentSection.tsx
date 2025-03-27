@@ -8,8 +8,8 @@ const SEOContentSection: React.FC = () => {
   const { t, language } = useLanguage();
   
   return (
-    <section className="py-16 bg-light-bg">
-      <div className="container max-w-7xl mx-auto px-4">
+    <section className="py-16 bg-light-bg w-full">
+      <div className="container-custom">
         <div className="text-center mb-12">
           <h2 className="text-2xl md:text-3xl font-bold text-navy mb-3">
             {t('why_choose_title')}
@@ -21,10 +21,10 @@ const SEOContentSection: React.FC = () => {
         
         <Tabs defaultValue="why-use" className="w-full mb-12">
           <div className="flex flex-col items-center mb-8">
-            <TabsList className="grid w-full max-w-md grid-cols-3 bg-white/80 shadow-sm">
-              <TabsTrigger value="why-use" className="data-[state=active]:bg-teal data-[state=active]:text-white">{t('why_use_our_tools')}</TabsTrigger>
-              <TabsTrigger value="benefits" className="data-[state=active]:bg-teal data-[state=active]:text-white">{t('benefits_title')}</TabsTrigger>
-              <TabsTrigger value="how-works" className="data-[state=active]:bg-teal data-[state=active]:text-white">{t('how_it_works')}</TabsTrigger>
+            <TabsList className="w-full max-w-md bg-white/80 shadow-sm">
+              <TabsTrigger value="why-use" className="flex-1 data-[state=active]:bg-teal data-[state=active]:text-white">Why Use Our SEO Tool</TabsTrigger>
+              <TabsTrigger value="benefits" className="flex-1 data-[state=active]:bg-teal data-[state=active]:text-white">Benefits of Regular Audits</TabsTrigger>
+              <TabsTrigger value="how-works" className="flex-1 data-[state=active]:bg-teal data-[state=active]:text-white">How Our Tool Works</TabsTrigger>
             </TabsList>
           </div>
           
