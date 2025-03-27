@@ -4,8 +4,10 @@ import { analyzeSEO, AnalysisResult } from '@/utils/seoAnalyzer';
 import { toast } from "@/hooks/use-toast";
 import SEOContainer from '@/components/SEOContainer';
 import SEOResults from '@/components/SEOResults';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Index = () => {
+  const { t } = useLanguage();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [currentUrl, setCurrentUrl] = useState('');
   const [currentKeyword, setCurrentKeyword] = useState<string | undefined>(undefined);
@@ -23,10 +25,10 @@ const Index = () => {
       setResults(analysisResults);
     } catch (error) {
       console.error('Error analyzing SEO:', error);
-      setError('An error occurred while analyzing the website. Please try again.');
+      setError(t('error_message'));
       toast({
-        title: "Analysis Failed",
-        description: "There was an error analyzing the website. Please try again.",
+        title: t('analyze_button'),
+        description: t('error_message'),
         variant: "destructive",
       });
     } finally {
@@ -40,6 +42,37 @@ const Index = () => {
     setCurrentKeyword(undefined);
     setError(null);
   };
+
+  // Add a special meta tag for language alternates (for SEO)
+  React.useEffect(() => {
+    // Create or update the alternate language link
+    let linkEn = document.querySelector('link[hreflang="en"]');
+    let linkFr = document.querySelector('link[hreflang="fr"]');
+    
+    if (!linkEn) {
+      linkEn = document.createElement('link');
+      linkEn.setAttribute('rel', 'alternate');
+      linkEn.setAttribute('hreflang', 'en');
+      document.head.appendChild(linkEn);
+    }
+    
+    if (!linkFr) {
+      linkFr = document.createElement('link');
+      linkFr.setAttribute('rel', 'alternate');
+      linkFr.setAttribute('hreflang', 'fr');
+      document.head.appendChild(linkFr);
+    }
+    
+    // Set current URL for both languages
+    const currentUrl = window.location.href;
+    linkEn.setAttribute('href', currentUrl);
+    linkFr.setAttribute('href', currentUrl);
+    
+    return () => {
+      document.head.removeChild(linkEn);
+      document.head.removeChild(linkFr);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen w-full">
@@ -55,8 +88,8 @@ const Index = () => {
                 <div className="animate-pulse-glow mb-6">
                   <div className="h-16 w-16 rounded-full border-4 border-t-teal border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
                 </div>
-                <p className="text-lg font-medium text-white">Analyzing {currentUrl}...</p>
-                <p className="text-muted-foreground">This may take a few moments</p>
+                <p className="text-lg font-medium text-white">{t('loading')} {currentUrl}...</p>
+                <p className="text-muted-foreground">{t('this_may_take')}</p>
               </div>
             )}
 
@@ -67,7 +100,7 @@ const Index = () => {
                   onClick={handleReset} 
                   className="px-4 py-2 bg-navy-light text-white rounded-lg hover:bg-navy transition-colors"
                 >
-                  Try Again
+                  {t('try_again')}
                 </button>
               </div>
             )}

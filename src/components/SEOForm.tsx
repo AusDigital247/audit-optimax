@@ -1,142 +1,87 @@
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Search, Globe, ArrowRight, AlertCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface SEOFormProps {
   onSubmit: (url: string, keyword?: string) => void;
   isLoading: boolean;
-  className?: string;
 }
 
-const SEOForm = ({ onSubmit, isLoading, className }: SEOFormProps) => {
+const SEOForm: React.FC<SEOFormProps> = ({ onSubmit, isLoading }) => {
+  const { t } = useLanguage();
   const [url, setUrl] = useState('');
   const [keyword, setKeyword] = useState('');
-  const [error, setError] = useState('');
+  const [urlError, setUrlError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!url) {
-      setError('Please enter a valid URL');
-      return;
-    }
-
-    // Basic URL validation
+  const validateUrl = (value: string) => {
     try {
-      // Add https if not present
-      let processedUrl = url;
-      if (!/^https?:\/\//i.test(url)) {
-        processedUrl = 'https://' + url;
-      }
-      
-      new URL(processedUrl);
-      setError('');
-      onSubmit(processedUrl, keyword || undefined);
-    } catch (err) {
-      setError('Please enter a valid URL');
+      new URL(value);
+      return true;
+    } catch {
+      return false;
     }
   };
 
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className={cn(
-        "w-full max-w-3xl mx-auto glass p-8 rounded-xl shadow-lg border border-teal/30",
-        className
-      )}
-    >
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-3">
-          <div className="flex items-center">
-            <Globe className="w-5 h-5 mr-2 text-teal" />
-            <Label htmlFor="url" className="text-base font-medium text-white">
-              Website URL
-            </Label>
-          </div>
-          <div className="relative">
-            <Input
-              id="url"
-              type="text"
-              placeholder="Enter a website URL (e.g., example.com)"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              className={cn(
-                "pl-4 pr-10 py-6 bg-navy-light/50 border-teal/30 focus:border-teal rounded-lg text-base placeholder:text-muted-foreground",
-                error ? "border-red-500 focus-visible:ring-red-500" : "focus-visible:ring-teal"
-              )}
-            />
-            {error && (
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500">
-                <AlertCircle className="h-5 w-5" />
-              </div>
-            )}
-          </div>
-          {error && (
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-red-500 text-sm mt-1 flex items-center"
-            >
-              <AlertCircle className="h-4 w-4 mr-1" />
-              {error}
-            </motion.p>
-          )}
-        </div>
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setUrlError('');
 
-        <div className="space-y-3">
-          <div className="flex items-center">
-            <Search className="w-5 h-5 mr-2 text-teal" />
-            <Label htmlFor="keyword" className="text-base font-medium text-white">
-              Target Keyword (Optional)
-            </Label>
-          </div>
+    if (!url.trim()) {
+      setUrlError(t('url_placeholder'));
+      return;
+    }
+
+    const isValidUrl = validateUrl(url);
+    if (!isValidUrl) {
+      setUrlError('Please enter a valid URL (e.g., https://example.com)');
+      return;
+    }
+
+    onSubmit(url, keyword ? keyword : undefined);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col">
+      <div className="space-y-4 mb-6">
+        <div>
+          <Label htmlFor="url" className="text-white mb-1.5 block">URL</Label>
+          <Input
+            id="url"
+            type="text"
+            placeholder={t('url_placeholder')}
+            value={url}
+            onChange={(e) => {
+              setUrl(e.target.value);
+              if (urlError) setUrlError('');
+            }}
+            className={`${urlError ? 'border-red-500' : ''}`}
+          />
+          {urlError && <p className="text-red-400 text-sm mt-1">{urlError}</p>}
+        </div>
+        
+        <div>
+          <Label htmlFor="keyword" className="text-white mb-1.5 block">{t('keyword_placeholder')}</Label>
           <Input
             id="keyword"
             type="text"
-            placeholder="Enter a keyword to check keyword optimization"
+            placeholder={t('keyword_placeholder')}
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            className="pl-4 pr-10 py-6 bg-navy-light/50 border-teal/30 focus:border-teal rounded-lg text-base placeholder:text-muted-foreground focus-visible:ring-teal"
           />
         </div>
-
-        <div className="flex flex-col md:flex-row gap-4 mt-8">
-          <Button 
-            type="submit" 
-            className="w-full py-6 text-base font-medium rounded-lg transition-all flex items-center justify-center gap-2"
-            disabled={isLoading}
-            size="lg"
-          >
-            {isLoading ? 'Analyzing...' : 'Analyze SEO'}
-            {!isLoading && <ArrowRight className="h-5 w-5" />}
-          </Button>
-          
-          <Button 
-            type="button"
-            variant="magenta" 
-            className="w-full py-6 text-base font-medium rounded-lg transition-all"
-            onClick={() => {
-              setUrl('https://example.com');
-              setKeyword('example');
-            }}
-            size="lg"
-          >
-            Try Demo
-          </Button>
-        </div>
-        
-        <div className="text-center text-sm text-gray-400 mt-4">
-          No sign-up required. Instant results. 100% Free.
-        </div>
-      </form>
-    </motion.div>
+      </div>
+      
+      <Button 
+        type="submit" 
+        className="bg-teal hover:bg-teal-light text-white font-medium w-full py-6"
+        disabled={isLoading}
+      >
+        {t('analyze_button')}
+      </Button>
+    </form>
   );
 };
 

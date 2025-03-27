@@ -1,70 +1,99 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link } from 'react-router-dom';
 import { ArrowRight, CheckCircle, Globe, LineChart, Search, Shield, Trophy, Users } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const SeoToronto = () => {
+  const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState("why-seo");
+
+  useEffect(() => {
+    let linkEn = document.querySelector('link[hreflang="en"]');
+    let linkFr = document.querySelector('link[hreflang="fr"]');
+    
+    if (!linkEn) {
+      linkEn = document.createElement('link');
+      linkEn.setAttribute('rel', 'alternate');
+      linkEn.setAttribute('hreflang', 'en');
+      document.head.appendChild(linkEn);
+    }
+    
+    if (!linkFr) {
+      linkFr = document.createElement('link');
+      linkFr.setAttribute('rel', 'alternate');
+      linkFr.setAttribute('hreflang', 'fr');
+      document.head.appendChild(linkFr);
+    }
+    
+    const currentUrl = window.location.href;
+    linkEn.setAttribute('href', currentUrl);
+    linkFr.setAttribute('href', currentUrl);
+    
+    document.title = language === 'en' ? 'Toronto SEO Services - AUS Digital' : 'Services SEO Toronto - AUS Digital';
+    
+    return () => {
+      document.head.removeChild(linkEn);
+      document.head.removeChild(linkFr);
+    };
+  }, [language]);
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section - Dark Theme */}
       <section className="bg-gradient-to-b from-navy to-navy-light py-16 md:py-20">
         <div className="container-custom">
           <div className="flex flex-col items-center text-center mb-8">
             <h1 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">
-              Toronto SEO Services: Dominate Local Search & Grow Your Business
+              {t('toronto_hero_title')}
             </h1>
             <h2 className="text-xl md:text-2xl text-teal-light/90 font-medium mb-8">
-              Data-Driven SEO Strategies for Toronto Businesses That Generate Real Results
+              {t('toronto_hero_subtitle')}
             </h2>
             <div className="flex flex-col sm:flex-row gap-4 mt-2">
               <Link 
                 to="/contact" 
                 className="px-6 py-3 bg-teal text-white font-medium rounded-lg hover:bg-teal-light transition-all flex items-center justify-center gap-2"
               >
-                Get Free SEO Audit <ArrowRight size={18} />
+                {t('get_free_audit')} <ArrowRight size={18} />
               </Link>
               <Link 
                 to="/" 
                 className="px-6 py-3 bg-transparent border border-white/30 text-white font-medium rounded-lg hover:bg-white/10 transition-all"
               >
-                Try Our SEO Tool
+                {t('try_seo_tool')}
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Introduction Section - Light Theme */}
       <section className="content-section-light">
         <div className="container-custom">
-          <h2 className="text-3xl font-bold mb-6 text-navy">Toronto SEO Expertise: Elevate Your Online Presence</h2>
+          <h2 className="text-3xl font-bold mb-6 text-navy">{t('toronto_intro_title')}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             <div className="feature-card">
               <div className="p-3 bg-teal rounded-full w-fit mb-4">
                 <Globe className="text-white" size={28} />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">Local SEO Dominance</h3>
-              <p className="text-white/80">Capture the Toronto market with targeted local SEO strategies that put your business on the map where it matters most.</p>
+              <h3 className="text-xl font-semibold mb-2 text-white">{t('local_dominance')}</h3>
+              <p className="text-white/80">{t('local_dominance_text')}</p>
             </div>
             
             <div className="feature-card">
               <div className="p-3 bg-teal rounded-full w-fit mb-4">
                 <LineChart className="text-white" size={28} />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">ROI-Focused Results</h3>
-              <p className="text-white/80">Data-driven SEO campaigns that deliver measurable returns and sustainable growth for your Toronto business.</p>
+              <h3 className="text-xl font-semibold mb-2 text-white">{t('roi_results')}</h3>
+              <p className="text-white/80">{t('roi_results_text')}</p>
             </div>
             
             <div className="feature-card">
               <div className="p-3 bg-teal rounded-full w-fit mb-4">
                 <Search className="text-white" size={28} />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">Comprehensive Strategy</h3>
-              <p className="text-white/80">Full-service SEO solutions tailored to the unique needs of Toronto businesses and your specific industry.</p>
+              <h3 className="text-xl font-semibold mb-2 text-white">{t('comprehensive_strategy')}</h3>
+              <p className="text-white/80">{t('comprehensive_strategy_text')}</p>
             </div>
           </div>
           
@@ -80,17 +109,16 @@ const SeoToronto = () => {
         </div>
       </section>
 
-      {/* Tabbed Content Section - Dark Theme */}
       <section className="content-section-dark">
         <div className="container-custom">
-          <h2 className="text-3xl font-bold mb-8 text-center text-white">Toronto SEO Services: Everything You Need to Know</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center text-white">{t('toronto_content_title')}</h2>
           
           <Tabs defaultValue="why-seo" className="mb-12" onValueChange={setActiveTab} value={activeTab}>
             <TabsList className="grid grid-cols-2 md:grid-cols-4 bg-navy-light/50 gap-1 mb-8 p-1 rounded-lg w-full">
-              <TabsTrigger value="why-seo" className="data-[state=active]:bg-teal data-[state=active]:text-white">Why SEO Matters</TabsTrigger>
-              <TabsTrigger value="our-process" className="data-[state=active]:bg-teal data-[state=active]:text-white">Our Process</TabsTrigger>
-              <TabsTrigger value="local-seo" className="data-[state=active]:bg-teal data-[state=active]:text-white">Toronto Local SEO</TabsTrigger>
-              <TabsTrigger value="case-studies" className="data-[state=active]:bg-teal data-[state=active]:text-white">Success Stories</TabsTrigger>
+              <TabsTrigger value="why-seo" className="data-[state=active]:bg-teal data-[state=active]:text-white">{t('why_seo')}</TabsTrigger>
+              <TabsTrigger value="our-process" className="data-[state=active]:bg-teal data-[state=active]:text-white">{t('our_process')}</TabsTrigger>
+              <TabsTrigger value="local-seo" className="data-[state=active]:bg-teal data-[state=active]:text-white">{t('local_seo')}</TabsTrigger>
+              <TabsTrigger value="case-studies" className="data-[state=active]:bg-teal data-[state=active]:text-white">{t('case_studies')}</TabsTrigger>
             </TabsList>
             
             <TabsContent value="why-seo" className="glass-card">
@@ -516,67 +544,65 @@ const SeoToronto = () => {
         </div>
       </section>
 
-      {/* FAQ Section - Light Theme */}
       <section className="content-section-light">
         <div className="container-custom">
-          <h2 className="text-3xl font-bold mb-6 text-navy text-center">Frequently Asked Questions About Toronto SEO</h2>
+          <h2 className="text-3xl font-bold mb-6 text-navy text-center">{t('faq_title')}</h2>
           <p className="text-lg text-navy/80 text-center mb-10 max-w-3xl mx-auto">
-            Get answers to common questions about search engine optimization for Toronto businesses and how our SEO services can help you grow.
+            {t('faq_subtitle')}
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
             <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="text-xl font-semibold mb-3 text-navy">How long does it take to see results from SEO in Toronto?</h3>
+              <h3 className="text-xl font-semibold mb-3 text-navy">{t('how_long_results')}</h3>
               <p className="text-navy/80">
-                While some improvements can be seen within weeks, meaningful results typically begin to appear within 3-6 months. Toronto's competitive digital landscape means that sustainable ranking improvements take time. Our clients usually see significant traffic increases by month 4 and substantial conversion improvements by month A good Toronto SEO company will be transparent about realistic timelines rather than promising overnight success.
+                {t('how_long_results_text')}
               </p>
             </div>
             
             <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="text-xl font-semibold mb-3 text-navy">How much does Toronto SEO cost?</h3>
+              <h3 className="text-xl font-semibold mb-3 text-navy">{t('how_much_cost')}</h3>
               <p className="text-navy/80">
-                Toronto SEO services typically range from $1,500 to $5,000+ per month depending on your business size, competition level, and goals. At AUS Digital, we customize our pricing based on your specific needs rather than offering one-size-fits-all packages. We provide transparent pricing with no hidden fees and focus on delivering measurable ROI. Our clients see an average return of $8 for every $1 spent on our SEO services.
+                {t('how_much_cost_text')}
               </p>
             </div>
             
             <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="text-xl font-semibold mb-3 text-navy">What makes Toronto SEO different from generic SEO?</h3>
+              <h3 className="text-xl font-semibold mb-3 text-navy">{t('what_different')}</h3>
               <p className="text-navy/80">
-                Toronto SEO requires specialized local knowledge including neighborhood targeting, understanding of the competitive GTA business landscape, familiarity with Toronto-specific directories and citation sources, and awareness of local consumer search behaviors. Generic SEO approaches often fail in Toronto's competitive market because they lack the hyper-local focus needed to connect with area residents and business decision-makers.
+                {t('what_different_text')}
               </p>
             </div>
             
             <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="text-xl font-semibold mb-3 text-navy">Do you guarantee #1 rankings for Toronto keywords?</h3>
+              <h3 className="text-xl font-semibold mb-3 text-navy">{t('do_guarantee')}</h3>
               <p className="text-navy/80">
-                Any SEO agency promising guaranteed #1 rankings is being dishonest. No one can control Google's algorithms or guarantee specific positions. What we do guarantee is a data-driven, ethical approach that follows SEO best practices and consistently improves your visibility, traffic, and conversions over time. We focus on meaningful metrics like qualified traffic growth, conversion improvements, and ROI rather than vanity rankings for low-value keywords.
+                {t('do_guarantee_text')}
               </p>
             </div>
             
             <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="text-xl font-semibold mb-3 text-navy">How do you measure the success of Toronto SEO campaigns?</h3>
+              <h3 className="text-xl font-semibold mb-3 text-navy">{t('how_measure')}</h3>
               <p className="text-navy/80">
-                We measure success through comprehensive metrics including organic traffic growth, keyword ranking improvements, conversion rate increases, qualified lead generation, and most importantly, return on investment. Our transparent reporting shows exactly how our SEO efforts translate to business growth. Each client receives custom KPIs based on their specific goals, whether that's generating leads, increasing e-commerce sales, or building brand awareness in the Toronto market.
+                {t('how_measure_text')}
               </p>
             </div>
             
             <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="text-xl font-semibold mb-3 text-navy">Do I need both SEO and paid advertising for my Toronto business?</h3>
+              <h3 className="text-xl font-semibold mb-3 text-navy">{t('do_paid')}</h3>
               <p className="text-navy/80">
-                While SEO provides the best long-term ROI, a comprehensive digital strategy often includes both organic and paid approaches. SEO builds sustainable traffic and credibility, while paid ads can drive immediate visibility during the SEO ramp-up period or for specific campaigns. We help Toronto businesses determine the optimal marketing mix based on their goals, timeline, and budget. Many clients start with a combined approach and gradually shift more budget to SEO as organic rankings improve.
+                {t('do_paid_text')}
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section - Dark Theme */}
       <section className="content-section-dark">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">Ready to Dominate Toronto Search Results?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">{t('ready_title')}</h2>
             <p className="text-xl text-white/80 mb-8">
-              Get your free, no-obligation SEO audit and discover how we can help your Toronto business reach new heights through strategic search optimization.
+              {t('ready_subtitle')}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -584,60 +610,105 @@ const SeoToronto = () => {
                 to="/contact" 
                 className="px-8 py-4 bg-teal text-white font-medium rounded-lg hover:bg-teal-light transition-all flex items-center justify-center gap-2"
               >
-                Get Your Free SEO Audit <ArrowRight size={18} />
+                {t('get_free_audit')} <ArrowRight size={18} />
               </Link>
               <Link
                 to="/"
                 className="px-8 py-4 bg-transparent border border-white/30 text-white font-medium rounded-lg hover:bg-white/10 transition-all"
               >
-                Try Our SEO Tool
+                {t('try_seo_tool')}
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Hidden SEO Content Section for Google */}
       <section className="sr-only">
-        <h2>Toronto SEO Services - Expert Search Engine Optimization</h2>
-        <p>
-          Looking for the best Toronto SEO company? AUS Digital provides expert search engine optimization services for Toronto businesses seeking to improve their online visibility and generate more leads. Our Toronto SEO experts specialize in local SEO, technical SEO, content marketing, and link building strategies tailored for the Greater Toronto Area (GTA) market.
-        </p>
-        
-        <h3>Toronto SEO Services We Offer</h3>
-        <ul>
-          <li>Local SEO Toronto - Improve your Google Maps rankings and local visibility</li>
-          <li>Technical SEO - Fix website issues that are holding back your rankings</li>
-          <li>On-Page SEO - Optimize your website content for Toronto-specific keywords</li>
-          <li>Content Marketing - Create valuable content that attracts Toronto customers</li>
-          <li>Link Building - Build authority with quality backlinks from Toronto sources</li>
-          <li>E-commerce SEO - Boost product visibility and sales for Toronto online stores</li>
-          <li>SEO Audits - Comprehensive analysis of your website's SEO performance</li>
-        </ul>
-        
-        <h3>Toronto Neighborhoods We Serve</h3>
-        <p>
-          We provide specialized SEO services throughout the Greater Toronto Area including Downtown Toronto, North York, Scarborough, Etobicoke, Mississauga, Brampton, Markham, Richmond Hill, Vaughan, Pickering, Ajax, Whitby, Oshawa, Oakville, and Burlington. Our local SEO strategies help businesses target specific Toronto neighborhoods and suburbs effectively.
-        </p>
-        
-        <h4>Why Choose AUS Digital for Toronto SEO Services?</h4>
-        <ul>
-          <li>Toronto SEO Specialists with deep local market knowledge</li>
-          <li>Data-driven strategies customized for your business goals</li>
-          <li>Transparent reporting and clear communication</li>
-          <li>Proven results for Toronto businesses across industries</li>
-          <li>White-hat ethical SEO practices that build sustainable growth</li>
-          <li>Competitive pricing with flexible packages for businesses of all sizes</li>
-        </ul>
-        
-        <p>
-          Improve your search engine rankings, increase website traffic, and generate more leads with Toronto's top SEO agency. Contact AUS Digital today for a free SEO audit and discover how our expert Toronto SEO services can help your business grow online.
-        </p>
-        
-        <h5>Toronto SEO Keywords</h5>
-        <p>
-          Toronto SEO, SEO Toronto, Toronto SEO company, Toronto SEO agency, Toronto SEO expert, Toronto SEO services, local SEO Toronto, Toronto SEO consultant, best SEO Toronto, affordable SEO Toronto, Toronto website optimization, Toronto search engine optimization, Toronto digital marketing, SEO services Toronto, GTA SEO company, SEO specialist Toronto, Toronto SEO firm, Toronto small business SEO, Toronto SEO strategies, Toronto keyword research, Toronto technical SEO, Toronto SEO audit, Toronto content marketing, Toronto link building, Toronto on-page SEO, Toronto off-page SEO, Toronto mobile SEO, Toronto e-commerce SEO, Toronto WordPress SEO, Toronto Shopify SEO, Toronto local business SEO, Toronto voice search optimization, Toronto schema markup, Toronto featured snippets, Toronto Google My Business optimization, Toronto local citations, Toronto backlink building, Toronto competitor analysis, Toronto conversion rate optimization, Toronto semantic SEO, Toronto LSI keywords, Toronto local pack rankings, Toronto map SEO, Toronto SEO ROI, Toronto search marketing.
-        </p>
+        {language === 'en' ? (
+          <>
+            <h2>Toronto SEO Services - Expert Search Engine Optimization</h2>
+            <p>
+              Looking for the best Toronto SEO company? AUS Digital provides expert search engine optimization services for Toronto businesses seeking to improve their online visibility and generate more leads. Our Toronto SEO experts specialize in local SEO, technical SEO, content marketing, and link building strategies tailored for the Greater Toronto Area (GTA) market.
+            </p>
+            
+            <h3>Toronto SEO Services We Offer</h3>
+            <ul>
+              <li>Local SEO Toronto - Improve your Google Maps rankings and local visibility</li>
+              <li>Technical SEO - Fix website issues that are holding back your rankings</li>
+              <li>On-Page SEO - Optimize your website content for Toronto-specific keywords</li>
+              <li>Content Marketing - Create valuable content that attracts Toronto customers</li>
+              <li>Link Building - Build authority with quality backlinks from Toronto sources</li>
+              <li>E-commerce SEO - Boost product visibility and sales for Toronto online stores</li>
+              <li>SEO Audits - Comprehensive analysis of your website's SEO performance</li>
+            </ul>
+            
+            <h3>Toronto Neighborhoods We Serve</h3>
+            <p>
+              We provide specialized SEO services throughout the Greater Toronto Area including Downtown Toronto, North York, Scarborough, Etobicoke, Mississauga, Brampton, Markham, Richmond Hill, Vaughan, Pickering, Ajax, Whitby, Oshawa, Oakville, and Burlington. Our local SEO strategies help businesses target specific Toronto neighborhoods and suburbs effectively.
+            </p>
+            
+            <h4>Why Choose AUS Digital for Toronto SEO Services?</h4>
+            <ul>
+              <li>Toronto SEO Specialists with deep local market knowledge</li>
+              <li>Data-driven strategies customized for your business goals</li>
+              <li>Transparent reporting and clear communication</li>
+              <li>Proven results for Toronto businesses across industries</li>
+              <li>White-hat ethical SEO practices that build sustainable growth</li>
+              <li>Competitive pricing with flexible packages for businesses of all sizes</li>
+            </ul>
+            
+            <p>
+              Improve your search engine rankings, increase website traffic, and generate more leads with Toronto's top SEO agency. Contact AUS Digital today for a free SEO audit and discover how our expert Toronto SEO services can help your business grow online.
+            </p>
+            
+            <h5>Toronto SEO Keywords</h5>
+            <p>
+              Toronto SEO, SEO Toronto, Toronto SEO company, Toronto SEO agency, Toronto SEO expert, Toronto SEO services, local SEO Toronto, Toronto SEO consultant, best SEO Toronto, affordable SEO Toronto, Toronto website optimization, Toronto search engine optimization, Toronto digital marketing, SEO services Toronto, GTA SEO company, SEO specialist Toronto, Toronto SEO firm, Toronto small business SEO, Toronto SEO strategies, Toronto keyword research, Toronto technical SEO, Toronto SEO audit, Toronto content marketing, Toronto link building, Toronto on-page SEO, Toronto off-page SEO, Toronto mobile SEO, Toronto e-commerce SEO, Toronto WordPress SEO, Toronto Shopify SEO, Toronto local business SEO, Toronto voice search optimization, Toronto schema markup, Toronto featured snippets, Toronto Google My Business optimization, Toronto local citations, Toronto backlink building, Toronto competitor analysis, Toronto conversion rate optimization, Toronto semantic SEO, Toronto LSI keywords, Toronto local pack rankings, Toronto map SEO, Toronto SEO ROI, Toronto search marketing.
+            </p>
+          </>
+        ) : (
+          <>
+            <h2>Services SEO Toronto - Optimisation pour moteurs de recherche expert</h2>
+            <p>
+              Vous cherchez la meilleure entreprise SEO à Toronto? AUS Digital fournit des services d'optimisation pour moteurs de recherche experts pour les entreprises de Toronto qui cherchent à améliorer leur visibilité en ligne et à générer plus de prospects. Nos experts SEO de Toronto se spécialisent dans le SEO local, le SEO technique, le marketing de contenu et les stratégies de création de liens adaptées au marché de la région du Grand Toronto (GTA).
+            </p>
+            
+            <h3>Services SEO Toronto que nous offrons</h3>
+            <ul>
+              <li>SEO local Toronto - Améliorez votre classement sur Google Maps et votre visibilité locale</li>
+              <li>SEO technique - Corrigez les problèmes de site Web qui freinent votre classement</li>
+              <li>SEO sur page - Optimisez le contenu de votre site Web pour les mots-clés spécifiques à Toronto</li>
+              <li>Marketing de contenu - Créez un contenu de valeur qui attire les clients de Toronto</li>
+              <li>Création de liens - Établissez une autorité avec des backlinks de qualité provenant de sources de Toronto</li>
+              <li>SEO e-commerce - Augmentez la visibilité des produits et les ventes pour les boutiques en ligne de Toronto</li>
+              <li>Audits SEO - Analyse complète des performances SEO de votre site Web</li>
+            </ul>
+            
+            <h3>Quartiers de Toronto que nous desservons</h3>
+            <p>
+              Nous fournissons des services SEO spécialisés dans toute la région du Grand Toronto, y compris le centre-ville de Toronto, North York, Scarborough, Etobicoke, Mississauga, Brampton, Markham, Richmond Hill, Vaughan, Pickering, Ajax, Whitby, Oshawa, Oakville et Burlington. Nos stratégies de SEO local aident les entreprises à cibler efficacement des quartiers et banlieues spécifiques de Toronto.
+            </p>
+            
+            <h4>Pourquoi choisir AUS Digital pour les services SEO Toronto?</h4>
+            <ul>
+              <li>Spécialistes SEO de Toronto avec une connaissance approfondie du marché local</li>
+              <li>Stratégies basées sur les données personnalisées pour vos objectifs commerciaux</li>
+              <li>Rapports transparents et communication claire</li>
+              <li>Résultats prouvés pour les entreprises de Toronto dans tous les secteurs</li>
+              <li>Pratiques SEO éthiques de chapeau blanc qui construisent une croissance durable</li>
+              <li>Prix compétitifs avec des forfaits flexibles pour les entreprises de toutes tailles</li>
+            </ul>
+            
+            <p>
+              Améliorez votre classement dans les moteurs de recherche, augmentez le trafic de votre site Web et générez plus de prospects avec la meilleure agence SEO de Toronto. Contactez AUS Digital aujourd'hui pour un audit SEO gratuit et découvrez comment nos services SEO experts de Toronto peuvent aider votre entreprise à se développer en ligne.
+            </p>
+            
+            <h5>Mots-clés SEO Toronto</h5>
+            <p>
+              SEO Toronto, référencement Toronto, entreprise SEO Toronto, agence SEO Toronto, expert SEO Toronto, services SEO Toronto, SEO local Toronto, consultant SEO Toronto, meilleur SEO Toronto, SEO abordable Toronto, optimisation de site Web Toronto, optimisation pour moteurs de recherche Toronto, marketing numérique Toronto, services de référencement Toronto, entreprise SEO GTA, spécialiste SEO Toronto, firme SEO Toronto, SEO pour petites entreprises Toronto, stratégies SEO Toronto, recherche de mots-clés Toronto, SEO technique Toronto, audit SEO Toronto, marketing de contenu Toronto, création de liens Toronto, SEO sur page Toronto, SEO hors page Toronto, SEO mobile Toronto, SEO e-commerce Toronto, SEO WordPress Toronto, SEO Shopify Toronto, SEO entreprise locale Toronto, optimisation de recherche vocale Toronto, balisage schéma Toronto, extraits en vedette Toronto, optimisation Google My Business Toronto, citations locales Toronto, création de backlinks Toronto, analyse de la concurrence Toronto, optimisation du taux de conversion Toronto, SEO sémantique Toronto, mots-clés LSI Toronto, classements locaux Toronto, SEO de carte Toronto, ROI SEO Toronto, marketing de recherche Toronto.
+            </p>
+          </>
+        )}
       </section>
     </div>
   );
