@@ -8,6 +8,12 @@ export interface AnalysisResult {
   categories: SEOCategory[];
   contentFetched: boolean;
   relevanceTier?: string;
+  metaData?: {
+    title?: string;
+    description?: string;
+    canonical?: string;
+    ogTags?: Record<string, string>;
+  };
 }
 
 // Main function to analyze a URL for SEO issues
@@ -34,7 +40,8 @@ export const analyzeSEO = async (url: string, keyword?: string): Promise<Analysi
       score: result.score,
       categories: result.categories,
       contentFetched: result.contentFetched,
-      relevanceTier: result.relevanceTier
+      relevanceTier: result.relevanceTier,
+      metaData: result.metaData // Pass through metadata for more detailed reports
     };
   } catch (error) {
     console.error('Error during SEO analysis:', error);

@@ -1,9 +1,8 @@
-
 import React from 'react';
 import SEOForm from './SEOForm';
 import SEOContentSection from './SEOContentSection';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Search, Zap, BarChart3, LineChart, LightbulbIcon, FileCheck, Rocket, Gauge, Target } from 'lucide-react';
+import { Zap, BarChart3, LineChart, LightbulbIcon, FileCheck, Rocket, Gauge, Target } from 'lucide-react';
 
 interface SEOContainerProps {
   onSubmit: (url: string, keyword?: string) => void;
@@ -18,30 +17,25 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
       {/* Hero Section - Keep Dark Theme */}
       <section className="bg-gradient-to-b from-navy to-navy-light pt-12 pb-20 md:pt-20 md:pb-32 w-full">
         <div className="container-custom">
-          <div className="flex flex-col items-center text-center mb-12">
-            <div className="animated-card mb-6 p-4 bg-teal/20 backdrop-blur-md rounded-full">
-              <Search className="h-12 w-12 text-teal-light" />
-            </div>
-            
+          <div className="flex flex-col items-center text-center mb-10">
             <div className="mb-6">
-              <h1 className="text-4xl md:text-6xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-teal-light to-white/90">
+              <h1 className="text-3xl md:text-5xl font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-white via-teal-light to-white/90">
                 {t('seo_tool_title')}
               </h1>
-              <h2 className="text-xl md:text-2xl text-white/90 font-light max-w-3xl mx-auto">
+              <h2 className="text-lg md:text-xl text-white/90 font-light max-w-2xl mx-auto">
                 {t('hero_subtitle')}
               </h2>
             </div>
             
-            <div className="flex items-center justify-center py-2 px-6 bg-teal/20 backdrop-blur-sm rounded-full mb-8 animated-card">
+            <div className="flex items-center justify-center py-2 px-6 bg-teal/30 backdrop-blur-sm rounded-full mb-6 animated-card">
               <Zap className="h-5 w-5 text-teal-light mr-2" />
               <span className="text-white text-sm font-medium">SEO Audit Tool</span>
             </div>
           </div>
           
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-3xl mx-auto" id="seo-tool">
             <div className="glass-card p-8 md:p-10 rounded-xl shadow-2xl border border-teal/30 animate-pulse-glow">
-              <h3 className="text-2xl font-bold mb-6 text-center text-white flex items-center justify-center gap-2">
-                <Search className="h-6 w-6 text-teal" />
+              <h3 className="text-2xl font-bold mb-6 text-center text-white">
                 {t('seo_tool_title')}
               </h3>
               <SEOForm onSubmit={onSubmit} isLoading={isLoading} />
@@ -127,7 +121,7 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
           
           <div className="mt-12 text-center">
             <a href="#seo-tool" className="cta-button inline-flex items-center gap-2">
-              <Search className="h-5 w-5" />
+              <Zap className="h-5 w-5" />
               Start Your Free SEO Audit Now
             </a>
           </div>

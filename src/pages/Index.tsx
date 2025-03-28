@@ -6,7 +6,7 @@ import SEOContainer from '@/components/SEOContainer';
 import SEOResults from '@/components/SEOResults';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Link } from 'react-router-dom';
-import { Search, Book, MapPin, Award, TrendingUp, CheckCircle } from 'lucide-react';
+import { Book, MapPin, Award, TrendingUp, CheckCircle, Zap } from 'lucide-react';
 
 const Index = () => {
   const { t } = useLanguage();
@@ -63,13 +63,23 @@ const Index = () => {
       document.head.appendChild(linkFr);
     }
     
-    const currentUrl = window.location.href;
-    linkEn.setAttribute('href', currentUrl);
-    linkFr.setAttribute('href', currentUrl);
+    const canonicalURL = 'https://seoaudittool.net' + window.location.pathname;
+    
+    linkEn.setAttribute('href', canonicalURL);
+    linkFr.setAttribute('href', canonicalURL);
+    
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.setAttribute('href', canonicalURL);
     
     return () => {
       if (linkEn && linkEn.parentNode) document.head.removeChild(linkEn);
       if (linkFr && linkFr.parentNode) document.head.removeChild(linkFr);
+      if (canonicalLink && canonicalLink.parentNode) document.head.removeChild(canonicalLink);
     };
   }, []);
 
@@ -83,12 +93,13 @@ const Index = () => {
         <meta property="og:title" content="SEO Audit Tool | Website SEO Checker" />
         <meta property="og:description" content="Free comprehensive SEO audit tool to analyze websites and get actionable recommendations to improve your search rankings." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={window.location.href} />
+        <meta property="og:url" content="https://seoaudittool.net" />
+        <meta property="og:image" content="https://seoaudittool.net/seo-tool-preview.jpg" />
         
         <meta name="twitter:title" content="SEO Audit Tool | Website SEO Checker" />
         <meta name="twitter:description" content="Free comprehensive SEO audit tool to analyze websites and get actionable recommendations to improve your search rankings." />
         
-        <link rel="canonical" href={window.location.href} />
+        <link rel="canonical" href="https://seoaudittool.net" />
         
         <script type="application/ld+json">
           {JSON.stringify({
@@ -128,7 +139,7 @@ const Index = () => {
                   <div className="h-16 w-16 rounded-full border-4 border-t-teal border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
                 </div>
                 <p className="text-lg font-medium text-white">{t('loading')} {currentUrl}...</p>
-                <p className="text-muted-foreground">{t('this_may_take')}</p>
+                <p className="text-white/70">{t('this_may_take')}</p>
               </div>
             )}
 
@@ -379,7 +390,7 @@ const Index = () => {
             
             <div className="text-center mt-10">
               <a href="#seo-tool" className="cta-button inline-flex items-center gap-2">
-                <Search className="h-5 w-5" />
+                <Zap className="h-5 w-5" />
                 Try Our Free SEO Tool Now
               </a>
             </div>
