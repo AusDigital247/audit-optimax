@@ -7,19 +7,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { 
   CheckCircle2, 
   BarChart, 
-  LineChart, 
   TrendingUp, 
   Users, 
-  Settings, 
-  Zap,
+  Zap, 
   MapPin,
   Building,
   Globe,
   Search,
-  FileText,
-  LayoutGrid,
-  ArrowUpRight,
-  MessageSquare
+  FileText
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -36,8 +31,19 @@ const SeoOttawa = () => {
     <>
       <Helmet>
         <title>Ottawa SEO Services | Local SEO Expert Ottawa | Digital Marketing</title>
-        <meta name="description" content="Expert SEO services in Ottawa and surrounding areas. Improve your local search rankings with proven Ottawa SEO strategies and comprehensive website analysis for businesses in Kanata, Orleans, Nepean, and beyond." />
+        <meta name="description" content="Expert SEO services in Ottawa and surrounding areas. Improve your local search rankings with proven Ottawa SEO strategies and comprehensive website analysis for businesses in Kanata, Orleans, Nepean and beyond." />
         <meta name="keywords" content="Ottawa SEO, SEO services Ottawa, local SEO Ottawa, SEO expert Ottawa, Ottawa search optimization, Kanata SEO, Orleans SEO, Nepean SEO" />
+        
+        {/* Override Open Graph tags */}
+        <meta property="og:title" content="Ottawa SEO Services | Local SEO Expert Ottawa" />
+        <meta property="og:description" content="Expert SEO services in Ottawa and surrounding areas. Improve your local search rankings with proven Ottawa SEO strategies." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
+        
+        {/* Override Twitter tags */}
+        <meta name="twitter:title" content="Ottawa SEO Services | Local SEO Expert Ottawa" />
+        <meta name="twitter:description" content="Expert SEO services in Ottawa and surrounding areas. Improve your local search rankings with proven Ottawa SEO strategies." />
+        
         <link rel="canonical" href={window.location.href} />
         
         {/* Ottawa-specific schema markup */}

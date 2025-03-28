@@ -36,6 +36,17 @@ const SeoToronto = () => {
         <title>Toronto SEO Services | Local SEO Expert Toronto | Digital Marketing</title>
         <meta name="description" content="Expert SEO services in Toronto and the GTA. Improve your local search rankings with proven Toronto SEO strategies and comprehensive website analysis for businesses in Scarborough, Etobicoke, North York, and beyond." />
         <meta name="keywords" content="Toronto SEO, SEO services Toronto, local SEO Toronto, SEO expert Toronto, Toronto search optimization, Scarborough SEO, Etobicoke SEO, North York SEO" />
+        
+        {/* Override Open Graph tags */}
+        <meta property="og:title" content="Toronto SEO Services | Local SEO Expert Toronto" />
+        <meta property="og:description" content="Expert SEO services in Toronto and the GTA. Improve your local search rankings with proven Toronto SEO strategies." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
+        
+        {/* Override Twitter tags */}
+        <meta name="twitter:title" content="Toronto SEO Services | Local SEO Expert Toronto" />
+        <meta name="twitter:description" content="Expert SEO services in Toronto and the GTA. Improve your local search rankings with proven Toronto SEO strategies." />
+        
         <link rel="canonical" href={window.location.href} />
         
         {/* Toronto-specific schema markup */}

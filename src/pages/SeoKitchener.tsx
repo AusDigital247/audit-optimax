@@ -7,20 +7,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { 
   CheckCircle2, 
   BarChart, 
-  LineChart, 
   TrendingUp, 
   Users, 
-  Settings, 
-  Zap,
+  Zap, 
   MapPin,
   Building,
   Globe,
   Search,
-  FileText,
-  LayoutGrid,
-  ArrowUpRight,
-  MessageSquare,
-  PieChart
+  FileText
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -37,8 +31,19 @@ const SeoKitchener = () => {
     <>
       <Helmet>
         <title>Kitchener SEO Services | Local SEO Expert Kitchener-Waterloo | Digital Marketing</title>
-        <meta name="description" content="Expert SEO services in Kitchener-Waterloo and surrounding areas. Improve your local search rankings with proven Kitchener SEO strategies and comprehensive website analysis for businesses in the Tri-Cities region." />
-        <meta name="keywords" content="Kitchener SEO, SEO services Kitchener, local SEO Kitchener, SEO expert Kitchener, Kitchener-Waterloo search optimization, Waterloo SEO, Cambridge SEO" />
+        <meta name="description" content="Expert SEO services in Kitchener-Waterloo and surrounding areas. Improve your local search rankings with proven Kitchener SEO strategies and comprehensive website analysis for businesses in Cambridge, Guelph, Waterloo and beyond." />
+        <meta name="keywords" content="Kitchener SEO, SEO services Kitchener, local SEO Kitchener, SEO expert Kitchener, Kitchener-Waterloo search optimization, Waterloo SEO, Cambridge SEO, Guelph SEO" />
+        
+        {/* Override Open Graph tags */}
+        <meta property="og:title" content="Kitchener SEO Services | Local SEO Expert Kitchener-Waterloo" />
+        <meta property="og:description" content="Expert SEO services in Kitchener-Waterloo and surrounding areas. Improve your local search rankings with proven Kitchener SEO strategies." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
+        
+        {/* Override Twitter tags */}
+        <meta name="twitter:title" content="Kitchener SEO Services | Local SEO Expert Kitchener-Waterloo" />
+        <meta name="twitter:description" content="Expert SEO services in Kitchener-Waterloo and surrounding areas. Improve your local search rankings with proven Kitchener SEO strategies." />
+        
         <link rel="canonical" href={window.location.href} />
         
         {/* Kitchener-specific schema markup */}
@@ -47,7 +52,7 @@ const SeoKitchener = () => {
             "@context": "https://schema.org",
             "@type": "Service",
             "name": "Kitchener SEO Services",
-            "description": "Professional SEO services for businesses in Kitchener-Waterloo and the Tri-Cities region. Improve local search visibility and drive more targeted traffic to your website.",
+            "description": "Professional SEO services for businesses in Kitchener-Waterloo and surrounding areas. Improve local search visibility and drive more targeted traffic to your website.",
             "provider": {
               "@type": "Organization",
               "name": "SEO Audit Tool"

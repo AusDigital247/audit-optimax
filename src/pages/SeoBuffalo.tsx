@@ -7,20 +7,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { 
   CheckCircle2, 
   BarChart, 
-  LineChart, 
   TrendingUp, 
   Users, 
-  Settings, 
-  Zap,
+  Zap, 
   MapPin,
   Building,
   Globe,
   Search,
-  FileText,
-  LayoutGrid,
-  ArrowUpRight,
-  MessageSquare,
-  Target
+  FileText
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -37,8 +31,19 @@ const SeoBuffalo = () => {
     <>
       <Helmet>
         <title>Buffalo NY SEO Services | Local SEO Expert Buffalo | Digital Marketing</title>
-        <meta name="description" content="Expert SEO services in Buffalo, New York and surrounding areas. Improve your local search rankings with proven Buffalo SEO strategies and comprehensive website analysis for businesses throughout Western New York." />
-        <meta name="keywords" content="Buffalo SEO, SEO services Buffalo, Buffalo NY SEO, SEO expert Buffalo, Buffalo search optimization, Western New York SEO, Niagara Region SEO" />
+        <meta name="description" content="Expert SEO services in Buffalo NY and Western New York. Improve your local search rankings with proven Buffalo SEO strategies and comprehensive website analysis for businesses in Niagara Falls, Cheektowaga, Amherst and beyond." />
+        <meta name="keywords" content="Buffalo SEO, SEO services Buffalo, local SEO Buffalo, SEO expert Buffalo, Buffalo NY search optimization, Niagara Falls SEO, Cheektowaga SEO, Amherst SEO" />
+        
+        {/* Override Open Graph tags */}
+        <meta property="og:title" content="Buffalo NY SEO Services | Local SEO Expert Buffalo" />
+        <meta property="og:description" content="Expert SEO services in Buffalo NY and Western New York. Improve your local search rankings with proven Buffalo SEO strategies." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
+        
+        {/* Override Twitter tags */}
+        <meta name="twitter:title" content="Buffalo NY SEO Services | Local SEO Expert Buffalo" />
+        <meta name="twitter:description" content="Expert SEO services in Buffalo NY and Western New York. Improve your local search rankings with proven Buffalo SEO strategies." />
+        
         <link rel="canonical" href={window.location.href} />
         
         {/* Buffalo-specific schema markup */}
@@ -47,7 +52,7 @@ const SeoBuffalo = () => {
             "@context": "https://schema.org",
             "@type": "Service",
             "name": "Buffalo SEO Services",
-            "description": "Professional SEO services for businesses in Buffalo, NY and surrounding areas. Improve local search visibility and drive more targeted traffic to your website.",
+            "description": "Professional SEO services for businesses in Buffalo NY and Western New York. Improve local search visibility and drive more targeted traffic to your website.",
             "provider": {
               "@type": "Organization",
               "name": "SEO Audit Tool"
@@ -66,8 +71,8 @@ const SeoBuffalo = () => {
               "name": "Buffalo and Western New York",
               "address": {
                 "@type": "PostalAddress",
-                "addressRegion": "NY",
-                "addressCountry": "USA"
+                "addressRegion": "New York",
+                "addressCountry": "United States"
               }
             }
           })}

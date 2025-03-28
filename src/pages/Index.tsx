@@ -81,6 +81,17 @@ const Index = () => {
         <title>SEO Audit Tool | Website SEO Checker | Free SEO Analysis</title>
         <meta name="description" content="Free comprehensive SEO audit tool to analyze websites and get actionable recommendations. Check SEO health score and improve search rankings with our website checker tool." />
         <meta name="keywords" content="SEO audit tool, website SEO checker, SEO analysis, SEO health score, search engine optimization, free SEO tool, website checker" />
+        
+        {/* Override Open Graph tags */}
+        <meta property="og:title" content="SEO Audit Tool | Website SEO Checker" />
+        <meta property="og:description" content="Free comprehensive SEO audit tool to analyze websites and get actionable recommendations to improve your search rankings." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
+        
+        {/* Override Twitter tags */}
+        <meta name="twitter:title" content="SEO Audit Tool | Website SEO Checker" />
+        <meta name="twitter:description" content="Free comprehensive SEO audit tool to analyze websites and get actionable recommendations to improve your search rankings." />
+        
         <link rel="canonical" href={window.location.href} />
         
         {/* Schema.org markup for the SEO tool */}
