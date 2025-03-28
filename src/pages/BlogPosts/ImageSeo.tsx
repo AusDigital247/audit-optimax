@@ -1,708 +1,391 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { CalendarIcon, User, Clock, ChevronRight, ArrowLeft, Image } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { CheckCircle2, Image, ArrowRight, Search, FileImage, BarChart3 } from 'lucide-react';
 
 const ImageSeo = () => {
-  const { language } = useLanguage();
-  
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
-    <div className="min-h-screen w-full bg-gray-50">
+    <div className="min-h-screen w-full bg-gradient-to-b from-navy to-navy-light">
       <Helmet>
-        <title>Advanced Image SEO Techniques | Optimize Images for Better Rankings</title>
-        <meta name="description" content="Learn advanced image SEO techniques to improve search visibility, boost rankings, and drive more traffic through properly optimized images." />
-        <meta name="keywords" content="image SEO, image optimization, alt text, image compression, file naming, accessibility, structured data for images, image sitemaps" />
+        <title>Advanced Image SEO Guide | Optimize Images for Search | SEO Audit Tool</title>
+        <meta name="description" content="Learn advanced image SEO techniques to improve search visibility, increase traffic, and enhance user experience. Complete guide with best practices for 2025." />
+        <meta name="keywords" content="image SEO, image optimization, alt text, image compression, responsive images, image sitemap, visual search optimization" />
         
-        <meta property="og:title" content="Advanced Image SEO Techniques | Optimize Images for Better Rankings" />
-        <meta property="og:description" content="Learn advanced image SEO techniques to improve search visibility, boost rankings, and drive more traffic through properly optimized images." />
+        <meta property="og:title" content="Advanced Image SEO Guide | Optimize Images for Search | SEO Audit Tool" />
+        <meta property="og:description" content="Learn advanced image SEO techniques to improve search visibility, increase traffic, and enhance user experience. Complete guide with best practices for 2025." />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={window.location.href} />
+        <meta property="og:image" content="/images/image-seo-guide.jpg" />
         
-        <meta name="twitter:title" content="Advanced Image SEO Techniques | Optimize Images for Better Rankings" />
-        <meta name="twitter:description" content="Learn advanced image SEO techniques to improve search visibility, boost rankings, and drive more traffic through properly optimized images." />
+        <meta name="twitter:title" content="Advanced Image SEO Guide | Optimize Images for Search | SEO Audit Tool" />
+        <meta name="twitter:description" content="Learn advanced image SEO techniques to improve search visibility, increase traffic, and enhance user experience. Complete guide with best practices for 2025." />
         
         <link rel="canonical" href={window.location.href} />
-        
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            "headline": "Advanced Image SEO Techniques",
-            "description": "Learn advanced image SEO techniques to improve search visibility, boost rankings, and drive more traffic through properly optimized images.",
-            "image": "/image-seo-guide.jpg",
-            "author": {
-              "@type": "Organization",
-              "name": "SEO Audit Tool"
-            },
-            "publisher": {
-              "@type": "Organization",
-              "name": "SEO Audit Tool",
-              "logo": {
-                "@type": "ImageObject",
-                "url": "/logo.png"
-              }
-            },
-            "datePublished": "2023-08-22",
-            "dateModified": "2023-08-22"
-          })}
-        </script>
       </Helmet>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-b from-navy to-navy-light py-16 md:py-20">
-        <div className="container-custom">
-          <div className="flex items-center mb-8">
-            <Link to="/blog" className="flex items-center text-white/80 hover:text-teal transition-colors">
-              <ArrowLeft size={18} className="mr-2" />
-              Back to Blog
-            </Link>
-          </div>
+      <div className="container mx-auto px-4 py-12 max-w-5xl">
+        <div className="mb-10">
+          <Link to="/blog" className="text-teal hover:text-teal-light flex items-center mb-4">
+            <ArrowRight className="h-4 w-4 mr-2 rotate-180" /> Back to Blog
+          </Link>
           
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-6">
-              <span className="text-xs font-medium px-3 py-1 bg-teal/20 text-teal-light rounded-full">Image Optimization</span>
+          <div className="bg-white rounded-xl p-8 shadow-lg">
+            <h1 className="text-4xl md:text-5xl font-bold text-navy mb-6">Advanced Image SEO Techniques for 2025</h1>
+            
+            <div className="flex items-center mb-6 text-navy/60">
+              <span className="mr-4">Published: May 10, 2024</span>
+              <span>10 min read</span>
             </div>
             
-            <h1 className="text-3xl md:text-5xl font-bold mb-6 text-center gradient-text">
-              Advanced Image SEO Techniques
-            </h1>
-            
-            <div className="flex items-center justify-center gap-4 mb-8 text-white/80">
-              <div className="flex items-center">
-                <User size={14} className="mr-1" />
-                <span className="text-sm">SEO Audit Tool Team</span>
-              </div>
-              <div className="flex items-center">
-                <CalendarIcon size={14} className="mr-1" />
-                <span className="text-sm">August 22, 2023</span>
-              </div>
-              <div className="flex items-center">
-                <Clock size={14} className="mr-1" />
-                <span className="text-sm">12 min read</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      {/* Article Content */}
-      <section className="py-12 md:py-16">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-            {/* Main Content */}
-            <div className="lg:col-span-8 bg-white rounded-xl p-6 md:p-10 shadow-sm">
-              <article className="prose prose-lg max-w-none">
-                <h2 id="introduction">Why Image SEO Matters More Than Ever</h2>
-                <p>
-                  In the evolving landscape of search engine optimization, image SEO has emerged as a critical yet often underutilized strategy. With visual search gaining momentum and Google's increasingly sophisticated ability to understand and index images, properly optimized images aren't just enhancing your content—they're becoming a primary pathway for driving organic traffic.
-                </p>
-                <p>
-                  The statistics speak volumes: according to recent studies, nearly 20% of all searches on Google occur on Google Images, representing billions of monthly queries. Additionally, with the rise of multi-modal search capabilities that combine text and images, visual content now plays a more significant role in how users discover websites. This detailed guide explores advanced image SEO techniques that go beyond basic optimization to give your website a competitive edge in search results and enhance user experience.
-                </p>
-
-                <h2 id="fundamentals">Image SEO Fundamentals: Beyond the Basics</h2>
-                <p>
-                  While many SEO practitioners understand basic image optimization, truly effective image SEO requires a more nuanced approach:
-                </p>
-                
-                <h3>Strategic File Naming Conventions</h3>
-                <p>
-                  File names remain one of the most underutilized aspects of image SEO. Beyond simply including keywords, implement these advanced naming strategies:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Hierarchical naming patterns:</strong> Use category-subcategory-specific naming patterns (e.g., "kitchen-appliances-stainless-steel-refrigerator-side-by-side.webp") to help search engines contextualize the image within your site's information architecture.
-                  </li>
-                  <li>
-                    <strong>Semantic identifiers:</strong> Include descriptive modifiers that answer likely user questions, such as color, style, size, or material (e.g., "organic-cotton-blue-t-shirt-crew-neck.webp").
-                  </li>
-                  <li>
-                    <strong>Geotagged file names:</strong> For location-specific businesses, include geographic identifiers in image file names (e.g., "toronto-skyline-cn-tower-sunset.webp").
-                  </li>
-                </ul>
-                
-                <h3>Alt Text Engineering</h3>
-                <p>
-                  Alt text has evolved beyond simple keyword inclusion to serve multiple purposes:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Context-aware descriptions:</strong> Craft alt text that relates the image to the surrounding content, using natural language that explains why the image is relevant to the text.
-                  </li>
-                  <li>
-                    <strong>Intent-optimized alt text:</strong> Align your alt text with search intent by including descriptive terms that match how users would search for visual content.
-                  </li>
-                  <li>
-                    <strong>Accessibility-enhanced:</strong> Ensure alt text serves both SEO and accessibility by providing clear descriptions for screen readers while naturally incorporating relevant keywords.
-                  </li>
-                </ul>
-                <p>
-                  Example of well-crafted alt text: "Chef preparing handmade pasta dough in a rustic Italian kitchen with marble countertop and wooden rolling pin" rather than just "pasta recipe" or "cooking pasta."
-                </p>
-                
-                <h3>Contextual Image Placement</h3>
-                <p>
-                  Where and how you place images within your content significantly impacts their SEO value:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Strategic positioning:</strong> Place the most important images near relevant keywords and headings in the text to strengthen the contextual relationship.
-                  </li>
-                  <li>
-                    <strong>Content reinforcement:</strong> Use images to illustrate key points rather than as decorative elements, ensuring they add informational value.
-                  </li>
-                  <li>
-                    <strong>Caption optimization:</strong> Implement descriptive captions that expand on the image content while incorporating secondary keywords or related terms.
-                  </li>
-                </ul>
-
-                <h2 id="technical-optimization">Technical Image Optimization for SEO Performance</h2>
-                <p>
-                  Technical aspects of image optimization directly impact both SEO performance and user experience:
-                </p>
-                
-                <h3>Next-Generation Image Formats</h3>
-                <p>
-                  The evolution of image formats offers significant advantages for both performance and quality:
-                </p>
-                <ul>
-                  <li>
-                    <strong>WebP implementation:</strong> Implementing WebP can reduce image size by up to 30% compared to optimized JPEG while maintaining visual quality. Use the <code>&lt;picture&gt;</code> element with fallbacks for comprehensive browser support.
-                  </li>
-                  <li>
-                    <strong>AVIF integration:</strong> For cutting-edge performance, begin adopting AVIF format, which offers superior compression (up to 50% smaller than WebP) and quality features like HDR and wide color gamut.
-                  </li>
-                  <li>
-                    <strong>Responsive format selection:</strong> Implement server-side logic to serve the most efficient format based on browser capabilities and connection speed.
-                  </li>
-                </ul>
-                
-                <h3>Advanced Compression Techniques</h3>
-                <p>
-                  Beyond standard compression, these techniques maximize performance while preserving quality:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Content-aware compression:</strong> Utilize tools that apply variable compression based on image content, preserving details in focal areas while more aggressively compressing less important regions.
-                  </li>
-                  <li>
-                    <strong>Chroma subsampling optimization:</strong> For photographic images, implement 4:2:0 chroma subsampling to reduce file size with minimal perceptible quality loss.
-                  </li>
-                  <li>
-                    <strong>Vector conversion for graphics:</strong> Convert simple illustrations, icons, and logos to SVG format for perfect scaling and minimal file size.
-                  </li>
-                </ul>
-                
-                <h3>Responsive Image Implementation</h3>
-                <p>
-                  Properly implemented responsive images impact both performance metrics and user experience:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Comprehensive srcset attributes:</strong> Provide multiple resolution options with carefully selected breakpoints based on your design and typical viewing devices.
-                  </li>
-                  <li>
-                    <strong>Art direction with &lt;picture&gt;:</strong> Use the picture element to deliver different image crops or compositions based on viewport size, enhancing the visual experience across devices.
-                  </li>
-                  <li>
-                    <strong>Resolution switching:</strong> Implement client-side resolution detection to serve the optimal image size based on both device capabilities and network conditions.
-                  </li>
-                  <li>
-                    <strong>Aspect ratio preservation:</strong> Use the aspect-ratio CSS property to prevent layout shifts during image loading, contributing to better Core Web Vitals scores.
-                  </li>
-                </ul>
-                
-                <h3>CDN and Delivery Optimization</h3>
-                <p>
-                  Advanced delivery strategies enhance both the loading experience and SEO performance:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Geographic content delivery:</strong> Utilize CDN services with global edge locations to minimize image loading times for users worldwide.
-                  </li>
-                  <li>
-                    <strong>Automated format negotiation:</strong> Implement CDN features that automatically serve the best format based on browser support (e.g., WebP for compatible browsers, JPEG for others).
-                  </li>
-                  <li>
-                    <strong>Dynamic quality adjustment:</strong> Use services that can dynamically adjust image quality based on connection speed while maintaining visual acceptability.
-                  </li>
-                </ul>
-
-                <h2 id="loading-performance">Image Loading Performance Optimization</h2>
-                <p>
-                  How images load significantly impacts both user experience metrics and search ranking:
-                </p>
-                
-                <h3>Strategic Lazy Loading Implementation</h3>
-                <p>
-                  Beyond basic lazy loading, these advanced techniques optimize the loading sequence:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Priority hints:</strong> Implement the <code>fetchpriority</code> attribute to indicate which images should load first, particularly for LCP (Largest Contentful Paint) images.
-                  </li>
-                  <li>
-                    <strong>Calculated loading distances:</strong> Customize lazy loading thresholds based on viewport size and typical scroll speed to ensure images load just before they enter the viewport.
-                  </li>
-                  <li>
-                    <strong>Critical image preloading:</strong> Use <code>&lt;link rel="preload"&gt;</code> for hero images and other visually important above-the-fold content to expedite rendering.
-                  </li>
-                </ul>
-                
-                <h3>Progressive Loading Techniques</h3>
-                <p>
-                  Enhance perceived performance with these progressive rendering approaches:
-                </p>
-                <ul>
-                  <li>
-                    <strong>LQIP (Low Quality Image Placeholders):</strong> Generate and preload tiny, blurred versions of images that serve as placeholders while the full image loads.
-                  </li>
-                  <li>
-                    <strong>Color extraction placeholders:</strong> Generate dominant color blocks as initial placeholders for a more visually pleasing loading experience.
-                  </li>
-                  <li>
-                    <strong>Progressive JPEG optimization:</strong> For larger images, ensure they're saved as progressive JPEGs to display increasingly detailed versions during loading rather than loading from top to bottom.
-                  </li>
-                  <li>
-                    <strong>Blur-up techniques:</strong> Implement JavaScript solutions that create a smooth transition from placeholder to full image with a pleasing blur effect.
-                  </li>
-                </ul>
-                
-                <h3>Advanced Caching Strategies</h3>
-                <p>
-                  Implement sophisticated caching approaches to optimize repeat visits:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Long-term caching with versioning:</strong> Set extended cache lifetimes for images with versioned URLs that change when the image is updated.
-                  </li>
-                  <li>
-                    <strong>Service worker image caching:</strong> Implement service workers to cache images for offline access and instant loading on return visits.
-                  </li>
-                  <li>
-                    <strong>Cache-aware image loading:</strong> Develop scripts that check for cached versions before triggering new downloads, particularly for returning users.
-                  </li>
-                </ul>
-
-                <h2 id="structured-data">Structured Data and Advanced Markup for Images</h2>
-                <p>
-                  Implementing structured data helps search engines better understand and index your images:
-                </p>
-                
-                <h3>Comprehensive Schema.org Implementation</h3>
-                <p>
-                  Beyond basic image markup, these structured data implementations enhance image visibility:
-                </p>
-                <ul>
-                  <li>
-                    <strong>ImageObject properties:</strong> Implement detailed ImageObject schema with properties like contentUrl, caption, creator, copyrightHolder, and exifData.
-                  </li>
-                  <li>
-                    <strong>Content-type specific schemas:</strong> For product images, use Product schema with additional image-specific properties; for recipe images, use Recipe schema with recipeInstructions tied to specific images.
-                  </li>
-                  <li>
-                    <strong>License information:</strong> Include license information in your structured data to help your images appear in Google's "licensed images" filter.
-                  </li>
-                </ul>
-                
-                <h3>IPTC and EXIF Data Optimization</h3>
-                <p>
-                  Embedded metadata provides additional context for image search engines:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Comprehensive IPTC fields:</strong> Populate IPTC metadata fields including title, description, keywords, creator, copyright, and location information.
-                  </li>
-                  <li>
-                    <strong>Geographic metadata:</strong> For location-relevant images, ensure accurate GPS coordinates are included in the EXIF data.
-                  </li>
-                  <li>
-                    <strong>Metadata preservation workflow:</strong> Establish a workflow that preserves essential metadata during the compression and optimization process.
-                  </li>
-                </ul>
-                
-                <h3>Image Sitemaps and Indexation Control</h3>
-                <p>
-                  Strategic approaches to image indexation improve discovery and relevance:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Dedicated image sitemaps:</strong> Create image-specific XML sitemaps that include additional attributes like title, caption, geo_location, and license.
-                  </li>
-                  <li>
-                    <strong>Selective indexation:</strong> Use robots.txt and meta directives to control which images should be indexed, preventing duplicate or low-value images from diluting your image search presence.
-                  </li>
-                  <li>
-                    <strong>Canonical image URLs:</strong> For images that appear in multiple locations on your site, implement canonical references to indicate the preferred version for indexing.
-                  </li>
-                </ul>
-
-                <h2 id="visual-search">Visual Search Optimization Techniques</h2>
-                <p>
-                  As visual search capabilities advance, these techniques help position your images for discovery:
-                </p>
-                
-                <h3>Computer Vision Optimization</h3>
-                <p>
-                  Adapt your images to work well with AI-powered visual recognition systems:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Subject clarity:</strong> Ensure main subjects are clearly distinguished from backgrounds, avoiding busy patterns that can confuse object recognition.
-                  </li>
-                  <li>
-                    <strong>Multiple angle coverage:</strong> For products, include images from multiple angles to increase recognition opportunities.
-                  </li>
-                  <li>
-                    <strong>Feature highlighting:</strong> Emphasize distinctive features that computer vision systems might use for identification and categorization.
-                  </li>
-                </ul>
-                
-                <h3>Similar Image Discovery Optimization</h3>
-                <p>
-                  Increase the likelihood of your images appearing in "similar image" results:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Visual distinctiveness:</strong> Create images with unique visual characteristics that stand out while remaining relevant to your category.
-                  </li>
-                  <li>
-                    <strong>Category signaling:</strong> Include visual elements that clearly signal the image category to help classification systems.
-                  </li>
-                  <li>
-                    <strong>Competitive visual analysis:</strong> Analyze which images rank well for your target terms and understand their visual characteristics.
-                  </li>
-                </ul>
-                
-                <h3>Google Lens and Visual Search Readiness</h3>
-                <p>
-                  Optimize specifically for emerging visual search tools:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Text clarity in images:</strong> Ensure any text in images is clear and readable, as Google Lens can recognize and search for text within images.
-                  </li>
-                  <li>
-                    <strong>Brand and logo prominence:</strong> For brand-related images, make logos and brand identifiers clearly visible to facilitate brand searches.
-                  </li>
-                  <li>
-                    <strong>Action-ready images:</strong> Design product images to facilitate "where to buy" and other action-oriented visual searches.
-                  </li>
-                </ul>
-
-                <h2 id="ecommerce">E-commerce Specific Image SEO Strategies</h2>
-                <p>
-                  For online retailers, these specialized techniques drive product discovery and conversion:
-                </p>
-                
-                <h3>Product Image Optimization</h3>
-                <p>
-                  Advanced strategies for product imagery that converts:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Consistent product presentation:</strong> Maintain consistent angles, lighting, and scale across product categories to help users visually compare options.
-                  </li>
-                  <li>
-                    <strong>Detail variation images:</strong> Include close-up images of unique features with feature-specific alt text and filenames.
-                  </li>
-                  <li>
-                    <strong>Usage context images:</strong> Show products in use or in appropriate settings to help users visualize ownership and increase relevance for contextual searches.
-                  </li>
-                </ul>
-                
-                <h3>Google Shopping Feed Integration</h3>
-                <p>
-                  Synchronize your image SEO with shopping feed requirements:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Feed-compatible image naming:</strong> Align image filenames with product identifiers used in your Google Merchant Center feed.
-                  </li>
-                  <li>
-                    <strong>Multiple image submission:</strong> Submit additional product images through the shopping feed's additional_image_link field.
-                  </li>
-                  <li>
-                    <strong>Model and variant consistency:</strong> Maintain consistent image structures across product variations to improve category relevance.
-                  </li>
-                </ul>
-                
-                <h3>User-Generated Image Optimization</h3>
-                <p>
-                  Leverage customer images for enhanced relevance:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Review image markup:</strong> Implement structured data for user-submitted review images to enhance rich result opportunities.
-                  </li>
-                  <li>
-                    <strong>Automatic UGC metadata:</strong> Develop systems to automatically generate SEO-friendly filenames and alt text for customer-submitted images.
-                  </li>
-                  <li>
-                    <strong>Permission frameworks:</strong> Create clear terms that allow you to repurpose user images for marketing while respecting copyright considerations.
-                  </li>
-                </ul>
-
-                <h2 id="analytics-testing">Image SEO Analytics and Testing</h2>
-                <p>
-                  Measurement and optimization strategies for ongoing improvement:
-                </p>
-                
-                <h3>Image Performance Tracking</h3>
-                <p>
-                  Advanced metrics to monitor image SEO effectiveness:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Image search traffic segmentation:</strong> Create specific segments in Google Analytics to track and analyze traffic from Google Images separately from general search traffic.
-                  </li>
-                  <li>
-                    <strong>Image impression tracking:</strong> Use Google Search Console to identify which images generate impressions and clicks, and analyze their characteristics.
-                  </li>
-                  <li>
-                    <strong>Visual engagement heatmaps:</strong> Implement visual analytics tools that track user attention and interaction with images to identify which visual elements drive engagement.
-                  </li>
-                </ul>
-                
-                <h3>A/B Testing for Image SEO</h3>
-                <p>
-                  Experimental approaches to optimize image performance:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Alt text variation testing:</strong> Test different alt text approaches on comparable images to measure impact on image search traffic.
-                  </li>
-                  <li>
-                    <strong>Image placement experiments:</strong> Evaluate how different image positions within content affect both user engagement and search visibility.
-                  </li>
-                  <li>
-                    <strong>Format comparison testing:</strong> Develop controlled tests to measure the impact of different image formats and loading techniques on conversion rates and bounce rates.
-                  </li>
-                </ul>
-                
-                <h3>Competitive Image Analysis</h3>
-                <p>
-                  Strategies to benchmark against and surpass competitors:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Reverse image search auditing:</strong> Use reverse image search to identify competitors ranking well with similar images and analyze their optimization approach.
-                  </li>
-                  <li>
-                    <strong>Category image trends:</strong> Track evolving visual trends in your industry to ensure your imagery remains relevant and competitive.
-                  </li>
-                  <li>
-                    <strong>Feature adoption monitoring:</strong> Monitor competitors' implementation of new image features and technologies to maintain competitive parity.
-                  </li>
-                </ul>
-
-                <h2 id="future-trends">Future-Proofing Your Image SEO Strategy</h2>
-                <p>
-                  Emerging trends and technologies to incorporate into your long-term strategy:
-                </p>
-                
-                <h3>AI-Generated and AI-Enhanced Images</h3>
-                <p>
-                  Preparing for the impact of artificial intelligence on image creation and optimization:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Generative AI ethics:</strong> Develop clear policies for the use of AI-generated images, including appropriate disclosure and copyright consideration.
-                  </li>
-                  <li>
-                    <strong>AI enhancement workflows:</strong> Incorporate AI tools that can improve existing images through upscaling, noise reduction, and feature enhancement.
-                  </li>
-                  <li>
-                    <strong>Unique value preservation:</strong> Ensure AI-assisted content still provides unique value that differentiates it from mass-generated visual content.
-                  </li>
-                </ul>
-                
-                <h3>Multi-Modal Search Readiness</h3>
-                <p>
-                  Preparing for searches that combine text, images, and other input types:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Text-image semantic alignment:</strong> Ensure strong contextual relationships between your images and the text they accompany to perform well in multi-modal searches.
-                  </li>
-                  <li>
-                    <strong>Visual question answering optimization:</strong> Design images that effectively answer likely visual questions users might have about your products or topics.
-                  </li>
-                  <li>
-                    <strong>Cross-modal entity recognition:</strong> Optimize for systems that can recognize the same entity across both textual descriptions and visual representations.
-                  </li>
-                </ul>
-                
-                <h3>Augmented Reality Integration</h3>
-                <p>
-                  Preparing images for AR applications and search features:
-                </p>
-                <ul>
-                  <li>
-                    <strong>3D-ready product photography:</strong> Develop photography practices that facilitate conversion to 3D models for AR experiences.
-                  </li>
-                  <li>
-                    <strong>AR markup preparation:</strong> Stay informed about emerging structured data standards for AR-enabled images and implement them early.
-                  </li>
-                  <li>
-                    <strong>Virtual try-on optimization:</strong> For applicable products, optimize images specifically for virtual try-on features in search and shopping platforms.
-                  </li>
-                </ul>
-
-                <h2 id="conclusion">Conclusion: Building a Comprehensive Image SEO Strategy</h2>
-                <p>
-                  Effective image SEO is no longer optional—it's an essential component of a comprehensive search strategy. The techniques outlined in this guide go beyond basic optimization to help you create images that are discoverable, engaging, and supportive of your overall SEO goals.
-                </p>
-                <p>
-                  To implement these strategies effectively, start by auditing your current image optimization practices using our <Link to="/" className="text-teal hover:text-teal-light">SEO Audit Tool</Link>. Identify priority areas for improvement, beginning with technical optimizations that impact site performance, then progressively implementing the more advanced semantic and structured data enhancements.
-                </p>
-                <p>
-                  Remember that image SEO sits at the intersection of technical optimization, content strategy, and user experience. The most successful approaches balance all three considerations, creating visual content that's technically sound, contextually relevant, and visually engaging for users.
-                </p>
-                <p>
-                  By incorporating these advanced image SEO techniques into your overall <Link to="/blog/seo-strategy-2025" className="text-teal hover:text-teal-light">SEO strategy</Link>, you'll not only improve your visibility in image search but also enhance your performance in universal search results, providing a significant competitive advantage in an increasingly visual digital landscape.
-                </p>
-              </article>
-              
-              {/* Tags Section */}
-              <div className="mt-10 pt-6 border-t border-gray-200">
-                <div className="flex flex-wrap gap-2">
-                  <span className="text-sm text-navy font-medium">Tags:</span>
-                  <span className="px-3 py-1 bg-navy/10 text-navy text-xs rounded-full">Image SEO</span>
-                  <span className="px-3 py-1 bg-navy/10 text-navy text-xs rounded-full">Alt Text Optimization</span>
-                  <span className="px-3 py-1 bg-navy/10 text-navy text-xs rounded-full">Visual Search</span>
-                  <span className="px-3 py-1 bg-navy/10 text-navy text-xs rounded-full">WebP Format</span>
-                  <span className="px-3 py-1 bg-navy/10 text-navy text-xs rounded-full">E-commerce Images</span>
-                </div>
-              </div>
-              
-              {/* Author Section */}
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <div className="flex items-center">
-                  <div className="w-12 h-12 rounded-full bg-navy/10 flex items-center justify-center">
-                    <User size={20} className="text-navy" />
-                  </div>
-                  <div className="ml-4">
-                    <h5 className="text-navy font-medium">SEO Audit Tool Team</h5>
-                    <p className="text-sm text-navy/70">Our team of SEO experts stays on the cutting edge of search engine optimization strategies to help your business succeed online.</p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Related Articles Section */}
-              <div className="mt-10 pt-6 border-t border-gray-200">
-                <h4 className="text-xl font-bold text-navy mb-4">Related Articles</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Link to="/blog/seo-strategy-2025" className="group">
-                    <div className="bg-gray-100 rounded-lg overflow-hidden transition-all group-hover:shadow-md">
-                      <div className="p-4">
-                        <h5 className="font-medium text-navy group-hover:text-teal transition-colors mb-2">Advanced SEO Strategies for 2025</h5>
-                        <p className="text-sm text-navy/70 line-clamp-2">Discover cutting-edge SEO strategies that will dominate in 2025 and help your website outrank the competition.</p>
-                      </div>
-                    </div>
-                  </Link>
-                  <Link to="/blog/youtube-seo" className="group">
-                    <div className="bg-gray-100 rounded-lg overflow-hidden transition-all group-hover:shadow-md">
-                      <div className="p-4">
-                        <h5 className="font-medium text-navy group-hover:text-teal transition-colors mb-2">YouTube SEO: The Complete Guide</h5>
-                        <p className="text-sm text-navy/70 line-clamp-2">Learn how to optimize your YouTube videos to increase visibility, engagement, and channel growth.</p>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
-              </div>
+            <div className="rounded-xl overflow-hidden mb-8 border-2 border-navy/10">
+              <img 
+                src="https://images.unsplash.com/photo-1542744094-3a31f272c490?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" 
+                alt="Person optimizing images for SEO with visual editing software" 
+                className="w-full h-auto"
+              />
             </div>
             
-            {/* Sidebar */}
-            <div className="lg:col-span-4">
-              {/* Table of Contents */}
-              <div className="bg-white rounded-xl p-6 shadow-sm mb-8 sticky top-24">
-                <h4 className="text-lg font-bold text-navy mb-4">Table of Contents</h4>
-                <nav className="toc-nav">
-                  <ul className="space-y-2 text-navy/70">
-                    <li>
-                      <a href="#introduction" className="hover:text-teal transition-colors">Why Image SEO Matters More Than Ever</a>
-                    </li>
-                    <li>
-                      <a href="#fundamentals" className="hover:text-teal transition-colors">Image SEO Fundamentals: Beyond the Basics</a>
-                    </li>
-                    <li>
-                      <a href="#technical-optimization" className="hover:text-teal transition-colors">Technical Image Optimization for SEO</a>
-                    </li>
-                    <li>
-                      <a href="#loading-performance" className="hover:text-teal transition-colors">Image Loading Performance Optimization</a>
-                    </li>
-                    <li>
-                      <a href="#structured-data" className="hover:text-teal transition-colors">Structured Data and Advanced Markup</a>
-                    </li>
-                    <li>
-                      <a href="#visual-search" className="hover:text-teal transition-colors">Visual Search Optimization Techniques</a>
-                    </li>
-                    <li>
-                      <a href="#ecommerce" className="hover:text-teal transition-colors">E-commerce Specific Image SEO</a>
-                    </li>
-                    <li>
-                      <a href="#analytics-testing" className="hover:text-teal transition-colors">Image SEO Analytics and Testing</a>
-                    </li>
-                    <li>
-                      <a href="#future-trends" className="hover:text-teal transition-colors">Future-Proofing Your Image SEO</a>
-                    </li>
-                    <li>
-                      <a href="#conclusion" className="hover:text-teal transition-colors">Conclusion</a>
-                    </li>
-                  </ul>
-                </nav>
+            <div className="prose prose-lg max-w-none">
+              <h2 className="text-3xl font-bold text-navy mt-8 mb-4">Why Image SEO Matters in 2025</h2>
+              <p>In today's visually-driven digital landscape, images are no longer just decorative elements—they're vital content assets that can significantly impact your SEO performance. With visual search gaining traction and Google's increasingly sophisticated image recognition capabilities, optimizing your images has become more important than ever.</p>
+              
+              <p>Consider these statistics:</p>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Google Images accounts for approximately 22.6% of all web searches</li>
+                <li>36% of consumers have used visual search when shopping online</li>
+                <li>Sites with optimized images rank 53% higher than their non-optimized counterparts</li>
+                <li>Pages with at least one image rank significantly better on average than those without</li>
+                <li>Properly optimized images can reduce page load time by 30-40%, improving user experience and SEO</li>
+              </ul>
+              
+              <div className="bg-navy/5 p-6 rounded-lg my-8">
+                <h3 className="text-xl font-bold text-navy mb-2">Image SEO Benefits:</h3>
+                <ul className="list-disc pl-6 space-y-2">
+                  <li>Improved organic search visibility in both image and regular search results</li>
+                  <li>Additional traffic from image search and visual search platforms</li>
+                  <li>Enhanced user experience through faster loading times</li>
+                  <li>Better accessibility for users with visual impairments</li>
+                  <li>Increased conversion rates due to relevant, high-quality visuals</li>
+                  <li>Potential for featured snippets and rich results that include images</li>
+                </ul>
               </div>
               
-              {/* CTA Card */}
-              <div className="bg-navy rounded-xl p-6 text-white mb-8">
-                <h4 className="text-xl font-bold mb-3">Check Your SEO Score</h4>
-                <p className="text-white/80 mb-4">Use our <Link to="/" className="text-teal-light hover:underline">SEO checker</Link> to analyze your website and get actionable recommendations.</p>
-                <Link to="/" className="block w-full bg-teal hover:bg-teal-light text-white text-center py-3 rounded-lg transition-colors">
-                  Run Free SEO Analysis
+              <h2 className="text-3xl font-bold text-navy mt-8 mb-4">Essential Image SEO Elements</h2>
+              
+              <h3 className="text-2xl font-bold text-navy mt-6 mb-3">1. Strategic Image File Names</h3>
+              <p>File names are one of the first indicators to search engines about the content of your image. Many website owners overlook this fundamental aspect, uploading images with default camera names like "IMG_12345.jpg" rather than descriptive, keyword-rich file names.</p>
+              
+              <p>Best practices for image file names:</p>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Use descriptive, keyword-rich file names (e.g., "advanced-image-seo-techniques-2025.jpg")</li>
+                <li>Separate words with hyphens, not underscores or spaces</li>
+                <li>Keep file names concise yet descriptive (3-5 words maximum)</li>
+                <li>Include your primary keyword when relevant</li>
+                <li>Consider adding location information for local SEO (e.g., "toronto-skyline-sunset.jpg")</li>
+                <li>Avoid keyword stuffing in file names</li>
+              </ul>
+              
+              <div className="my-8">
+                <img 
+                  src="https://images.unsplash.com/photo-1523437237164-9c53fa5febd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" 
+                  alt="Developer organizing and renaming image files for better SEO" 
+                  className="w-full h-auto rounded-xl"
+                />
+                <p className="text-sm text-navy/60 mt-2 text-center">Properly named image files improve discoverability in search engines</p>
+              </div>
+              
+              <h3 className="text-2xl font-bold text-navy mt-6 mb-3">2. Optimizing Alt Text for SEO and Accessibility</h3>
+              <p>Alt text (alternative text) serves two critical purposes: it helps search engines understand what your images depict, and it provides descriptions for visually impaired users who rely on screen readers.</p>
+              
+              <p>In 2025, search engines have become increasingly sophisticated at analyzing alt text for relevance and context, making proper optimization more important than ever.</p>
+              
+              <p>Best practices for alt text in 2025:</p>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Write descriptive, specific alt text that accurately describes the image content</li>
+                <li>Include relevant keywords naturally where appropriate</li>
+                <li>Keep alt text under 125 characters for optimal screen reader compatibility</li>
+                <li>Avoid keyword stuffing or irrelevant keywords</li>
+                <li>Include context that relates to your page content</li>
+                <li>For decorative images, use empty alt text (alt="")</li>
+                <li>For product images, consider including product name and key features</li>
+              </ul>
+              
+              <div className="bg-teal/10 p-6 rounded-lg my-8 border-l-4 border-teal">
+                <h4 className="text-xl font-bold text-navy mb-2">Alt Text Examples</h4>
+                <p className="mb-2"><strong>Poor:</strong> "image1.jpg" or "SEO image optimization"</p>
+                <p className="mb-2"><strong>Better:</strong> "Person optimizing website images for SEO"</p>
+                <p className="mb-0"><strong>Best:</strong> "Digital marketer using image optimization software to improve website SEO performance"</p>
+              </div>
+              
+              <h3 className="text-2xl font-bold text-navy mt-6 mb-3">3. Image Captioning and Context</h3>
+              <p>While not as commonly discussed as alt text, image captions play a significant role in both SEO and user experience. Captions are the visible text that appears below or alongside images, providing additional context for users.</p>
+              
+              <p>From an SEO perspective, captions offer several advantages:</p>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Captions are read 300% more than body copy, making them prime real estate for relevant keywords</li>
+                <li>They provide additional context to search engines about image content and relevance</li>
+                <li>Captions improve user engagement and time on page</li>
+                <li>They can include links to relevant content, enhancing internal linking structure</li>
+              </ul>
+              
+              <h3 className="text-2xl font-bold text-navy mt-6 mb-3">4. Technical Image Optimization</h3>
+              
+              <h4 className="text-xl font-bold text-navy mt-4 mb-2">Image Compression and File Size</h4>
+              <p>Page speed is a critical ranking factor, and large image files are often the biggest culprits in slowing down websites. In 2025, with Core Web Vitals firmly established as ranking signals, optimizing image file sizes has become non-negotiable.</p>
+              
+              <p>Best practices for image compression:</p>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Compress all images before uploading them to your website</li>
+                <li>Aim for file sizes under 200KB when possible without sacrificing quality</li>
+                <li>Use modern compression tools that maintain visual quality</li>
+                <li>Implement lossless compression for simple graphics and logos</li>
+                <li>Consider lossy compression for photographs and complex images</li>
+                <li>Use WebP format where supported (offers 30% better compression than JPEG)</li>
+                <li>Provide fallback formats for browsers that don't support WebP</li>
+              </ul>
+              
+              <h4 className="text-xl font-bold text-navy mt-4 mb-2">Responsive Images</h4>
+              <p>With mobile-first indexing fully implemented, responsive images are essential for both user experience and SEO. Responsive images automatically adjust their size based on the user's screen, ensuring optimal display across all devices.</p>
+              
+              <p>Implementation techniques for responsive images:</p>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Use the srcset attribute to specify multiple image versions for different screen sizes</li>
+                <li>Implement the sizes attribute to help browsers select the appropriate image size</li>
+                <li>Use CSS to set maximum widths and heights for images</li>
+                <li>Consider implementing lazy loading for images below the fold</li>
+                <li>Create appropriate image dimensions for common device breakpoints</li>
+              </ul>
+              
+              <div className="my-8">
+                <img 
+                  src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" 
+                  alt="Responsive design showing the same website on multiple devices" 
+                  className="w-full h-auto rounded-xl"
+                />
+                <p className="text-sm text-navy/60 mt-2 text-center">Responsive images are essential for multi-device compatibility and SEO</p>
+              </div>
+              
+              <h3 className="text-2xl font-bold text-navy mt-6 mb-3">5. Image File Format Selection</h3>
+              <p>Choosing the right image format is a balance between quality and performance. Each format has specific use cases and advantages:</p>
+              
+              <div className="overflow-x-auto my-6">
+                <table className="min-w-full border-collapse border border-navy/20">
+                  <thead>
+                    <tr className="bg-navy/10">
+                      <th className="p-3 text-left border border-navy/20">Format</th>
+                      <th className="p-3 text-left border border-navy/20">Best Use Cases</th>
+                      <th className="p-3 text-left border border-navy/20">Pros</th>
+                      <th className="p-3 text-left border border-navy/20">Cons</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="p-3 border border-navy/20 font-medium">WebP</td>
+                      <td className="p-3 border border-navy/20">Modern websites, photography, complex graphics</td>
+                      <td className="p-3 border border-navy/20">Superior compression, supports transparency and animation</td>
+                      <td className="p-3 border border-navy/20">Not supported by older browsers (requires fallbacks)</td>
+                    </tr>
+                    <tr className="bg-navy/5">
+                      <td className="p-3 border border-navy/20 font-medium">JPEG/JPG</td>
+                      <td className="p-3 border border-navy/20">Photographs, complex images with gradients</td>
+                      <td className="p-3 border border-navy/20">Universal support, good compression</td>
+                      <td className="p-3 border border-navy/20">No transparency, lossy compression</td>
+                    </tr>
+                    <tr>
+                      <td className="p-3 border border-navy/20 font-medium">PNG</td>
+                      <td className="p-3 border border-navy/20">Graphics with transparency, logos, icons</td>
+                      <td className="p-3 border border-navy/20">Lossless quality, transparency support</td>
+                      <td className="p-3 border border-navy/20">Larger file sizes compared to JPEG/WebP</td>
+                    </tr>
+                    <tr className="bg-navy/5">
+                      <td className="p-3 border border-navy/20 font-medium">SVG</td>
+                      <td className="p-3 border border-navy/20">Logos, icons, simple illustrations</td>
+                      <td className="p-3 border border-navy/20">Infinitely scalable, tiny file sizes</td>
+                      <td className="p-3 border border-navy/20">Not suitable for photographs</td>
+                    </tr>
+                    <tr>
+                      <td className="p-3 border border-navy/20 font-medium">AVIF</td>
+                      <td className="p-3 border border-navy/20">Next-gen replacement for WebP/JPEG</td>
+                      <td className="p-3 border border-navy/20">Superior compression, excellent quality</td>
+                      <td className="p-3 border border-navy/20">Limited browser support in 2025</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+              <p>For optimal SEO in 2025, consider implementing a format delivery strategy that serves:</p>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>WebP as the primary format with JPEG fallbacks</li>
+                <li>SVG for logos, icons, and simple graphics</li>
+                <li>AVIF for browsers that support it</li>
+                <li>PNG only when transparency is required and SVG isn't suitable</li>
+              </ul>
+              
+              <h2 className="text-3xl font-bold text-navy mt-8 mb-4">Advanced Image SEO Techniques for 2025</h2>
+              
+              <h3 className="text-2xl font-bold text-navy mt-6 mb-3">1. Image Structured Data</h3>
+              <p>Implementing structured data (schema markup) for images provides search engines with explicit information about your images, potentially enhancing visibility in search results and enabling rich features.</p>
+              
+              <p>Key image structured data types to implement:</p>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li><strong>ImageObject</strong> schema for important standalone images</li>
+                <li><strong>Product</strong> schema with image properties for e-commerce</li>
+                <li><strong>Recipe</strong> schema with images for food-related content</li>
+                <li><strong>Article</strong> schema with image properties for news/blog content</li>
+                <li><strong>How-To</strong> schema with step images for instructional content</li>
+              </ul>
+              
+              <h3 className="text-2xl font-bold text-navy mt-6 mb-3">2. Image Sitemaps</h3>
+              <p>An image sitemap helps search engines discover and index images that might otherwise be missed during crawling. This is particularly important for:</p>
+              
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Images loaded dynamically through JavaScript</li>
+                <li>Images in carousels or hidden in tabs</li>
+                <li>Sites with extensive image libraries</li>
+                <li>E-commerce sites with product images</li>
+              </ul>
+              
+              <p>Include the following information in your image sitemap:</p>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Image URL location</li>
+                <li>Caption information</li>
+                <li>Title information</li>
+                <li>License information (if applicable)</li>
+                <li>Geographic location (for location-specific images)</li>
+              </ul>
+              
+              <h3 className="text-2xl font-bold text-navy mt-6 mb-3">3. EXIF Data Optimization</h3>
+              <p>EXIF (Exchangeable Image File Format) data contains metadata about images, including camera settings, date taken, and location information. While not all EXIF data is used by search engines, some elements can provide additional context:</p>
+              
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Geolocation data for location-based searches</li>
+                <li>Date information for time-sensitive content</li>
+                <li>Copyright and ownership information</li>
+                <li>Image description fields</li>
+              </ul>
+              
+              <div className="bg-navy/10 p-6 rounded-lg my-8">
+                <h4 className="text-xl font-bold text-navy mb-2">Privacy Consideration</h4>
+                <p className="mb-0">Always strip personally identifying EXIF data from images before uploading them to your website. This includes exact GPS coordinates for sensitive locations and camera serial numbers that could be linked to specific individuals.</p>
+              </div>
+              
+              <h3 className="text-2xl font-bold text-navy mt-6 mb-3">4. Image Content Clustering</h3>
+              <p>Similar to topic clustering for written content, image content clustering involves organizing related images together to establish topical authority and enhance user experience.</p>
+              
+              <p>Implementation strategies include:</p>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Creating image galleries around specific themes or topics</li>
+                <li>Implementing proper internal linking between related image pages</li>
+                <li>Using consistent naming conventions and alt text patterns for related images</li>
+                <li>Creating hub pages that showcase collections of related images</li>
+                <li>Implementing breadcrumb navigation for image categories</li>
+              </ul>
+              
+              <div className="my-8">
+                <img 
+                  src="https://images.unsplash.com/photo-1560472355-536de3962603?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" 
+                  alt="Organized image gallery showing content clustering approach" 
+                  className="w-full h-auto rounded-xl"
+                />
+                <p className="text-sm text-navy/60 mt-2 text-center">Organizing images into thematic clusters improves search visibility</p>
+              </div>
+              
+              <h2 className="text-3xl font-bold text-navy mt-8 mb-4">Image SEO for E-commerce</h2>
+              <p>E-commerce sites face unique image SEO challenges, as product images directly impact conversion rates and search visibility.</p>
+              
+              <h3 className="text-2xl font-bold text-navy mt-6 mb-3">1. Product Image Optimization</h3>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Use consistent image dimensions across product categories</li>
+                <li>Include product name, SKU, and key features in alt text</li>
+                <li>Show products from multiple angles with separate optimized images</li>
+                <li>Implement 360-degree product views where appropriate</li>
+                <li>Use product structured data with image properties</li>
+                <li>Consider adding user-generated product images (with proper optimization)</li>
+              </ul>
+              
+              <h3 className="text-2xl font-bold text-navy mt-6 mb-3">2. Optimizing for Visual Search</h3>
+              <p>Visual search technologies like Google Lens and Pinterest Lens are becoming increasingly important for e-commerce. To optimize for visual search:</p>
+              
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Use high-quality, clear product images with clean backgrounds</li>
+                <li>Include multiple product angles to increase recognition opportunities</li>
+                <li>Ensure consistent lighting and professional image quality</li>
+                <li>Use descriptive file names and alt text that match product attributes</li>
+                <li>Implement proper structured data for products</li>
+                <li>Consider watermarking images with your brand for recognition</li>
+              </ul>
+              
+              <h2 className="text-3xl font-bold text-navy mt-8 mb-4">Measuring Image SEO Success</h2>
+              
+              <h3 className="text-2xl font-bold text-navy mt-6 mb-3">1. Key Performance Indicators</h3>
+              <p>Track these metrics to measure the effectiveness of your image SEO efforts:</p>
+              
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Image search traffic (via Google Search Console)</li>
+                <li>Image impressions and click-through rates</li>
+                <li>Page load speed improvements (Core Web Vitals)</li>
+                <li>Image ranking positions for target keywords</li>
+                <li>Conversion rates on pages with optimized images</li>
+                <li>Engagement metrics (time on page, bounce rate)</li>
+              </ul>
+              
+              <h3 className="text-2xl font-bold text-navy mt-6 mb-3">2. Tools for Image SEO Analysis</h3>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Google Search Console (image search performance)</li>
+                <li>PageSpeed Insights (image loading performance)</li>
+                <li>Screaming Frog SEO Spider (image audit)</li>
+                <li>Google Analytics (traffic and engagement metrics)</li>
+                <li>Our <Link to="/" className="text-teal hover:underline">SEO Audit Tool</Link> (comprehensive site analysis including images)</li>
+              </ul>
+              
+              <h2 className="text-3xl font-bold text-navy mt-8 mb-4">Conclusion: The Future of Image SEO</h2>
+              <p>As we move through 2025, image SEO continues to evolve with advancements in visual search, AI-powered image recognition, and user experience expectations. The sites that will succeed are those that treat images as first-class content citizens, with thorough optimization practices that address both technical and semantic aspects.</p>
+              
+              <p>Key takeaways for image SEO in 2025:</p>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Comprehensive image optimization improves both SEO performance and user experience</li>
+                <li>Technical optimization (file size, format, responsiveness) remains foundational</li>
+                <li>Semantic optimization (file names, alt text, context) provides crucial relevance signals</li>
+                <li>Structured data and image sitemaps enhance discoverability</li>
+                <li>E-commerce sites should prioritize image optimization for both traditional and visual search</li>
+                <li>Regular measurement and refinement are essential for ongoing success</li>
+              </ul>
+              
+              <p>By implementing these image SEO best practices, you'll improve your site's visibility in both traditional and image search results, enhance user experience, and ultimately drive more qualified traffic to your website.</p>
+              
+              <div className="bg-navy/10 p-6 rounded-lg my-8">
+                <h4 className="text-xl font-bold text-navy mb-2">Want to check your website's overall SEO health?</h4>
+                <p className="mb-4">Try our <Link to="/" className="text-teal hover:underline">Free SEO Audit Tool</Link> to get a comprehensive analysis of your website's performance, including image optimization opportunities.</p>
+                <Link to="/">
+                  <Button className="bg-teal hover:bg-teal-dark text-white">
+                    <Search className="w-4 h-4 mr-2" /> Run a Free SEO Analysis
+                  </Button>
                 </Link>
               </div>
               
-              {/* More Resources */}
-              <div className="bg-white rounded-xl p-6 shadow-sm">
-                <h4 className="text-lg font-bold text-navy mb-4">More Resources</h4>
-                <ul className="space-y-3">
-                  <li>
-                    <Link to="/blog/youtube-seo" className="flex items-center text-navy hover:text-teal transition-colors">
-                      <ChevronRight size={16} className="mr-2 text-teal" />
-                      <span>YouTube SEO Guide</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/blog/onpage-seo" className="flex items-center text-navy hover:text-teal transition-colors">
-                      <ChevronRight size={16} className="mr-2 text-teal" />
-                      <span>Advanced On-Page SEO Techniques</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/services/seo" className="flex items-center text-navy hover:text-teal transition-colors">
-                      <ChevronRight size={16} className="mr-2 text-teal" />
-                      <span>Professional SEO Services</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/blog/international-seo" className="flex items-center text-navy hover:text-teal transition-colors">
-                      <ChevronRight size={16} className="mr-2 text-teal" />
-                      <span>International SEO Guide</span>
-                    </Link>
-                  </li>
-                </ul>
+              <div className="border-t border-navy/10 pt-6 mt-8">
+                <h3 className="text-2xl font-bold text-navy mb-4">Related Articles</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Link to="/blog/seo-strategy-2025" className="group">
+                    <div className="border border-navy/10 rounded-lg p-4 transition-all group-hover:border-teal">
+                      <h4 className="text-lg font-bold text-navy mb-2 group-hover:text-teal">Advanced SEO Strategies for 2025</h4>
+                      <p className="text-navy/70 text-sm">Discover cutting-edge SEO techniques to dominate search rankings in 2025.</p>
+                    </div>
+                  </Link>
+                  <Link to="/blog/youtube-seo" className="group">
+                    <div className="border border-navy/10 rounded-lg p-4 transition-all group-hover:border-teal">
+                      <h4 className="text-lg font-bold text-navy mb-2 group-hover:text-teal">YouTube SEO: The Complete Guide</h4>
+                      <p className="text-navy/70 text-sm">Master YouTube SEO with our comprehensive guide to rank videos higher.</p>
+                    </div>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
