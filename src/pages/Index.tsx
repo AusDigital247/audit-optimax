@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { analyzeSEO, AnalysisResult } from '@/utils/seoAnalyzer';
@@ -7,6 +6,7 @@ import SEOContainer from '@/components/SEOContainer';
 import SEOResults from '@/components/SEOResults';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Link } from 'react-router-dom';
+import { Search, Book, MapPin, Award, TrendingUp, CheckCircle } from 'lucide-react';
 
 const Index = () => {
   const { t } = useLanguage();
@@ -45,9 +45,7 @@ const Index = () => {
     setError(null);
   };
 
-  // Add a special meta tag for language alternates (for SEO)
   useEffect(() => {
-    // Create or update the alternate language link
     let linkEn = document.querySelector('link[hreflang="en"]');
     let linkFr = document.querySelector('link[hreflang="fr"]');
     
@@ -65,7 +63,6 @@ const Index = () => {
       document.head.appendChild(linkFr);
     }
     
-    // Set current URL for both languages
     const currentUrl = window.location.href;
     linkEn.setAttribute('href', currentUrl);
     linkFr.setAttribute('href', currentUrl);
@@ -83,19 +80,16 @@ const Index = () => {
         <meta name="description" content="Free comprehensive SEO audit tool to analyze websites and get actionable recommendations. Check SEO health score and improve search rankings with our website checker tool." />
         <meta name="keywords" content="SEO audit tool, website SEO checker, SEO analysis, SEO health score, search engine optimization, free SEO tool, website checker" />
         
-        {/* Homepage-specific Open Graph tags */}
         <meta property="og:title" content="SEO Audit Tool | Website SEO Checker" />
         <meta property="og:description" content="Free comprehensive SEO audit tool to analyze websites and get actionable recommendations to improve your search rankings." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={window.location.href} />
         
-        {/* Homepage-specific Twitter tags */}
         <meta name="twitter:title" content="SEO Audit Tool | Website SEO Checker" />
         <meta name="twitter:description" content="Free comprehensive SEO audit tool to analyze websites and get actionable recommendations to improve your search rankings." />
         
         <link rel="canonical" href={window.location.href} />
         
-        {/* Schema.org markup for the SEO tool */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
@@ -120,7 +114,9 @@ const Index = () => {
       </Helmet>
 
       {!results && !error && (
-        <SEOContainer onSubmit={handleSubmit} isLoading={isAnalyzing} />
+        <div id="seo-tool">
+          <SEOContainer onSubmit={handleSubmit} isLoading={isAnalyzing} />
+        </div>
       )}
 
       {(isAnalyzing || error || results) && (
@@ -162,25 +158,29 @@ const Index = () => {
         </div>
       )}
       
-      {/* Blog posts section */}
       {!results && !error && !isAnalyzing && (
-        <section className="py-16 bg-gray-50">
+        <section className="py-16 bg-gray-50 dark:bg-navy/90">
           <div className="container max-w-7xl px-4 mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-navy mb-4">Latest SEO Guides</h2>
-              <p className="text-lg text-navy/70 max-w-3xl mx-auto">
+              <h2 className="text-3xl font-bold text-navy dark:text-white mb-4 flex items-center justify-center gap-2">
+                <Book className="h-7 w-7 text-teal dark:text-teal-light" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-white dark:to-teal-light">
+                  Latest SEO Guides
+                </span>
+              </h2>
+              <p className="text-lg text-navy/70 dark:text-white/70 max-w-3xl mx-auto">
                 Explore our in-depth SEO guides to improve your website's search engine visibility and performance.
               </p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <Link to="/blog/seo-strategy-2025" className="group">
-                <div className="bg-white rounded-xl overflow-hidden shadow-sm transition-all group-hover:shadow-md h-full flex flex-col">
+                <div className="glass-card-hover h-full flex flex-col">
                   <div className="p-6 flex-grow">
-                    <h3 className="text-xl font-bold text-navy mb-3 group-hover:text-teal transition-colors">
+                    <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
                       Advanced SEO Strategies for 2025
                     </h3>
-                    <p className="text-navy/70 mb-4">
+                    <p className="text-navy/70 dark:text-white/70 mb-4">
                       Discover cutting-edge SEO strategies that will dominate in 2025, including AI integration, voice search optimization, and user experience signals.
                     </p>
                   </div>
@@ -191,12 +191,12 @@ const Index = () => {
               </Link>
               
               <Link to="/blog/image-seo" className="group">
-                <div className="bg-white rounded-xl overflow-hidden shadow-sm transition-all group-hover:shadow-md h-full flex flex-col">
+                <div className="glass-card-hover h-full flex flex-col">
                   <div className="p-6 flex-grow">
-                    <h3 className="text-xl font-bold text-navy mb-3 group-hover:text-teal transition-colors">
+                    <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
                       Advanced Image SEO Techniques
                     </h3>
-                    <p className="text-navy/70 mb-4">
+                    <p className="text-navy/70 dark:text-white/70 mb-4">
                       Learn how to optimize your images for better search visibility with these advanced techniques and best practices for image SEO.
                     </p>
                   </div>
@@ -207,12 +207,12 @@ const Index = () => {
               </Link>
               
               <Link to="/blog/youtube-seo" className="group">
-                <div className="bg-white rounded-xl overflow-hidden shadow-sm transition-all group-hover:shadow-md h-full flex flex-col">
+                <div className="glass-card-hover h-full flex flex-col">
                   <div className="p-6 flex-grow">
-                    <h3 className="text-xl font-bold text-navy mb-3 group-hover:text-teal transition-colors">
+                    <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
                       YouTube SEO: The Complete Guide
                     </h3>
-                    <p className="text-navy/70 mb-4">
+                    <p className="text-navy/70 dark:text-white/70 mb-4">
                       Master YouTube SEO with our comprehensive guide. Learn proven techniques to rank videos higher and get more views.
                     </p>
                   </div>
@@ -224,7 +224,8 @@ const Index = () => {
             </div>
             
             <div className="text-center mt-10">
-              <Link to="/blog" className="btn-gradient">
+              <Link to="/blog" className="btn-gradient inline-flex items-center gap-2">
+                <Book className="h-5 w-5" />
                 View All SEO Resources
               </Link>
             </div>
@@ -232,51 +233,155 @@ const Index = () => {
         </section>
       )}
       
-      {/* Local SEO Cities section */}
       {!results && !error && !isAnalyzing && (
-        <section className="py-16 bg-white">
+        <section className="py-16 bg-white dark:bg-navy">
           <div className="container max-w-7xl px-4 mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-navy mb-4">Local SEO Services</h2>
-              <p className="text-lg text-navy/70 max-w-3xl mx-auto">
+              <h2 className="text-3xl font-bold text-navy dark:text-white mb-4 flex items-center justify-center gap-2">
+                <MapPin className="h-7 w-7 text-teal dark:text-teal-light" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-white dark:to-teal-light">
+                  Local SEO Services
+                </span>
+              </h2>
+              <p className="text-lg text-navy/70 dark:text-white/70 max-w-3xl mx-auto">
                 We offer specialized local SEO services to help businesses improve their visibility in location-based searches.
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <Link to="/seo-toronto" className="group">
-                <div className="p-6 border border-gray-200 rounded-xl text-center transition-all group-hover:border-teal group-hover:shadow-sm">
-                  <h3 className="text-xl font-bold text-navy mb-2 group-hover:text-teal transition-colors">Toronto SEO</h3>
-                  <p className="text-navy/70">Expert SEO services for businesses in Toronto and the GTA.</p>
+                <div className="p-6 border border-gray-200 dark:border-gray-700 rounded-xl text-center transition-all group-hover:border-teal group-hover:shadow-sm glass-card-hover">
+                  <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full w-14 h-14 mx-auto mb-4 flex items-center justify-center">
+                    <MapPin className="h-6 w-6 text-teal dark:text-teal-light" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">Toronto SEO</h3>
+                  <p className="text-navy/70 dark:text-white/70">Expert SEO services for businesses in Toronto and the GTA.</p>
                 </div>
               </Link>
               
               <Link to="/seo-ottawa" className="group">
-                <div className="p-6 border border-gray-200 rounded-xl text-center transition-all group-hover:border-teal group-hover:shadow-sm">
-                  <h3 className="text-xl font-bold text-navy mb-2 group-hover:text-teal transition-colors">Ottawa SEO</h3>
-                  <p className="text-navy/70">Specialized SEO strategies for Ottawa businesses and organizations.</p>
+                <div className="p-6 border border-gray-200 dark:border-gray-700 rounded-xl text-center transition-all group-hover:border-teal group-hover:shadow-sm glass-card-hover">
+                  <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full w-14 h-14 mx-auto mb-4 flex items-center justify-center">
+                    <MapPin className="h-6 w-6 text-teal dark:text-teal-light" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">Ottawa SEO</h3>
+                  <p className="text-navy/70 dark:text-white/70">Specialized SEO strategies for Ottawa businesses and organizations.</p>
                 </div>
               </Link>
               
               <Link to="/seo-kitchener" className="group">
-                <div className="p-6 border border-gray-200 rounded-xl text-center transition-all group-hover:border-teal group-hover:shadow-sm">
-                  <h3 className="text-xl font-bold text-navy mb-2 group-hover:text-teal transition-colors">Kitchener SEO</h3>
-                  <p className="text-navy/70">Local SEO solutions for Kitchener-Waterloo businesses.</p>
+                <div className="p-6 border border-gray-200 dark:border-gray-700 rounded-xl text-center transition-all group-hover:border-teal group-hover:shadow-sm glass-card-hover">
+                  <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full w-14 h-14 mx-auto mb-4 flex items-center justify-center">
+                    <MapPin className="h-6 w-6 text-teal dark:text-teal-light" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">Kitchener SEO</h3>
+                  <p className="text-navy/70 dark:text-white/70">Local SEO solutions for Kitchener-Waterloo businesses.</p>
+                </div>
+              </Link>
+              
+              <Link to="/seo-london" className="group">
+                <div className="p-6 border border-gray-200 dark:border-gray-700 rounded-xl text-center transition-all group-hover:border-teal group-hover:shadow-sm glass-card-hover">
+                  <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full w-14 h-14 mx-auto mb-4 flex items-center justify-center">
+                    <MapPin className="h-6 w-6 text-teal dark:text-teal-light" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">London SEO</h3>
+                  <p className="text-navy/70 dark:text-white/70">Results-driven SEO services for London, Ontario businesses.</p>
+                </div>
+              </Link>
+              
+              <Link to="/seo-vancouver" className="group">
+                <div className="p-6 border border-gray-200 dark:border-gray-700 rounded-xl text-center transition-all group-hover:border-teal group-hover:shadow-sm glass-card-hover">
+                  <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full w-14 h-14 mx-auto mb-4 flex items-center justify-center">
+                    <MapPin className="h-6 w-6 text-teal dark:text-teal-light" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">Vancouver SEO</h3>
+                  <p className="text-navy/70 dark:text-white/70">Strategic SEO solutions for Vancouver businesses and startups.</p>
                 </div>
               </Link>
               
               <Link to="/seo-buffalo" className="group">
-                <div className="p-6 border border-gray-200 rounded-xl text-center transition-all group-hover:border-teal group-hover:shadow-sm">
-                  <h3 className="text-xl font-bold text-navy mb-2 group-hover:text-teal transition-colors">Buffalo SEO</h3>
-                  <p className="text-navy/70">Results-driven SEO services for Buffalo, NY businesses.</p>
+                <div className="p-6 border border-gray-200 dark:border-gray-700 rounded-xl text-center transition-all group-hover:border-teal group-hover:shadow-sm glass-card-hover">
+                  <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full w-14 h-14 mx-auto mb-4 flex items-center justify-center">
+                    <MapPin className="h-6 w-6 text-teal dark:text-teal-light" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">Buffalo SEO</h3>
+                  <p className="text-navy/70 dark:text-white/70">Results-driven SEO services for Buffalo, NY businesses.</p>
                 </div>
               </Link>
             </div>
             
             <div className="text-center mt-10">
-              <Link to="/services/local-seo" className="btn-gradient">
+              <Link to="/services/local-seo" className="btn-gradient inline-flex items-center gap-2">
+                <Award className="h-5 w-5" />
                 Learn More About Local SEO
               </Link>
+            </div>
+          </div>
+        </section>
+      )}
+      
+      {!results && !error && !isAnalyzing && (
+        <section className="py-16 bg-gray-50 dark:bg-navy-light">
+          <div className="container max-w-7xl px-4 mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-navy dark:text-white mb-4 flex items-center justify-center gap-2">
+                <TrendingUp className="h-7 w-7 text-teal dark:text-teal-light" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-white dark:to-teal-light">
+                  Why Choose Our SEO Tool
+                </span>
+              </h2>
+              <p className="text-lg text-navy/70 dark:text-white/70 max-w-3xl mx-auto">
+                Our SEO audit tool offers comprehensive analysis and actionable insights to boost your search engine rankings.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="flex items-start gap-4">
+                <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full">
+                  <CheckCircle className="h-6 w-6 text-teal dark:text-teal-light" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2">Comprehensive SEO Reports</h3>
+                  <p className="text-navy/70 dark:text-white/70">Get detailed insights into your website's SEO performance with actionable recommendations.</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-4">
+                <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full">
+                  <CheckCircle className="h-6 w-6 text-teal dark:text-teal-light" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2">Mobile Optimization Analysis</h3>
+                  <p className="text-navy/70 dark:text-white/70">Ensure your website is fully optimized for mobile devices with our detailed checks.</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-4">
+                <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full">
+                  <CheckCircle className="h-6 w-6 text-teal dark:text-teal-light" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2">Page Speed Optimization</h3>
+                  <p className="text-navy/70 dark:text-white/70">Identify performance bottlenecks and improve your page loading speed for better user experience.</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-4">
+                <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full">
+                  <CheckCircle className="h-6 w-6 text-teal dark:text-teal-light" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2">Content Quality Assessment</h3>
+                  <p className="text-navy/70 dark:text-white/70">Evaluate your content's SEO-friendliness and get suggestions for improvement.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="text-center mt-10">
+              <a href="#seo-tool" className="cta-button inline-flex items-center gap-2">
+                <Search className="h-5 w-5" />
+                Try Our Free SEO Tool Now
+              </a>
             </div>
           </div>
         </section>
