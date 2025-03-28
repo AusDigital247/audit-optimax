@@ -28,6 +28,28 @@
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
   }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
 }
 
 @layer base {
@@ -39,7 +61,7 @@
   }
   
   body {
-    @apply bg-light-bg text-foreground antialiased;
+    @apply bg-light-bg dark:bg-navy text-foreground dark:text-white antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
     width: 100%;
     max-width: 100%;
@@ -69,7 +91,7 @@
   }
   
   .text-highlight {
-    @apply text-teal font-medium;
+    @apply text-teal dark:text-teal-light font-medium;
   }
   
   .gradient-text {
@@ -84,16 +106,20 @@
     @apply backdrop-blur-md bg-white/90 border border-gray-200 shadow-lg;
   }
   
+  .glass-dark {
+    @apply backdrop-blur-lg bg-navy-light/80 border border-navy-light/50 shadow-lg;
+  }
+  
   .glass-strong {
     @apply backdrop-blur-md bg-navy-light/90 border border-teal/20 shadow-lg;
   }
   
   .feature-card {
-    @apply glass-strong p-6 rounded-xl hover:shadow-lg transition-all duration-300;
+    @apply glass-strong dark:bg-navy-light/50 p-6 rounded-xl hover:shadow-lg transition-all duration-300;
   }
   
   .glass-card {
-    @apply backdrop-blur-md bg-navy-light/70 border border-teal/20 rounded-xl shadow-lg p-5;
+    @apply backdrop-blur-md bg-navy-light/70 dark:bg-navy-light/50 border border-teal/20 rounded-xl shadow-lg p-5;
   }
   
   .card-float {
@@ -101,7 +127,7 @@
   }
   
   .content-section-light {
-    @apply bg-gradient-light text-navy py-12 md:py-16 w-full;
+    @apply bg-gradient-light dark:bg-gradient-to-b dark:from-navy dark:to-navy-light text-navy dark:text-white py-12 md:py-16 w-full;
   }
   
   .content-section-dark {
@@ -109,19 +135,27 @@
   }
   
   .content-section-alt {
-    @apply bg-gradient-to-b from-navy to-navy-light text-white py-12 md:py-16 w-full;
+    @apply bg-gradient-to-b from-navy to-navy-light dark:from-navy-light dark:to-navy text-white py-12 md:py-16 w-full;
   }
   
   .glassmorphism-card {
-    @apply backdrop-blur-lg bg-white/10 border border-white/20 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300;
+    @apply backdrop-blur-lg bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300;
   }
   
   .btn-primary {
-    @apply bg-teal hover:bg-teal-light text-white font-medium py-2 px-4 rounded-md transition-colors;
+    @apply bg-teal hover:bg-teal-light dark:bg-gradient-to-r dark:from-teal dark:to-teal-light dark:hover:opacity-90 text-white font-medium py-2 px-4 rounded-md transition-all shadow hover:shadow-md;
+  }
+  
+  .btn-secondary {
+    @apply border border-teal text-teal hover:bg-teal/10 dark:border-teal-light dark:text-teal-light dark:hover:bg-teal/20 font-medium py-2 px-4 rounded-md transition-colors;
+  }
+  
+  .btn-glass {
+    @apply bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-medium rounded-md px-4 py-2 transition-colors shadow-md;
   }
   
   .nav-link {
-    @apply text-navy hover:text-teal transition-colors;
+    @apply text-navy dark:text-gray-200 hover:text-teal dark:hover:text-teal-light transition-colors;
   }
   
   .section-padding {
@@ -133,7 +167,7 @@
   }
   
   .section-subtitle {
-    @apply text-lg text-center max-w-3xl mx-auto mb-10 text-navy/70;
+    @apply text-lg text-center max-w-3xl mx-auto mb-10 text-navy/70 dark:text-white/70;
   }
   
   /* Fix for horizontal tabs */
@@ -146,11 +180,11 @@
   }
   
   .tab-item {
-    @apply whitespace-nowrap px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors;
+    @apply whitespace-nowrap px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-navy-light hover:bg-gray-50 dark:hover:bg-navy transition-colors;
   }
   
   .tab-item.active {
-    @apply bg-teal text-white border-teal;
+    @apply bg-teal text-white border-teal dark:bg-gradient-to-r dark:from-teal dark:to-teal-light;
   }
 
   /* Scrollbar styling */
@@ -169,11 +203,11 @@
   }
 
   .custom-tabs-list {
-    @apply flex bg-white/5 backdrop-blur-sm p-1 rounded-lg mb-6 overflow-x-auto scrollbar-none;
+    @apply flex bg-white/5 dark:bg-white/5 backdrop-blur-sm p-1 rounded-lg mb-6 overflow-x-auto scrollbar-none;
   }
 
   .custom-tab-trigger {
-    @apply flex-1 whitespace-nowrap px-4 py-2 rounded-lg font-medium text-sm data-[state=active]:bg-teal data-[state=active]:text-white transition-all;
+    @apply flex-1 whitespace-nowrap px-4 py-2 rounded-lg font-medium text-sm data-[state=active]:bg-teal data-[state=active]:text-white dark:data-[state=active]:bg-gradient-to-r dark:data-[state=active]:from-teal dark:data-[state=active]:to-teal-light transition-all;
   }
 
   /* New animated card styles */
@@ -184,6 +218,28 @@
   /* Better button styles */
   .btn-gradient {
     @apply bg-gradient-to-r from-teal to-teal-light text-white font-medium py-3 px-6 rounded-lg hover:shadow-lg transition-all duration-300;
+  }
+  
+  /* New glassmorphism styles */
+  .glass-morphism {
+    @apply backdrop-blur-xl bg-white/10 dark:bg-navy/30 border border-white/20 dark:border-white/10 shadow-lg;
+  }
+  
+  .glass-card-hover {
+    @apply backdrop-blur-md bg-white/80 dark:bg-navy-light/50 border border-gray-200 dark:border-gray-700/30 rounded-xl shadow hover:shadow-lg transition-all duration-300 hover:border-teal/30 dark:hover:border-teal-light/30;
+  }
+  
+  .glass-nav {
+    @apply backdrop-blur-lg bg-white/80 dark:bg-navy/80 border-b border-gray-200 dark:border-gray-800/50 shadow-sm;
+  }
+  
+  /* CTA Button Enhancements */
+  .cta-button {
+    @apply bg-gradient-to-r from-teal to-teal-light hover:opacity-90 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5;
+  }
+  
+  .cta-button-outline {
+    @apply border-2 border-teal dark:border-teal-light text-teal dark:text-teal-light hover:bg-teal/10 dark:hover:bg-teal-light/10 font-medium py-3 px-6 rounded-lg transition-colors duration-300;
   }
 }
 

@@ -96,17 +96,35 @@ const config = {
           "0%, 100%": { boxShadow: "0 0 15px rgba(93, 158, 240, 0.5)" },
           "50%": { boxShadow: "0 0 25px rgba(93, 158, 240, 0.8)" },
         },
+        "fade-in-up": {
+          "0%": { 
+            opacity: "0",
+            transform: "translateY(10px)"
+          },
+          "100%": { 
+            opacity: "1",
+            transform: "translateY(0)"
+          },
+        },
+        "float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-glow": "pulse-glow 2s infinite",
+        "fade-in-up": "fade-in-up 0.5s ease-out",
+        "float": "float 3s ease-in-out infinite",
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
         'gradient-blueprint': 'linear-gradient(135deg, #121a2e 0%, #1e2b4a 100%)',
         'gradient-light': 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+        'gradient-glass': 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
+        'gradient-glass-dark': 'linear-gradient(135deg, rgba(30,43,74,0.7) 0%, rgba(18,26,46,0.8) 100%)',
       },
     },
   },
