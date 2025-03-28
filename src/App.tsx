@@ -14,6 +14,8 @@ import SeoToronto from './pages/SeoToronto';
 import SeoOttawa from './pages/SeoOttawa';
 import SeoKitchener from './pages/SeoKitchener';
 import SeoBuffalo from './pages/SeoBuffalo';
+import SeoLondon from './pages/SeoLondon';
+import SeoVancouver from './pages/SeoVancouver';
 import About from './pages/About';
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
@@ -55,6 +57,8 @@ function App() {
                   <Route path="/seo-ottawa" element={<SeoOttawa />} />
                   <Route path="/seo-kitchener" element={<SeoKitchener />} />
                   <Route path="/seo-buffalo" element={<SeoBuffalo />} />
+                  <Route path="/seo-london" element={<SeoLondon />} />
+                  <Route path="/seo-vancouver" element={<SeoVancouver />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/contact" element={<Contact />} />
