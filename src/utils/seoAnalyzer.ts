@@ -36,12 +36,14 @@ export const analyzeSEO = async (url: string, keyword?: string): Promise<Analysi
     // Use our analyzer with the preserved URL path and cache buster
     const result = await analyzePageSEO(urlWithCacheBuster, keyword);
     
+    // Create the result, ensuring we include metadata if available
     return {
       score: result.score,
       categories: result.categories,
       contentFetched: result.contentFetched,
       relevanceTier: result.relevanceTier,
-      metaData: result.metaData // Pass through metadata for more detailed reports
+      // We need to check if the result has metaData before trying to use it
+      ...(result.metaData ? { metaData: result.metaData } : {})
     };
   } catch (error) {
     console.error('Error during SEO analysis:', error);

@@ -16,7 +16,13 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   score: number,
   categories: Array<{title: string, items: SEOCheckItem[]}>,
   contentFetched: boolean,
-  relevanceTier?: string
+  relevanceTier?: string,
+  metaData?: {
+    title?: string;
+    description?: string;
+    canonical?: string;
+    ogTags?: Record<string, string>;
+  }
 }> => {
   console.log(`Analyzing SEO for URL: ${url}, Keyword: ${keyword}`);
   
@@ -69,6 +75,28 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   
   const pageTitle = extractTitle(content);
   console.log("Extracted page title for validation:", pageTitle);
+  
+  const metaTags = extractMetaTags(content);
+  console.log("Meta tags found:", Object.keys(metaTags).length);
+  
+  const metaDescription = metaTags['description'];
+  console.log("Meta description:", metaDescription);
+  
+  const ogTags: Record<string, string> = {};
+  Object.keys(metaTags).forEach(key => {
+    if (key.startsWith('og:')) {
+      ogTags[key] = metaTags[key];
+    }
+  });
+  
+  const canonical = checkCanonicalTag(content);
+  
+  const metaData = {
+    title: pageTitle,
+    description: metaDescription,
+    canonical: canonical.url,
+    ogTags
+  };
   
   const urlItems: SEOCheckItem[] = [];
   
@@ -843,6 +871,7 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     score: scoreResult.score,
     categories,
     contentFetched: true,
-    relevanceTier: scoreResult.relevanceTier
+    relevanceTier: scoreResult.relevanceTier,
+    metaData
   };
 };
