@@ -73,28 +73,29 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
 
   console.log("Content fetched successfully, length:", content.length);
   
+  // Extract metadata once at the beginning to avoid redeclaration
   const pageTitle = extractTitle(content);
   console.log("Extracted page title for validation:", pageTitle);
   
-  const metaTags = extractMetaTags(content);
-  console.log("Meta tags found:", Object.keys(metaTags).length);
+  const extractedMetaTags = extractMetaTags(content);
+  console.log("Meta tags found:", Object.keys(extractedMetaTags).length);
   
-  const metaDescription = metaTags['description'];
+  const metaDescription = extractedMetaTags['description'];
   console.log("Meta description:", metaDescription);
   
   const ogTags: Record<string, string> = {};
-  Object.keys(metaTags).forEach(key => {
+  Object.keys(extractedMetaTags).forEach(key => {
     if (key.startsWith('og:')) {
-      ogTags[key] = metaTags[key];
+      ogTags[key] = extractedMetaTags[key];
     }
   });
   
-  const canonical = checkCanonicalTag(content);
+  const canonicalTag = checkCanonicalTag(content);
   
   const metaData = {
     title: pageTitle,
     description: metaDescription,
-    canonical: canonical.url,
+    canonical: canonicalTag.url,
     ogTags
   };
   
@@ -183,29 +184,20 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
   
   const titleTagItems: SEOCheckItem[] = [];
   
-  const title = extractTitle(content);
-  console.log("Extracted title for analysis:", title);
-  
-  const metaTags = extractMetaTags(content);
-  console.log("Meta tags found:", Object.keys(metaTags).length);
-  
-  const metaDescription = metaTags['description'];
-  console.log("Meta description:", metaDescription);
-  
-  if (title) {
+  if (pageTitle) {
     titleTagItems.push({
       name: "Title tag",
       status: "pass",
-      message: `Your page has a title tag: "${title}"`,
+      message: `Your page has a title tag: "${pageTitle}"`,
       points: seoPointValues.titleTag,
       details: {
-        found: title,
+        found: pageTitle,
         expected: "Page should have a title tag",
         explanation: "The title tag is one of the most important on-page SEO elements."
       }
     });
     
-    const titleLength = title.length;
+    const titleLength = pageTitle.length;
     const isTitleLengthGood = titleLength >= 30 && titleLength <= 60;
     
     titleTagItems.push({
@@ -218,16 +210,16 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
           : `Your title is too long (${titleLength} characters). Search engines may truncate titles longer than 60 characters.`,
       points: seoPointValues.titleLength,
       details: {
-        found: `"${title}" (${titleLength} characters)`,
+        found: `"${pageTitle}" (${titleLength} characters)`,
         expected: "Title should be between 30 and 60 characters",
         explanation: "Titles that are too long may get cut off in search results, while titles that are too short may not be descriptive enough."
       }
     });
     
     if (keyword) {
-      const exactKeywordInTitle = isKeywordPresent(title, keyword);
+      const exactKeywordInTitle = isKeywordPresent(pageTitle, keyword);
       
-      const titleLower = title.toLowerCase();
+      const titleLower = pageTitle.toLowerCase();
       const keywordWords = keyword.toLowerCase().split(/\s+/).filter(w => w.length > 2);
       const allKeywordWordsInTitle = keywordWords.every(word => titleLower.includes(word));
       
@@ -251,17 +243,17 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
         message: titleKeywordMessage,
         points: titleKeywordPoints,
         details: {
-          found: title,
+          found: pageTitle,
           expected: `Title should contain the keyword "${keyword}"`,
           explanation: "Including your target keyword in the title helps search engines understand what your page is about and is one of the most critical SEO factors."
         }
       });
       
       if (exactKeywordInTitle || allKeywordWordsInTitle) {
-        const keywordAtBeginning = title.toLowerCase().startsWith(keyword.toLowerCase()) || 
-                                  title.toLowerCase().startsWith(`the ${keyword.toLowerCase()}`) ||
-                                  title.toLowerCase().indexOf(keyword.toLowerCase()) < 20 ||
-                                  keywordWords.some(word => title.toLowerCase().startsWith(word));
+        const keywordAtBeginning = pageTitle.toLowerCase().startsWith(keyword.toLowerCase()) || 
+                                  pageTitle.toLowerCase().startsWith(`the ${keyword.toLowerCase()}`) ||
+                                  pageTitle.toLowerCase().indexOf(keyword.toLowerCase()) < 20 ||
+                                  keywordWords.some(word => pageTitle.toLowerCase().startsWith(word));
         
         titleTagItems.push({
           name: "Keyword position in title",
@@ -271,7 +263,7 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
             : "Your keyword is not at the beginning of the title. Consider moving it closer to the start for better SEO.",
           points: seoPointValues.titleKeywordPosition,
           details: {
-            found: title,
+            found: pageTitle,
             expected: `Title should have "${keyword}" near the beginning`,
             explanation: "Keywords placed at the beginning of the title may have more weight in search algorithms."
           }
@@ -698,18 +690,15 @@ export const analyzePageSEO = async (url: string, keyword: string = ''): Promise
     }
   });
   
-  const canonical = checkCanonicalTag(content);
-  console.log("Canonical check:", canonical);
-  
   technicalItems.push({
     name: "Page has canonical tag",
-    status: canonical.has ? "pass" : "warning",
-    message: canonical.has 
-      ? `Your page has a canonical tag pointing to: ${canonical.url}` 
+    status: canonicalTag.has ? "pass" : "warning",
+    message: canonicalTag.has 
+      ? `Your page has a canonical tag pointing to: ${canonicalTag.url}` 
       : "Your page is missing a canonical tag. Add one to prevent duplicate content issues.",
     points: seoPointValues.canonicalTag,
     details: {
-      found: canonical.has ? canonical.url : "No canonical tag found",
+      found: canonicalTag.has ? canonicalTag.url : "No canonical tag found",
       expected: "Page should have a canonical tag",
       explanation: "Canonical tags help prevent duplicate content issues by telling search engines which version of a page is the preferred one."
     }
