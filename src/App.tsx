@@ -23,6 +23,11 @@ import LocalSeo from './pages/LocalSeo';
 import TermsConditions from './pages/TermsConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 
+// Import blog posts
+import SeoStrategy2025 from './pages/BlogPosts/SeoStrategy2025';
+import ImageSeo from './pages/BlogPosts/ImageSeo';
+import YoutubeSeo from './pages/BlogPosts/YoutubeSeo';
+
 // Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -58,6 +63,12 @@ function App() {
                   <Route path="/services/local-seo" element={<LocalSeo />} />
                   <Route path="/terms" element={<TermsConditions />} />
                   <Route path="/privacy" element={<PrivacyPolicy />} />
+                  
+                  {/* Blog post routes */}
+                  <Route path="/blog/seo-strategy-2025" element={<SeoStrategy2025 />} />
+                  <Route path="/blog/image-seo" element={<ImageSeo />} />
+                  <Route path="/blog/youtube-seo" element={<YoutubeSeo />} />
+                  
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </main>

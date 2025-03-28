@@ -3,44 +3,46 @@ import React, { useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Link } from 'react-router-dom';
 import { CalendarIcon, User, Clock, ChevronRight, Search } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const Blog = () => {
   const { t, language } = useLanguage();
   
   useEffect(() => {
-    document.title = language === 'en' ? 'Blog - AUS Digital' : 'Blog - AUS Digital';
+    document.title = language === 'en' ? 'SEO Blog - Latest SEO Tips & Strategies | SEO Audit Tool' : 'Blog SEO - Conseils et Stratégies SEO | SEO Audit Tool';
+    window.scrollTo(0, 0);
   }, [language]);
   
   // Sample blog posts data
   const blogPosts = [
     {
-      id: 1,
-      title: "10 Essential SEO Strategies for 2023",
-      excerpt: "Learn the most effective SEO strategies that will boost your website's visibility and drive organic traffic in 2023.",
-      author: "Sarah Johnson",
-      date: "June 15, 2023",
-      readTime: "8 min read",
-      category: "SEO Tips",
+      id: "seo-strategy-2025",
+      title: "Advanced SEO Strategies for 2025",
+      excerpt: "Discover cutting-edge SEO strategies that will dominate in 2025, including AI integration, voice search optimization, and user experience signals to outrank your competition.",
+      author: "SEO Audit Tool Team",
+      date: "July 15, 2023",
+      readTime: "15 min read",
+      category: "SEO Strategy",
       image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=600&h=400&q=80"
     },
     {
-      id: 2,
-      title: "How to Optimize Your Website for Mobile-First Indexing",
-      excerpt: "With Google's mobile-first indexing approach, learn how to ensure your website performs well on mobile devices.",
-      author: "Michael Chen",
-      date: "May 28, 2023",
-      readTime: "6 min read",
-      category: "Technical SEO",
+      id: "image-seo",
+      title: "Advanced Image SEO Techniques",
+      excerpt: "Learn advanced image SEO techniques to improve search visibility, boost rankings, and drive more traffic through properly optimized images.",
+      author: "SEO Audit Tool Team",
+      date: "August 22, 2023",
+      readTime: "12 min read",
+      category: "Image Optimization",
       image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&h=400&q=80"
     },
     {
-      id: 3,
-      title: "The Complete Guide to Local SEO for Small Businesses",
-      excerpt: "Discover how small businesses can leverage local SEO to attract more customers and outrank competitors in their area.",
-      author: "Emily Rodriguez",
-      date: "April 10, 2023",
-      readTime: "10 min read",
-      category: "Local SEO",
+      id: "youtube-seo",
+      title: "YouTube SEO: The Complete Guide to Ranking Higher & Getting More Views",
+      excerpt: "Master YouTube SEO with our comprehensive guide. Learn proven techniques to rank videos higher, increase views, grow subscribers and optimize your channel for success.",
+      author: "SEO Audit Tool Team",
+      date: "September 18, 2023",
+      readTime: "18 min read",
+      category: "Video Optimization",
       image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&h=400&q=80"
     },
     {
@@ -82,11 +84,47 @@ const Blog = () => {
     { name: "Local SEO", count: 6 },
     { name: "Content Marketing", count: 10 },
     { name: "Link Building", count: 7 },
-    { name: "Analytics", count: 5 }
+    { name: "Analytics", count: 5 },
+    { name: "Video Optimization", count: 3 },
+    { name: "Image Optimization", count: 2 }
   ];
   
   return (
     <div className="min-h-screen w-full">
+      <Helmet>
+        <title>SEO Blog - Latest SEO Tips & Strategies | SEO Audit Tool</title>
+        <meta name="description" content="Explore our SEO blog for expert tips, in-depth guides, and the latest strategies to improve your website's search engine rankings and visibility." />
+        <meta name="keywords" content="SEO blog, SEO tips, SEO strategies, search engine optimization blog, SEO guides, image SEO, YouTube SEO, technical SEO" />
+        
+        <meta property="og:title" content="SEO Blog - Latest SEO Tips & Strategies | SEO Audit Tool" />
+        <meta property="og:description" content="Explore our SEO blog for expert tips, in-depth guides, and the latest strategies to improve your website's search engine rankings and visibility." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
+        
+        <meta name="twitter:title" content="SEO Blog - Latest SEO Tips & Strategies | SEO Audit Tool" />
+        <meta name="twitter:description" content="Explore our SEO blog for expert tips, in-depth guides, and the latest strategies to improve your website's search engine rankings and visibility." />
+        
+        <link rel="canonical" href={window.location.href} />
+        
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Blog",
+            "name": "SEO Audit Tool Blog",
+            "description": "Expert SEO tips, guides, and strategies to improve your website's search engine rankings and visibility.",
+            "url": window.location.href,
+            "publisher": {
+              "@type": "Organization",
+              "name": "SEO Audit Tool",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "/logo.png"
+              }
+            }
+          })}
+        </script>
+      </Helmet>
+      
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-navy to-navy-light py-16 md:py-24 w-full">
         <div className="container-custom">
@@ -153,7 +191,7 @@ const Blog = () => {
                             </div>
                           </div>
                           
-                          <Link to={`/blog/${post.id}`} className="text-teal font-medium flex items-center hover:text-teal-light transition-colors">
+                          <Link to={typeof post.id === 'string' ? `/blog/${post.id}` : `/blog/post-${post.id}`} className="text-teal font-medium flex items-center hover:text-teal-light transition-colors">
                             Read More <ChevronRight size={16} />
                           </Link>
                         </div>
@@ -197,7 +235,9 @@ const Blog = () => {
                         className="w-20 h-20 object-cover rounded-lg"
                       />
                       <div>
-                        <h4 className="text-navy font-medium line-clamp-2 mb-1">{post.title}</h4>
+                        <Link to={typeof post.id === 'string' ? `/blog/${post.id}` : `/blog/post-${post.id}`} className="hover:text-teal transition-colors">
+                          <h4 className="text-navy font-medium line-clamp-2 mb-1">{post.title}</h4>
+                        </Link>
                         <p className="text-xs text-navy/60 flex items-center">
                           <CalendarIcon size={12} className="mr-1" /> {post.date}
                         </p>
@@ -207,22 +247,51 @@ const Blog = () => {
                 </ul>
               </div>
               
+              {/* Website Analysis Tool */}
+              <div className="glassmorphism-card bg-navy p-6 rounded-xl mb-8">
+                <h3 className="text-xl font-bold text-white mb-4">Free SEO Analysis</h3>
+                <p className="text-white/80 mb-4">Check how your website performs with our <Link to="/" className="text-teal-light hover:underline">free SEO checker</Link>. Get instant insights and actionable recommendations.</p>
+                <Link to="/" className="block w-full bg-teal hover:bg-teal-light text-white font-medium py-3 px-4 rounded-lg transition-colors text-center">
+                  Analyze Your Website
+                </Link>
+              </div>
+              
               {/* Newsletter */}
-              <div className="glassmorphism-card bg-navy p-6 rounded-xl">
-                <h3 className="text-xl font-bold text-white mb-4">Subscribe to Our Newsletter</h3>
-                <p className="text-white/80 mb-4">Get the latest SEO tips and news delivered to your inbox.</p>
+              <div className="glassmorphism-card bg-white p-6 rounded-xl">
+                <h3 className="text-xl font-bold text-navy mb-4">Subscribe to Our Newsletter</h3>
+                <p className="text-navy/70 mb-4">Get the latest SEO tips and news delivered to your inbox.</p>
                 
                 <form className="space-y-4">
                   <input
                     type="email"
                     placeholder="Your email address"
-                    className="w-full py-3 px-4 rounded-lg border border-white/20 bg-white/10 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-teal"
+                    className="w-full py-3 px-4 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal"
                   />
                   <button type="submit" className="w-full bg-teal hover:bg-teal-light text-white font-medium py-3 px-4 rounded-lg transition-colors">
                     Subscribe
                   </button>
                 </form>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* SEO Services CTA */}
+      <section className="bg-navy-light py-16">
+        <div className="container-custom">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-6 text-white">Need Professional SEO Services?</h2>
+            <p className="text-xl text-white/80 mb-8">
+              Our team of SEO experts can help your business achieve higher rankings and more traffic.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link to="/services/seo" className="btn-gradient">
+                SEO Services
+              </Link>
+              <Link to="/services/local-seo" className="btn-outline-white">
+                Local SEO
+              </Link>
             </div>
           </div>
         </div>
