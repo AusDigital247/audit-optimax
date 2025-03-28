@@ -17,16 +17,16 @@ const Footer = () => {
               We provide comprehensive SEO and digital marketing solutions to help businesses grow their online presence and increase revenue.
             </p>
             <div className="flex space-x-4">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-teal transition-colors">
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-teal transition-colors">
                 <Facebook size={20} />
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-teal transition-colors">
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-teal transition-colors">
                 <Twitter size={20} />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-teal transition-colors">
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-teal transition-colors">
                 <Instagram size={20} />
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-teal transition-colors">
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-teal transition-colors">
                 <Linkedin size={20} />
               </a>
             </div>
@@ -86,20 +86,12 @@ const Footer = () => {
           
           <div>
             <h3 className="text-xl font-bold mb-4 border-b border-teal/30 pb-2">Get In Touch</h3>
-            <ul className="space-y-4">
-              <li className="flex items-start">
-                <MapPin size={20} className="text-teal mr-2 mt-1 flex-shrink-0" />
-                <span className="text-white/80">123 King Street West, Toronto, ON, Canada</span>
-              </li>
-              <li className="flex items-center">
-                <Globe size={20} className="text-teal mr-2 flex-shrink-0" />
-                <a href="https://ausdigital.com" className="text-white/80 hover:text-teal transition-colors">www.ausdigital.com</a>
-              </li>
-              <li className="flex items-center">
-                <Send size={20} className="text-teal mr-2 flex-shrink-0" />
-                <a href="mailto:info@ausdigital.com" className="text-white/80 hover:text-teal transition-colors">info@ausdigital.com</a>
-              </li>
-            </ul>
+            <p className="text-white/80">
+              Feel free to contact us for any inquiries or questions about our services.
+            </p>
+            <Link to="/contact" className="mt-4 inline-block bg-teal/20 hover:bg-teal/30 transition-colors py-2 px-4 rounded-lg text-white flex items-center">
+              <Send size={16} className="mr-2" /> Contact Us
+            </Link>
           </div>
         </div>
         

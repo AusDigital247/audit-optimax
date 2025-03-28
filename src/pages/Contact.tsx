@@ -69,7 +69,7 @@ const Contact = () => {
             <div>
               <h2 className="text-3xl font-bold mb-6 text-navy">Get In Touch</h2>
               <p className="text-navy/80 mb-8">
-                Have questions about our services or want to discuss your project? Fill out the form below or contact us directly using the information provided.
+                Have questions about our services or want to discuss your project? Fill out the form below or contact us directly.
               </p>
               
               <div className="space-y-6 mb-8">
@@ -79,19 +79,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-navy">Email Us</h3>
-                    <p className="text-navy/70">info@ausdigital.com</p>
-                    <p className="text-navy/70">support@ausdigital.com</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="bg-teal/20 p-3 rounded-full mr-4">
-                    <Phone className="h-6 w-6 text-teal" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-navy">Call Us</h3>
-                    <p className="text-navy/70">(+1) 416-555-0123</p>
-                    <p className="text-navy/70">(+1) 416-555-0124</p>
+                    <p className="text-navy/70">Contact us through the form</p>
                   </div>
                 </div>
                 
@@ -101,9 +89,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-navy">Visit Us</h3>
-                    <p className="text-navy/70">123 King Street West</p>
-                    <p className="text-navy/70">Suite 2000, Toronto, ON</p>
-                    <p className="text-navy/70">Canada M5H 3T9</p>
+                    <p className="text-navy/70">Toronto, ON, Canada</p>
                   </div>
                 </div>
               </div>
@@ -171,7 +157,7 @@ const Contact = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal"
-                      placeholder="+1 (123) 456-7890"
+                      placeholder="Your phone number"
                     />
                   </div>
                   
@@ -235,7 +221,7 @@ const Contact = () => {
         <div className="text-center text-white">
           <MapPin className="h-16 w-16 text-teal mx-auto mb-4" />
           <h3 className="text-2xl font-bold">Interactive Map Coming Soon</h3>
-          <p className="text-white/70">We're working on integrating a Google Maps view of our location.</p>
+          <p className="text-white/70">We're working on integrating a map view of our location.</p>
         </div>
       </section>
     </div>

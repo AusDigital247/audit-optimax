@@ -40,7 +40,7 @@ const TermsConditions = () => {
               <ul className="list-disc pl-6 space-y-2 text-navy/80 mb-6">
                 <li>"Client" refers to the individual or organization that has engaged our services.</li>
                 <li>"Company", "We", "Us", or "Our" refers to AUS Digital.</li>
-                <li>"Website" refers to ausdigital.com and all its subdomains.</li>
+                <li>"Website" refers to our official website and all its subdomains.</li>
                 <li>"Services" refers to all SEO and digital marketing services provided by the Company.</li>
                 <li>"Content" refers to all material appearing on our website, including text, images, videos, and interactive features.</li>
               </ul>
@@ -108,7 +108,7 @@ const TermsConditions = () => {
               
               <h2 className="text-2xl font-bold text-navy mb-4">12. Contact Information</h2>
               <p className="text-navy/80 mb-6">
-                If you have any questions about these Terms and Conditions, please contact us at info@ausdigital.com or call us at (+1) 416-555-0123.
+                If you have any questions about these Terms and Conditions, please contact us through our contact page.
               </p>
             </div>
           </div>
