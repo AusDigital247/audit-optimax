@@ -1,3 +1,4 @@
+
 import React from 'react';
 import SEOForm from './SEOForm';
 import SEOContentSection from './SEOContentSection';
@@ -77,7 +78,7 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
               <div className="bg-teal/20 p-3 rounded-full w-fit mb-4">
                 <FileCheck className="h-6 w-6 text-teal-light" />
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">Complete SEO Audit</h3>
+              <h3 className="text-xl font-bold mb-2 text-white">Complete SEO Audit</h3>
               <p className="text-white/80">Get a comprehensive report of your site's SEO performance.</p>
             </div>
           </div>

@@ -7,7 +7,7 @@ import { MapPin, Search, Building, Users, CheckCircle2, BarChart3, Globe, Rocket
 
 const LocalSeo = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-navy to-navy-light">
+    <div className="min-h-screen">
       <Helmet>
         <title>Local SEO Services | Boost Local Search Rankings | SEO Audit Tool</title>
         <meta name="description" content="Specialized local SEO services to help your business dominate local search results. Target customers in your area and drive more foot traffic." />
@@ -34,7 +34,8 @@ const LocalSeo = () => {
         </script>
       </Helmet>
 
-      <section className="py-16 md:py-24">
+      {/* Hero Section - Dark Theme */}
+      <section className="bg-gradient-to-b from-navy to-navy-light py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">Local SEO Services</h1>
@@ -86,77 +87,89 @@ const LocalSeo = () => {
               </p>
             </div>
           </div>
+        </div>
+      </section>
 
-          <div className="mb-20">
-            <h2 className="text-3xl font-bold text-center text-white mb-12">Our Local SEO Approach</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div className="space-y-6">
-                <div className="flex gap-4 items-start">
-                  <div className="bg-teal/20 p-3 rounded-full">
-                    <CheckCircle2 className="h-6 w-6 text-teal" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-white mb-2">Local Keyword Research</h3>
-                    <p className="text-white/70">We identify high-value keywords that local customers use to find businesses like yours.</p>
-                  </div>
+      {/* Mixed Light/Dark Theme Section */}
+      <section className="bg-light-bg dark:bg-navy-light py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center text-navy dark:text-white mb-12">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-white dark:to-teal-light">
+              Our Local SEO Approach
+            </span>
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="space-y-6">
+              <div className="flex gap-4 items-start glass-card-hover p-4 rounded-xl">
+                <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full">
+                  <CheckCircle2 className="h-6 w-6 text-teal dark:text-teal-light" />
                 </div>
-                
-                <div className="flex gap-4 items-start">
-                  <div className="bg-teal/20 p-3 rounded-full">
-                    <CheckCircle2 className="h-6 w-6 text-teal" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-white mb-2">Google Business Profile Optimization</h3>
-                    <p className="text-white/70">We optimize your profile with accurate information, engaging posts, and strategic keywords.</p>
-                  </div>
-                </div>
-                
-                <div className="flex gap-4 items-start">
-                  <div className="bg-teal/20 p-3 rounded-full">
-                    <CheckCircle2 className="h-6 w-6 text-teal" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-white mb-2">Local Content Strategy</h3>
-                    <p className="text-white/70">We create location-specific content that resonates with your target audience and search engines.</p>
-                  </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-navy dark:text-white mb-2">Local Keyword Research</h3>
+                  <p className="text-navy/70 dark:text-white/70">We identify high-value keywords that local customers use to find businesses like yours.</p>
                 </div>
               </div>
               
-              <div className="space-y-6">
-                <div className="flex gap-4 items-start">
-                  <div className="bg-teal/20 p-3 rounded-full">
-                    <CheckCircle2 className="h-6 w-6 text-teal" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-white mb-2">Local Link Building</h3>
-                    <p className="text-white/70">We secure high-quality backlinks from respected local websites to boost your domain authority.</p>
-                  </div>
+              <div className="flex gap-4 items-start glass-card-hover p-4 rounded-xl">
+                <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full">
+                  <CheckCircle2 className="h-6 w-6 text-teal dark:text-teal-light" />
                 </div>
-                
-                <div className="flex gap-4 items-start">
-                  <div className="bg-teal/20 p-3 rounded-full">
-                    <CheckCircle2 className="h-6 w-6 text-teal" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-white mb-2">Technical SEO Audit</h3>
-                    <p className="text-white/70">Use our <Link to="/" className="text-teal hover:underline">SEO Audit Tool</Link> to identify and fix issues affecting your local rankings.</p>
-                  </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-navy dark:text-white mb-2">Google Business Profile Optimization</h3>
+                  <p className="text-navy/70 dark:text-white/70">We optimize your profile with accurate information, engaging posts, and strategic keywords.</p>
                 </div>
-                
-                <div className="flex gap-4 items-start">
-                  <div className="bg-teal/20 p-3 rounded-full">
-                    <CheckCircle2 className="h-6 w-6 text-teal" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-white mb-2">Local Ranking Tracking</h3>
-                    <p className="text-white/70">We monitor your local rankings and make data-driven optimizations to improve results.</p>
-                  </div>
+              </div>
+              
+              <div className="flex gap-4 items-start glass-card-hover p-4 rounded-xl">
+                <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full">
+                  <CheckCircle2 className="h-6 w-6 text-teal dark:text-teal-light" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-navy dark:text-white mb-2">Local Content Strategy</h3>
+                  <p className="text-navy/70 dark:text-white/70">We create location-specific content that resonates with your target audience and search engines.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="flex gap-4 items-start glass-card-hover p-4 rounded-xl">
+                <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full">
+                  <CheckCircle2 className="h-6 w-6 text-teal dark:text-teal-light" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-navy dark:text-white mb-2">Local Link Building</h3>
+                  <p className="text-navy/70 dark:text-white/70">We secure high-quality backlinks from respected local websites to boost your domain authority.</p>
+                </div>
+              </div>
+              
+              <div className="flex gap-4 items-start glass-card-hover p-4 rounded-xl">
+                <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full">
+                  <CheckCircle2 className="h-6 w-6 text-teal dark:text-teal-light" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-navy dark:text-white mb-2">Technical SEO Audit</h3>
+                  <p className="text-navy/70 dark:text-white/70">Use our <Link to="/" className="text-teal hover:underline dark:text-teal-light">SEO Audit Tool</Link> to identify and fix issues affecting your local rankings.</p>
+                </div>
+              </div>
+              
+              <div className="flex gap-4 items-start glass-card-hover p-4 rounded-xl">
+                <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full">
+                  <CheckCircle2 className="h-6 w-6 text-teal dark:text-teal-light" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-navy dark:text-white mb-2">Local Ranking Tracking</h3>
+                  <p className="text-navy/70 dark:text-white/70">We monitor your local rankings and make data-driven optimizations to improve results.</p>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          <div className="bg-navy-light border border-teal/20 rounded-xl p-8 md:p-12 mb-16">
+      {/* Dark Theme Section */}
+      <section className="bg-navy py-16">
+        <div className="container mx-auto px-4">
+          <div className="bg-navy-light/70 backdrop-blur-sm border border-teal/20 rounded-xl p-8 md:p-12 mb-16 glass-card">
             <h2 className="text-3xl font-bold text-white mb-8 text-center">Why Local SEO Matters</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <div className="text-center">
