@@ -1,720 +1,182 @@
-import React, { useState, useEffect } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle, Globe, LineChart, Search, Shield, Trophy, Users } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { Helmet } from 'react-helmet-async';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CheckCircle2, BarChart, LineChart, TrendingUp, Users, Settings, Zap } from 'lucide-react';
 
 const SeoToronto = () => {
-  const { t, language } = useLanguage();
-  const [activeTab, setActiveTab] = useState("why-seo");
-
-  useEffect(() => {
-    let linkEn = document.querySelector('link[hreflang="en"]');
-    let linkFr = document.querySelector('link[hreflang="fr"]');
-    
-    if (!linkEn) {
-      linkEn = document.createElement('link');
-      linkEn.setAttribute('rel', 'alternate');
-      linkEn.setAttribute('hreflang', 'en');
-      document.head.appendChild(linkEn);
-    }
-    
-    if (!linkFr) {
-      linkFr = document.createElement('link');
-      linkFr.setAttribute('rel', 'alternate');
-      linkFr.setAttribute('hreflang', 'fr');
-      document.head.appendChild(linkFr);
-    }
-    
-    const currentUrl = window.location.href;
-    linkEn.setAttribute('href', currentUrl);
-    linkFr.setAttribute('href', currentUrl);
-    
-    document.title = language === 'en' ? 'Toronto SEO Services - AUS Digital' : 'Services SEO Toronto - AUS Digital';
-    
-    return () => {
-      if (linkEn && linkEn.parentNode) document.head.removeChild(linkEn);
-      if (linkFr && linkFr.parentNode) document.head.removeChild(linkFr);
-    };
-  }, [language]);
-
   return (
-    <div className="min-h-screen w-full">
-      <section className="bg-gradient-to-b from-navy to-navy-light py-16 md:py-20 w-full">
-        <div className="container-custom">
-          <div className="flex flex-col items-center text-center mb-8">
-            <h1 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">
-              {t('toronto_hero_title')}
-            </h1>
-            <h2 className="text-xl md:text-2xl text-teal-light/90 font-medium mb-8">
-              {t('toronto_hero_subtitle')}
-            </h2>
-            <div className="flex flex-col sm:flex-row gap-4 mt-2">
-              <Link 
-                to="/contact" 
-                className="px-6 py-3 bg-teal text-white font-medium rounded-lg hover:bg-teal-light transition-all flex items-center justify-center gap-2"
-              >
-                {t('get_free_audit')} <ArrowRight size={18} />
+    <>
+      <Helmet>
+        <title>Toronto SEO Services | Local SEO Expert Toronto | SEO Audit Tool</title>
+        <meta name="description" content="Expert SEO services in Toronto. Improve your local search rankings with our proven Toronto SEO strategies and comprehensive website analysis." />
+        <meta name="keywords" content="Toronto SEO, SEO services Toronto, local SEO Toronto, SEO expert Toronto, Toronto search optimization" />
+        <link rel="canonical" href={window.location.href} />
+        
+        {/* Toronto-specific schema markup */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "Toronto SEO Services",
+            "description": "Professional SEO services for businesses in Toronto. Improve local search visibility and drive more traffic to your website.",
+            "provider": {
+              "@type": "Organization",
+              "name": "SEO Audit Tool"
+            },
+            "serviceArea": {
+              "@type": "Place",
+              "name": "Toronto"
+            },
+            "audience": {
+              "@type": "Audience",
+              "audienceType": "Toronto Businesses"
+            }
+          })}
+        </script>
+      </Helmet>
+      
+      <div className="w-full bg-gradient-to-b from-navy to-navy-light py-16 md:py-24">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">Toronto SEO Services</h1>
+            <p className="text-xl text-white/80 mb-8">Boost your business visibility in Toronto with our specialized local SEO services</p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link to="/">
+                <Button className="bg-teal hover:bg-teal-dark text-white">
+                  Try Our SEO Audit Tool
+                </Button>
               </Link>
-              <Link 
-                to="/" 
-                className="px-6 py-3 bg-transparent border border-white/30 text-white font-medium rounded-lg hover:bg-white/10 transition-all"
-              >
-                {t('try_seo_tool')}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="content-section-light w-full">
-        <div className="container-custom">
-          <h2 className="text-3xl font-bold mb-6 text-navy">{t('toronto_intro_title')}</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <div className="feature-card">
-              <div className="p-3 bg-teal rounded-full w-fit mb-4">
-                <Globe className="text-white" size={28} />
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">{t('local_dominance')}</h3>
-              <p className="text-white/80">{t('local_dominance_text')}</p>
-            </div>
-            
-            <div className="feature-card">
-              <div className="p-3 bg-teal rounded-full w-fit mb-4">
-                <LineChart className="text-white" size={28} />
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">{t('roi_results')}</h3>
-              <p className="text-white/80">{t('roi_results_text')}</p>
-            </div>
-            
-            <div className="feature-card">
-              <div className="p-3 bg-teal rounded-full w-fit mb-4">
-                <Search className="text-white" size={28} />
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">{t('comprehensive_strategy')}</h3>
-              <p className="text-white/80">{t('comprehensive_strategy_text')}</p>
-            </div>
-          </div>
-          
-          <div className="prose prose-lg max-w-none mb-12 text-navy">
-            <p className="text-lg">
-              In today's competitive digital landscape, <strong>Toronto businesses</strong> need more than just a basic online presence—they need strategic SEO expertise that delivers tangible results. At <span className="text-highlight">AUS Digital</span>, we combine technical SEO mastery with deep local market knowledge to help your business thrive in Toronto's unique digital ecosystem.
-            </p>
-            
-            <p>
-              Whether you're a small local shop in The Annex, a growing tech startup in Liberty Village, or an established enterprise in the Financial District, our Toronto SEO specialists create customized strategies that align with your business goals and target audience.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="content-section-dark w-full">
-        <div className="container-custom">
-          <h2 className="text-3xl font-bold mb-8 text-center text-white">{t('toronto_content_title')}</h2>
-          
-          <div className="w-full overflow-hidden">
-            <Tabs defaultValue="why-seo" className="mb-12 w-full" onValueChange={setActiveTab} value={activeTab}>
-              <div className="tabs-container">
-                <TabsList className="bg-navy-light/50 mb-8 p-1 rounded-lg w-full flex">
-                  <TabsTrigger value="why-seo" className="flex-1 data-[state=active]:bg-teal data-[state=active]:text-white whitespace-nowrap px-4 py-2">{t('why_seo')}</TabsTrigger>
-                  <TabsTrigger value="our-process" className="flex-1 data-[state=active]:bg-teal data-[state=active]:text-white whitespace-nowrap px-4 py-2">{t('our_process')}</TabsTrigger>
-                  <TabsTrigger value="local-seo" className="flex-1 data-[state=active]:bg-teal data-[state=active]:text-white whitespace-nowrap px-4 py-2">{t('local_seo')}</TabsTrigger>
-                  <TabsTrigger value="case-studies" className="flex-1 data-[state=active]:bg-teal data-[state=active]:text-white whitespace-nowrap px-4 py-2">{t('case_studies')}</TabsTrigger>
-                </TabsList>
-              </div>
-              
-              <TabsContent value="why-seo" className="glass-card">
-                <h3 className="text-2xl font-bold mb-4 text-white">Why Toronto Businesses Need Professional SEO</h3>
-                
-                <div className="text-white/90 space-y-4">
-                  <p>
-                    In Canada's largest and most competitive business market, having a strong online presence isn't optional—it's essential. Toronto consumers conduct over 5 million local searches daily, with 76% of those searches resulting in a visit to a local business within 24 hours.
-                  </p>
-                  
-                  <h4 className="text-xl font-semibold mt-6 mb-3 text-teal-light">SEO: The Foundation of Digital Success in Toronto</h4>
-                  
-                  <p>
-                    Search Engine Optimization (SEO) is the process of improving your website's visibility in search engine results pages (SERPs) for relevant queries. For Toronto businesses, this means appearing prominently when potential customers search for your products or services locally.
-                  </p>
-                  
-                  <ul className="list-disc pl-6 space-y-2 mt-4">
-                    <li><strong>Increased Visibility:</strong> Rise above 15,000+ competing Toronto businesses in your industry.</li>
-                    <li><strong>Quality Traffic:</strong> Attract visitors actively searching for your offerings in the GTA.</li>
-                    <li><strong>Credibility Building:</strong> Establish trust with Toronto consumers who rely on search rankings as indicators of business quality.</li>
-                    <li><strong>Competitive Advantage:</strong> Gain market share in Toronto's digital landscape while competitors fall behind.</li>
-                    <li><strong>Cost-Effective Marketing:</strong> Generate consistent Toronto leads without the ongoing costs of paid advertising.</li>
-                  </ul>
-                  
-                  <div className="bg-navy-light p-6 rounded-lg mt-8 border border-teal/20">
-                    <h5 className="text-lg font-semibold mb-3 text-white">The Toronto SEO Landscape: By the Numbers</h5>
-                    <ul className="space-y-3">
-                      <li className="flex items-start gap-3">
-                        <CheckCircle className="text-teal min-w-5 mt-1" size={20} />
-                        <span>97% of consumers search online for local businesses in Toronto before making a purchase decision</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <CheckCircle className="text-teal min-w-5 mt-1" size={20} />
-                        <span>93% of local Toronto search experiences begin on Google</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <CheckCircle className="text-teal min-w-5 mt-1" size={20} />
-                        <span>78% of local mobile searches in Toronto result in an offline purchase</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <CheckCircle className="text-teal min-w-5 mt-1" size={20} />
-                        <span>Toronto businesses ranking in the top 3 positions capture over 60% of all clicks</span>
-                      </li>
-                    </ul>
-                  </div>
-                  
-                  <p className="mt-6">
-                    Without effective SEO, your Toronto business is essentially invisible to thousands of potential customers searching for exactly what you offer every day. In a city with over 180,000 registered businesses competing for attention, professional SEO services provide the competitive edge needed to stand out and thrive.
-                  </p>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="our-process" className="glass-card">
-                <h3 className="text-2xl font-bold mb-4 text-white">Our Toronto SEO Process: Data-Driven & Results-Focused</h3>
-                
-                <div className="text-white/90">
-                  <p className="mb-6">
-                    At AUS Digital, we've refined our Toronto SEO methodology through years of experience helping local businesses achieve significant growth through search. Our approach combines technical expertise with deep local market insights.
-                  </p>
-                  
-                  <div className="space-y-8 mt-8">
-                    <div className="flex flex-col md:flex-row gap-6">
-                      <div className="bg-navy-light p-6 rounded-lg border border-teal/20 md:w-1/2">
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 rounded-full bg-teal flex items-center justify-center text-white font-bold">1</div>
-                          <h4 className="text-xl font-semibold text-white">Comprehensive Toronto SEO Audit</h4>
-                        </div>
-                        <p>
-                          We begin with a thorough analysis of your current online presence, examining your website structure, content quality, technical health, backlink profile, and competitive positioning in the Toronto market. This detailed assessment reveals optimization opportunities specific to your business and industry.
-                        </p>
-                      </div>
-                      
-                      <div className="bg-navy-light p-6 rounded-lg border border-teal/20 md:w-1/2">
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 rounded-full bg-teal flex items-center justify-center text-white font-bold">2</div>
-                          <h4 className="text-xl font-semibold text-white">Toronto Keyword Research & Strategy</h4>
-                        </div>
-                        <p>
-                          Using advanced tools and Toronto market insights, we identify high-value keywords that your potential customers are actually searching for. We analyze search intent, competition levels, and conversion potential to develop a strategic keyword map focused on Toronto and GTA-specific search patterns.
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-col md:flex-row gap-6">
-                      <div className="bg-navy-light p-6 rounded-lg border border-teal/20 md:w-1/2">
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 rounded-full bg-teal flex items-center justify-center text-white font-bold">3</div>
-                          <h4 className="text-xl font-semibold text-white">Technical SEO Optimization</h4>
-                        </div>
-                        <p>
-                          Our technical SEO specialists ensure your website's foundation is solid by addressing critical elements that impact search visibility: site speed, mobile responsiveness, indexing issues, structured data, XML sitemaps, SSL security, and more. We implement Toronto-specific schema markup to enhance local search presence.
-                        </p>
-                      </div>
-                      
-                      <div className="bg-navy-light p-6 rounded-lg border border-teal/20 md:w-1/2">
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 rounded-full bg-teal flex items-center justify-center text-white font-bold">4</div>
-                          <h4 className="text-xl font-semibold text-white">On-Page SEO & Content Development</h4>
-                        </div>
-                        <p>
-                          We optimize or create compelling, Toronto-focused content that satisfies both search engines and users. This includes strategic keyword implementation, meta tag optimization, heading structure, internal linking, and the development of location-specific content that resonates with Toronto audiences.
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-col md:flex-row gap-6">
-                      <div className="bg-navy-light p-6 rounded-lg border border-teal/20 md:w-1/2">
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 rounded-full bg-teal flex items-center justify-center text-white font-bold">5</div>
-                          <h4 className="text-xl font-semibold text-white">Toronto Local SEO Mastery</h4>
-                        </div>
-                        <p>
-                          Our specialized local SEO strategies include Google Business Profile optimization, local citation building across Toronto business directories, neighborhood-targeted landing pages, local schema markup, and review management to boost your visibility in Toronto's Google Map Pack and local search results.
-                        </p>
-                      </div>
-                      
-                      <div className="bg-navy-light p-6 rounded-lg border border-teal/20 md:w-1/2">
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 rounded-full bg-teal flex items-center justify-center text-white font-bold">6</div>
-                          <h4 className="text-xl font-semibold text-white">Authority Building & Link Development</h4>
-                        </div>
-                        <p>
-                          We implement ethical link building strategies to boost your website's authority, focusing on quality Toronto-based backlinks from relevant local sources. Our team cultivates relationships with GTA businesses, media outlets, and industry associations to secure valuable links that drive both rankings and referral traffic.
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-col md:flex-row gap-6">
-                      <div className="bg-navy-light p-6 rounded-lg border border-teal/20 md:w-1/2">
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 rounded-full bg-teal flex items-center justify-center text-white font-bold">7</div>
-                          <h4 className="text-xl font-semibold text-white">User Experience Optimization</h4>
-                        </div>
-                        <p>
-                          We enhance your website's UX for both visitors and search engines, optimizing page speed, mobile responsiveness, navigation, and conversion paths. These improvements lower bounce rates and increase engagement signals that help boost your Toronto search rankings while converting more visitors into customers.
-                        </p>
-                      </div>
-                      
-                      <div className="bg-navy-light p-6 rounded-lg border border-teal/20 md:w-1/2">
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 rounded-full bg-teal flex items-center justify-center text-white font-bold">8</div>
-                          <h4 className="text-xl font-semibold text-white">Transparent Analytics & Reporting</h4>
-                        </div>
-                        <p>
-                          We provide comprehensive monthly reports that track all key performance indicators: rankings, traffic, conversions, and ROI. Our detailed analytics show exactly how our SEO efforts are impacting your business growth in the Toronto market, with clear dashboards and insights rather than confusing technical jargon.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-10">
-                    <h4 className="text-xl font-semibold mb-4 text-white">Continuous Optimization: The AUS Digital Difference</h4>
-                    <p>
-                      SEO is never "set and forget." Our process includes ongoing optimization as Toronto search trends evolve, competitors adjust, and Google algorithms update. We constantly refine our approach based on performance data, ensuring your business maintains and improves positions for competitive Toronto search terms.
-                    </p>
-                  </div>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="local-seo" className="glass-card">
-                <h3 className="text-2xl font-bold mb-4 text-white">Toronto Local SEO: Dominate Your Neighborhood</h3>
-                
-                <div className="text-white/90">
-                  <p className="mb-6">
-                    Local SEO is critical for Toronto businesses targeting customers in specific neighborhoods or the greater GTA. Our hyper-local approach ensures you're visible to nearby customers ready to convert.
-                  </p>
-                  
-                  <h4 className="text-xl font-semibold mt-8 mb-4 text-teal-light">The Toronto Local SEO Advantage</h4>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 mb-8">
-                    <div className="bg-navy-light p-5 rounded-lg border border-teal/20">
-                      <h5 className="flex items-center gap-2 text-lg font-semibold mb-3 text-white">
-                        <Users className="text-teal" size={20} />
-                        Google Business Profile Mastery
-                      </h5>
-                      <p>
-                        We optimize your Google Business Profile to dominate Toronto's local map pack, including location-specific keywords, business categories, services, photos, and review management. Our GBP optimization leads to 72% more store visits for Toronto retail clients.
-                      </p>
-                    </div>
-                    
-                    <div className="bg-navy-light p-5 rounded-lg border border-teal/20">
-                      <h5 className="flex items-center gap-2 text-lg font-semibold mb-3 text-white">
-                        <Globe className="text-teal" size={20} />
-                        Toronto Citation Building
-                      </h5>
-                      <p>
-                        We build and maintain consistent business listings across Toronto-specific directories (Toronto.com, YellowPages.ca, Yelp Canada) and industry platforms. Our NAP consistency corrections have improved local rankings by an average of 33% for Toronto service businesses.
-                      </p>
-                    </div>
-                    
-                    <div className="bg-navy-light p-5 rounded-lg border border-teal/20">
-                      <h5 className="flex items-center gap-2 text-lg font-semibold mb-3 text-white">
-                        <Search className="text-teal" size={20} />
-                        Neighborhood-Targeted Content
-                      </h5>
-                      <p>
-                        We create content that targets specific Toronto neighborhoods and suburbs including Scarborough, North York, Etobicoke, Mississauga, and Markham. Our neighborhood pages approach increased qualified leads by 47% for a Toronto real estate client.
-                      </p>
-                    </div>
-                    
-                    <div className="bg-navy-light p-5 rounded-lg border border-teal/20">
-                      <h5 className="flex items-center gap-2 text-lg font-semibold mb-3 text-white">
-                        <Shield className="text-teal" size={20} />
-                        Review Generation & Management
-                      </h5>
-                      <p>
-                        We implement strategic review acquisition programs and manage your online reputation across Google, Facebook, and industry-specific review sites. Our review strategies have boosted conversion rates by 28% for Toronto hospitality clients.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <h4 className="text-xl font-semibold mt-10 mb-4 text-teal-light">Toronto-Specific Local SEO Strategies</h4>
-                  
-                  <p className="mb-4">
-                    Our local SEO approach is tailored to Toronto's unique market characteristics. We develop customized strategies based on your business type, target neighborhoods, and competitive landscape.
-                  </p>
-                  
-                  <div className="mt-6 space-y-4">
-                    <div className="flex items-start gap-3">
-                      <CheckCircle className="text-teal min-w-5 mt-1" size={20} />
-                      <div>
-                        <strong className="text-white">Hyper-Local Keywords:</strong> We target Toronto-specific search terms with neighborhood modifiers that match how locals actually search (e.g., "emergency plumber Liberty Village" vs. generic "Toronto plumber").
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-3">
-                      <CheckCircle className="text-teal min-w-5 mt-1" size={20} />
-                      <div>
-                        <strong className="text-white">Local Link Building:</strong> We secure backlinks from Toronto business associations, community organizations, event listings, and local media outlets that boost both authority and local relevance.
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-3">
-                      <CheckCircle className="text-teal min-w-5 mt-1" size={20} />
-                      <div>
-                        <strong className="text-white">Location Pages:</strong> We develop optimized pages for each service area, incorporating local landmarks, transportation references, and community-specific content that demonstrates genuine local knowledge.
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-3">
-                      <CheckCircle className="text-teal min-w-5 mt-1" size={20} />
-                      <div>
-                        <strong className="text-white">Schema Markup:</strong> We implement Toronto-specific structured data that helps search engines understand your local relevance, service areas, and business details.
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-teal/10 p-6 rounded-lg mt-8 border border-teal/20">
-                    <h5 className="text-lg font-semibold mb-3 text-white">Local SEO Case Study: Toronto Dental Practice</h5>
-                    <p className="mb-4">
-                      A downtown Toronto dental practice came to us struggling to attract new patients despite their central location. Through targeted local SEO strategies, we achieved:
-                    </p>
-                    <ul className="list-disc pl-6 space-y-2">
-                      <li>87% increase in local keyword rankings within 4 months</li>
-                      <li>124% increase in Google Business Profile views</li>
-                      <li>45 new patient bookings directly attributed to local search</li>
-                      <li>Featured in the local map pack for 27 high-value keywords</li>
-                      <li>43% reduction in cost per new patient acquisition</li>
-                    </ul>
-                  </div>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="case-studies" className="glass-card">
-                <h3 className="text-2xl font-bold mb-6 text-white">Toronto SEO Success Stories</h3>
-                
-                <div className="text-white/90">
-                  <p className="mb-6">
-                    Our results-driven approach has helped numerous Toronto businesses achieve remarkable growth through search engine optimization. Below are just a few examples of our successful client partnerships.
-                  </p>
-                  
-                  <div className="space-y-8 mt-8">
-                    <div className="bg-navy-light border border-teal/20 rounded-lg overflow-hidden">
-                      <div className="bg-teal/20 p-5">
-                        <div className="flex items-center gap-3 mb-1">
-                          <Trophy className="text-teal" size={24} />
-                          <h4 className="text-xl font-semibold text-white">Toronto Commercial Real Estate Firm</h4>
-                        </div>
-                        <p className="text-sm text-white/70">Industry: Real Estate | Duration: 9 Months</p>
-                      </div>
-                      
-                      <div className="p-5">
-                        <h5 className="text-lg font-semibold mb-3 text-white">Challenge:</h5>
-                        <p className="mb-4">
-                          This established commercial real estate firm was struggling to generate qualified leads in Toronto's competitive market. Despite having an impressive portfolio, they ranked poorly for valuable keywords and received minimal organic traffic.
-                        </p>
-                        
-                        <h5 className="text-lg font-semibold mb-3 text-white">Solution:</h5>
-                        <p className="mb-4">
-                          We implemented a comprehensive SEO strategy including:
-                        </p>
-                        <ul className="list-disc pl-6 space-y-2 mb-4">
-                          <li>Complete website restructuring with Toronto-optimized property listings</li>
-                          <li>Development of neighborhood-specific commercial real estate guides</li>
-                          <li>Technical SEO overhaul addressing 40+ critical issues</li>
-                          <li>Creation of data-driven market reports attracting quality backlinks</li>
-                          <li>Local citation building across 50+ Toronto business directories</li>
-                        </ul>
-                        
-                        <h5 className="text-lg font-semibold mb-3 text-white">Results:</h5>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
-                          <div className="bg-navy p-4 rounded-lg text-center">
-                            <p className="text-2xl font-bold text-teal">189%</p>
-                            <p className="text-sm text-white/70">Organic Traffic Increase</p>
-                          </div>
-                          <div className="bg-navy p-4 rounded-lg text-center">
-                            <p className="text-2xl font-bold text-teal">43</p>
-                            <p className="text-sm text-white/70">First Page Keywords</p>
-                          </div>
-                          <div className="bg-navy p-4 rounded-lg text-center">
-                            <p className="text-2xl font-bold text-teal">67%</p>
-                            <p className="text-sm text-white/70">Lead Conversion Increase</p>
-                          </div>
-                          <div className="bg-navy p-4 rounded-lg text-center">
-                            <p className="text-2xl font-bold text-teal">$4.2M</p>
-                            <p className="text-sm text-white/70">Revenue Attributed to SEO</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="bg-navy-light border border-teal/20 rounded-lg overflow-hidden">
-                      <div className="bg-teal/20 p-5">
-                        <div className="flex items-center gap-3 mb-1">
-                          <Trophy className="text-teal" size={24} />
-                          <h4 className="text-xl font-semibold text-white">Toronto Medical Clinic</h4>
-                        </div>
-                        <p className="text-sm text-white/70">Industry: Healthcare | Duration: 12 Months</p>
-                      </div>
-                      
-                      <div className="p-5">
-                        <h5 className="text-lg font-semibold mb-3 text-white">Challenge:</h5>
-                        <p className="mb-4">
-                          This multi-specialty medical clinic needed to increase visibility for their specialized services in Toronto's competitive healthcare market. They were being outranked by larger institutions despite offering superior patient care.
-                        </p>
-                        
-                        <h5 className="text-lg font-semibold mb-3 text-white">Solution:</h5>
-                        <p className="mb-4">
-                          We developed a healthcare-specific SEO strategy including:
-                        </p>
-                        <ul className="list-disc pl-6 space-y-2 mb-4">
-                          <li>Service-specific content development with medical expertise</li>
-                          <li>Implementation of medical schema markup and E-A-T optimization</li>
-                          <li>Google Business Profile optimization for each specialty</li>
-                          <li>Ethical link building from health authorities and associations</li>
-                          <li>Patient journey mapping and conversion rate optimization</li>
-                        </ul>
-                        
-                        <h5 className="text-lg font-semibold mb-3 text-white">Results:</h5>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
-                          <div className="bg-navy p-4 rounded-lg text-center">
-                            <p className="text-2xl font-bold text-teal">243%</p>
-                            <p className="text-sm text-white/70">Organic Traffic Growth</p>
-                          </div>
-                          <div className="bg-navy p-4 rounded-lg text-center">
-                            <p className="text-2xl font-bold text-teal">426%</p>
-                            <p className="text-sm text-white/70">Online Appointment Increase</p>
-                          </div>
-                          <div className="bg-navy p-4 rounded-lg text-center">
-                            <p className="text-2xl font-bold text-teal">14</p>
-                            <p className="text-sm text-white/70">Featured Snippets Secured</p>
-                          </div>
-                          <div className="bg-navy p-4 rounded-lg text-center">
-                            <p className="text-2xl font-bold text-teal">92%</p>
-                            <p className="text-sm text-white/70">New Patient Increase</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="bg-navy-light border border-teal/20 rounded-lg overflow-hidden">
-                      <div className="bg-teal/20 p-5">
-                        <div className="flex items-center gap-3 mb-1">
-                          <Trophy className="text-teal" size={24} />
-                          <h4 className="text-xl font-semibold text-white">Toronto E-Commerce Retailer</h4>
-                        </div>
-                        <p className="text-sm text-white/70">Industry: Retail | Duration: 6 Months</p>
-                      </div>
-                      
-                      <div className="p-5">
-                        <h5 className="text-lg font-semibold mb-3 text-white">Challenge:</h5>
-                        <p className="mb-4">
-                          This Toronto-based e-commerce company was struggling with poor organic visibility, high bounce rates, and low conversion rates despite offering competitive products and pricing.
-                        </p>
-                        
-                        <h5 className="text-lg font-semibold mb-3 text-white">Solution:</h5>
-                        <p className="mb-4">
-                          We implemented a comprehensive e-commerce SEO strategy:
-                        </p>
-                        <ul className="list-disc pl-6 space-y-2 mb-4">
-                          <li>Complete product page optimization for 500+ SKUs</li>
-                          <li>Implementation of advanced e-commerce schema markup</li>
-                          <li>Site speed optimization reducing load time by 67%</li>
-                          <li>Development of buying guides and product comparison content</li>
-                          <li>Technical SEO fixing deep crawl and indexing issues</li>
-                        </ul>
-                        
-                        <h5 className="text-lg font-semibold mb-3 text-white">Results:</h5>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
-                          <div className="bg-navy p-4 rounded-lg text-center">
-                            <p className="text-2xl font-bold text-teal">312%</p>
-                            <p className="text-sm text-white/70">Organic Traffic Increase</p>
-                          </div>
-                          <div className="bg-navy p-4 rounded-lg text-center">
-                            <p className="text-2xl font-bold text-teal">94%</p>
-                            <p className="text-sm text-white/70">More Organic Transactions</p>
-                          </div>
-                          <div className="bg-navy p-4 rounded-lg text-center">
-                            <p className="text-2xl font-bold text-teal">46%</p>
-                            <p className="text-sm text-white/70">Bounce Rate Reduction</p>
-                          </div>
-                          <div className="bg-navy p-4 rounded-lg text-center">
-                            <p className="text-2xl font-bold text-teal">167%</p>
-                            <p className="text-sm text-white/70">Revenue Growth</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-        </div>
-      </section>
-
-      <section className="content-section-light w-full">
-        <div className="container-custom">
-          <h2 className="text-3xl font-bold mb-6 text-navy text-center">{t('faq_title')}</h2>
-          <p className="text-lg text-navy/80 text-center mb-10 max-w-3xl mx-auto">
-            {t('faq_subtitle')}
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="text-xl font-semibold mb-3 text-navy">{t('how_long_results')}</h3>
-              <p className="text-navy/80">
-                {t('how_long_results_text')}
-              </p>
-            </div>
-            
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="text-xl font-semibold mb-3 text-navy">{t('how_much_cost')}</h3>
-              <p className="text-navy/80">
-                {t('how_much_cost_text')}
-              </p>
-            </div>
-            
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="text-xl font-semibold mb-3 text-navy">{t('what_different')}</h3>
-              <p className="text-navy/80">
-                {t('what_different_text')}
-              </p>
-            </div>
-            
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="text-xl font-semibold mb-3 text-navy">{t('do_guarantee')}</h3>
-              <p className="text-navy/80">
-                {t('do_guarantee_text')}
-              </p>
-            </div>
-            
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="text-xl font-semibold mb-3 text-navy">{t('how_measure')}</h3>
-              <p className="text-navy/80">
-                {t('how_measure_text')}
-              </p>
-            </div>
-            
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="text-xl font-semibold mb-3 text-navy">{t('do_paid')}</h3>
-              <p className="text-navy/80">
-                {t('do_paid_text')}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="content-section-dark w-full">
-        <div className="container-custom">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">{t('ready_title')}</h2>
-            <p className="text-xl text-white/80 mb-8">
-              {t('ready_subtitle')}
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link 
-                to="/contact" 
-                className="px-8 py-4 bg-teal text-white font-medium rounded-lg hover:bg-teal-light transition-all flex items-center justify-center gap-2"
-              >
-                {t('get_free_audit')} <ArrowRight size={18} />
-              </Link>
-              <Link
-                to="/"
-                className="px-8 py-4 bg-transparent border border-white/30 text-white font-medium rounded-lg hover:bg-white/10 transition-all"
-              >
-                {t('try_seo_tool')}
+              <Link to="/services/local-seo">
+                <Button variant="outline" className="border-teal text-teal hover:bg-teal/10">
+                  Learn About Local SEO
+                </Button>
               </Link>
             </div>
           </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <Card className="bg-navy-light border-teal/20">
+              <CardHeader>
+                <CardTitle className="flex items-center text-white">
+                  <TrendingUp className="w-5 h-5 mr-2 text-teal" /> Local Rank Boosting
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-white/70">
+                  Our Toronto SEO strategies are specifically designed to improve your rankings in local search results, helping customers find your business.
+                </CardDescription>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-navy-light border-teal/20">
+              <CardHeader>
+                <CardTitle className="flex items-center text-white">
+                  <Users className="w-5 h-5 mr-2 text-teal" /> Toronto Audience Targeting
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-white/70">
+                  We target keywords and create content that resonates with Toronto audiences, increasing relevant traffic to your website.
+                </CardDescription>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-navy-light border-teal/20">
+              <CardHeader>
+                <CardTitle className="flex items-center text-white">
+                  <BarChart className="w-5 h-5 mr-2 text-teal" /> Competitive Analysis
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-white/70">
+                  We analyze your Toronto competitors to develop strategies that will help you stand out in your local market.
+                </CardDescription>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <div className="mb-20">
+            <h2 className="text-3xl font-bold text-center text-white mb-12">How Our Toronto SEO Services Work</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div className="space-y-6">
+                <div className="flex gap-4 items-start">
+                  <div className="bg-teal/20 p-3 rounded-full">
+                    <CheckCircle2 className="h-6 w-6 text-teal" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-2">Local Keyword Research</h3>
+                    <p className="text-white/70">We identify high-value keywords that Toronto customers use to find businesses like yours.</p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-4 items-start">
+                  <div className="bg-teal/20 p-3 rounded-full">
+                    <CheckCircle2 className="h-6 w-6 text-teal" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-2">Google Business Profile Optimization</h3>
+                    <p className="text-white/70">We optimize your Google Business Profile to improve your visibility in local map results.</p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-4 items-start">
+                  <div className="bg-teal/20 p-3 rounded-full">
+                    <CheckCircle2 className="h-6 w-6 text-teal" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-2">Local Content Strategy</h3>
+                    <p className="text-white/70">We create Toronto-focused content that resonates with local audiences and search engines.</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="flex gap-4 items-start">
+                  <div className="bg-teal/20 p-3 rounded-full">
+                    <CheckCircle2 className="h-6 w-6 text-teal" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-2">Local Link Building</h3>
+                    <p className="text-white/70">We secure high-quality backlinks from respected Toronto websites to boost your domain authority.</p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-4 items-start">
+                  <div className="bg-teal/20 p-3 rounded-full">
+                    <CheckCircle2 className="h-6 w-6 text-teal" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-2">Technical SEO Audit</h3>
+                    <p className="text-white/70">Use our <Link to="/" className="text-teal hover:underline">SEO Audit Tool</Link> to identify and fix technical issues that may be hindering your site's performance.</p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-4 items-start">
+                  <div className="bg-teal/20 p-3 rounded-full">
+                    <CheckCircle2 className="h-6 w-6 text-teal" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-2">Performance Tracking</h3>
+                    <p className="text-white/70">We continuously monitor your rankings and traffic to refine our strategies for maximum results.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="text-center mb-12">
+            <Link to="/">
+              <Button size="lg" className="bg-teal hover:bg-teal-dark text-white">
+                <Zap className="w-5 h-5 mr-2" /> Start with a Free SEO Audit
+              </Button>
+            </Link>
+          </div>
         </div>
-      </section>
-
-      <section className="sr-only">
-        {language === 'en' ? (
-          <>
-            <h2>Toronto SEO Services - Expert Search Engine Optimization</h2>
-            <p>
-              Looking for the best Toronto SEO company? AUS Digital provides expert search engine optimization services for Toronto businesses seeking to improve their online visibility and generate more leads. Our Toronto SEO experts specialize in local SEO, technical SEO, content marketing, and link building strategies tailored for the Greater Toronto Area (GTA) market.
-            </p>
-            
-            <h3>Toronto SEO Services We Offer</h3>
-            <ul>
-              <li>Local SEO Toronto - Improve your Google Maps rankings and local visibility</li>
-              <li>Technical SEO - Fix website issues that are holding back your rankings</li>
-              <li>On-Page SEO - Optimize your website content for Toronto-specific keywords</li>
-              <li>Content Marketing - Create valuable content that attracts Toronto customers</li>
-              <li>Link Building - Build authority with quality backlinks from Toronto sources</li>
-              <li>E-commerce SEO - Boost product visibility and sales for Toronto online stores</li>
-              <li>SEO Audits - Comprehensive analysis of your website's SEO performance</li>
-            </ul>
-            
-            <h3>Toronto Neighborhoods We Serve</h3>
-            <p>
-              We provide specialized SEO services throughout the Greater Toronto Area including Downtown Toronto, North York, Scarborough, Etobicoke, Mississauga, Brampton, Markham, Richmond Hill, Vaughan, Pickering, Ajax, Whitby, Oshawa, Oakville, and Burlington. Our local SEO strategies help businesses target specific Toronto neighborhoods and suburbs effectively.
-            </p>
-            
-            <h4>Why Choose AUS Digital for Toronto SEO Services?</h4>
-            <ul>
-              <li>Toronto SEO Specialists with deep local market knowledge</li>
-              <li>Data-driven strategies customized for your business goals</li>
-              <li>Transparent reporting and clear communication</li>
-              <li>Proven results for Toronto businesses across industries</li>
-              <li>White-hat ethical SEO practices that build sustainable growth</li>
-              <li>Competitive pricing with flexible packages for businesses of all sizes</li>
-            </ul>
-            
-            <p>
-              Improve your search engine rankings, increase website traffic, and generate more leads with Toronto's top SEO agency. Contact AUS Digital today for a free SEO audit and discover how our expert Toronto SEO services can help your business grow online.
-            </p>
-            
-            <h5>Toronto SEO Keywords</h5>
-            <p>
-              Toronto SEO, SEO Toronto, Toronto SEO company, Toronto SEO agency, Toronto SEO expert, Toronto SEO services, local SEO Toronto, Toronto SEO consultant, best SEO Toronto, affordable SEO Toronto, Toronto website optimization, Toronto search engine optimization, Toronto digital marketing, SEO services Toronto, GTA SEO company, SEO specialist Toronto, Toronto SEO firm, Toronto small business SEO, Toronto SEO strategies, Toronto keyword research, Toronto technical SEO, Toronto SEO audit, Toronto content marketing, Toronto link building, Toronto on-page SEO, Toronto off-page SEO, Toronto mobile SEO, Toronto e-commerce SEO, Toronto WordPress SEO, Toronto Shopify SEO, Toronto local business SEO, Toronto voice search optimization, Toronto schema markup, Toronto featured snippets, Toronto Google My Business optimization, Toronto local citations, Toronto backlink building, Toronto competitor analysis, Toronto conversion rate optimization, Toronto semantic SEO, Toronto LSI keywords, Toronto local pack rankings, Toronto map SEO, Toronto SEO ROI, Toronto search marketing.
-            </p>
-          </>
-        ) : (
-          <>
-            <h2>Services SEO Toronto - Optimisation pour moteurs de recherche expert</h2>
-            <p>
-              Vous cherchez la meilleure entreprise SEO à Toronto? AUS Digital fournit des services d'optimisation pour moteurs de recherche experts pour les entreprises de Toronto qui cherchent à améliorer leur visibilité en ligne et à générer plus de prospects. Nos experts SEO de Toronto se spécialisent dans le SEO local, le SEO technique, le marketing de contenu et les stratégies de création de liens adaptées au marché de la région du Grand Toronto (GTA).
-            </p>
-            
-            <h3>Services SEO Toronto que nous offrons</h3>
-            <ul>
-              <li>SEO local Toronto - Améliorez votre classement sur Google Maps et votre visibilité locale</li>
-              <li>SEO technique - Corrigez les problèmes de site Web qui freinent votre classement</li>
-              <li>SEO sur page - Optimisez le contenu de votre site Web pour les mots-clés spécifiques à Toronto</li>
-              <li>Marketing de contenu - Créez un contenu de valeur qui attire les clients de Toronto</li>
-              <li>Création de liens - Établissez une autorité avec des backlinks de qualité provenant de sources de Toronto</li>
-              <li>SEO e-commerce - Augmentez la visibilité des produits et les ventes pour les boutiques en ligne de Toronto</li>
-              <li>Audits SEO - Analyse complète des performances SEO de votre site Web</li>
-            </ul>
-            
-            <h3>Quartiers de Toronto que nous desservons</h3>
-            <p>
-              Nous fournissons des services SEO spécialisés dans toute la région du Grand Toronto, y compris le centre-ville de Toronto, North York, Scarborough, Etobicoke, Mississauga, Brampton, Markham, Richmond Hill, Vaughan, Pickering, Ajax, Whitby, Oshawa, Oakville et Burlington. Nos stratégies de SEO local aident les entreprises à cibler efficacement des quartiers et banlieues spécifiques de Toronto.
-            </p>
-            
-            <h4>Pourquoi choisir AUS Digital pour les services SEO Toronto?</h4>
-            <ul>
-              <li>Spécialistes SEO de Toronto avec une connaissance approfondie du marché local</li>
-              <li>Stratégies basées sur les données personnalisées pour vos objectifs commerciaux</li>
-              <li>Rapports transparents et communication claire</li>
-              <li>Résultats prouvés pour les entreprises de Toronto dans tous les secteurs</li>
-              <li>Pratiques SEO éthiques de chapeau blanc qui construisent une croissance durable</li>
-              <li>Prix compétitifs avec des forfaits flexibles pour les entreprises de toutes tailles</li>
-            </ul>
-            
-            <p>
-              Améliorez votre classement dans les moteurs de recherche, augmentez le trafic de votre site Web et générez plus de prospects avec la meilleure agence SEO de Toronto. Contactez AUS Digital aujourd'hui pour un audit SEO gratuit et découvrez comment nos services SEO experts de Toronto peuvent aider votre entreprise à se développer en ligne.
-            </p>
-            
-            <h5>Mots-clés SEO Toronto</h5>
-            <p>
-              SEO Toronto, référencement Toronto, entreprise SEO Toronto, agence SEO Toronto, expert SEO Toronto, services SEO Toronto, SEO local Toronto, consultant SEO Toronto, meilleur SEO Toronto, SEO abordable Toronto, optimisation de site Web Toronto, optimisation pour moteurs de recherche Toronto, marketing numérique Toronto, services de référencement Toronto, entreprise SEO GTA, spécialiste SEO Toronto, firme SEO Toronto, SEO pour petites entreprises Toronto, stratégies SEO Toronto, recherche de mots-clés Toronto, SEO technique Toronto, audit SEO Toronto, marketing de contenu Toronto, création de liens Toronto, SEO sur page Toronto, SEO hors page Toronto, SEO mobile Toronto, SEO e-commerce Toronto, SEO WordPress Toronto, SEO Shopify Toronto, SEO entreprise locale Toronto, optimisation de recherche vocale Toronto, balisage schéma Toronto, extraits en vedette Toronto, optimisation Google My Business Toronto, citations locales Toronto, création de backlinks Toronto, analyse de la concurrence Toronto, optimisation du taux de conversion Toronto, SEO sémantique Toronto, mots-clés LSI Toronto, classements locaux Toronto, SEO de carte Toronto, ROI SEO Toronto, marketing de recherche Toronto.
-            </p>
-          </>
-        )}
-      </section>
-    </div>
+      </div>
+    </>
   );
 };
 
