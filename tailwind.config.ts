@@ -65,6 +65,8 @@ const config = {
         'teal': '#5D9EF0',        // Blue accent (renamed from 'teal' but kept the variable name)
         'teal-light': '#7DBEFC',  // Lighter blue for hover states
         'light-bg': '#f8fafc',    // Light background
+        'light-card': '#ffffff',  // Light card background
+        'light-accent': '#e2e8f0', // Light accent color
         'accent-purple': '#8b5cf6', // Purple accent
         'accent-pink': '#ec4899',   // Pink accent
         'accent-orange': '#f97316', // Orange accent
@@ -72,6 +74,10 @@ const config = {
         'text-highlight': '#5D9EF0', // Blue text highlight
         'gradient-text-start': '#ffffff', // Start color for gradient text
         'gradient-text-end': '#5D9EF0',   // End color for gradient text
+        // Light theme specific colors
+        'light-text': '#121a2e',  // Dark text for light theme
+        'light-muted': '#64748b', // Muted text for light theme
+        'light-border': '#e2e8f0', // Border color for light theme
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -125,6 +131,7 @@ const config = {
         'gradient-light': 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
         'gradient-glass': 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
         'gradient-glass-dark': 'linear-gradient(135deg, rgba(30,43,74,0.7) 0%, rgba(18,26,46,0.8) 100%)',
+        'gradient-glass-light': 'linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.9) 100%)',
       },
     },
   },

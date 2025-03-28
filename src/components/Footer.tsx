@@ -7,21 +7,6 @@ import { Facebook, Twitter, Instagram, Linkedin, Globe, Send, MapPin, ArrowRight
 const Footer = () => {
   const { t } = useLanguage();
   
-  const cityLinks = [
-    { path: "/seo-toronto", name: "Toronto SEO Experts", anchor: "Toronto SEO Services" },
-    { path: "/seo-ottawa", name: "Ottawa SEO Agency", anchor: "Ottawa SEO" },
-    { path: "/seo-kitchener", name: "Kitchener SEO Solutions", anchor: "Kitchener SEO" },
-    { path: "/seo-london", name: "London SEO Company", anchor: "London SEO" },
-    { path: "/seo-vancouver", name: "Vancouver SEO Services", anchor: "Vancouver SEO" },
-    { path: "/seo-buffalo", name: "Buffalo SEO Specialists", anchor: "Buffalo SEO" }
-  ];
-
-  const blogLinks = [
-    { path: "/blog/seo-strategy-2025", anchor: "SEO Strategy 2025" },
-    { path: "/blog/image-seo", anchor: "Image SEO Guide" },
-    { path: "/blog/youtube-seo", anchor: "YouTube SEO Tips" }
-  ];
-  
   return (
     <footer className="bg-navy text-white dark:bg-gradient-to-b dark:from-navy-light dark:to-navy w-full">
       <div className="container mx-auto px-4 py-12 md:py-16">
@@ -82,70 +67,66 @@ const Footer = () => {
                   <ArrowRight size={14} className="mr-2" /> Contact SEO Experts
                 </Link>
               </li>
-              <li>
-                <Link to="/services/local-seo" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Local SEO Solutions
-                </Link>
-              </li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 className="text-xl font-bold mb-4 border-b border-teal/30 pb-2">Main Pages</h3>
+            <ul className="space-y-2">
               <li>
                 <Link to="/services/seo" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Enterprise SEO Packages
+                  <ArrowRight size={14} className="mr-2" /> SEO Services
+                </Link>
+              </li>
+              <li>
+                <Link to="/services/local-seo" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Local SEO
+                </Link>
+              </li>
+              <li>
+                <Link to="/seo-toronto" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Toronto SEO
+                </Link>
+              </li>
+              <li>
+                <Link to="/seo-vancouver" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Vancouver SEO
+                </Link>
+              </li>
+              <li>
+                <Link to="/seo-ottawa" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Ottawa SEO
                 </Link>
               </li>
             </ul>
           </div>
           
           <div>
-            <h3 className="text-xl font-bold mb-4 border-b border-teal/30 pb-2">Local SEO Services</h3>
+            <h3 className="text-xl font-bold mb-4 border-b border-teal/30 pb-2">Company</h3>
             <ul className="space-y-2">
-              {cityLinks.map((link, index) => (
-                <li key={index}>
-                  <Link to={link.path} className="text-white/80 hover:text-teal transition-colors flex items-center">
-                    <ArrowRight size={14} className="mr-2" /> {link.anchor}
-                  </Link>
-                </li>
-              ))}
               <li>
-                <Link to="/" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Free Website SEO Checker
+                <Link to="/about" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> About Us
                 </Link>
               </li>
               <li>
-                <Link to="/" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Complete SEO Analysis
-                </Link>
-              </li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 className="text-xl font-bold mb-4 border-b border-teal/30 pb-2">SEO Resources</h3>
-            <ul className="space-y-2">
-              {blogLinks.map((link, index) => (
-                <li key={index}>
-                  <Link to={link.path} className="text-white/80 hover:text-teal transition-colors flex items-center">
-                    <ArrowRight size={14} className="mr-2" /> {link.anchor}
-                  </Link>
-                </li>
-              ))}
-              <li>
-                <Link to="/blog" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Technical SEO Guide
+                <Link to="/contact" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Contact Us
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Keyword Research Tips
+                <Link to="/terms" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Terms & Conditions
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Core Web Vitals Guide
+                <Link to="/privacy" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> SEO Best Practices
+                <Link to="/sitemap.xml" target="_blank" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Sitemap
                 </Link>
               </li>
             </ul>
@@ -162,7 +143,7 @@ const Footer = () => {
           <div className="flex space-x-4 text-sm text-white/60">
             <Link to="/terms" className="hover:text-teal transition-colors">Terms & Conditions</Link>
             <Link to="/privacy" className="hover:text-teal transition-colors">Privacy Policy</Link>
-            <Link to="/sitemap.xml" className="hover:text-teal transition-colors">Sitemap</Link>
+            <Link to="/sitemap.xml" target="_blank" className="hover:text-teal transition-colors">Sitemap</Link>
           </div>
         </div>
       </div>

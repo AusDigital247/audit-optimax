@@ -4,10 +4,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from "@/components/ui/toaster";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { HelmetProvider } from 'react-helmet-async';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ThemeToggle from "@/components/ThemeToggle";
 
 import Index from './pages/Index';
 import NotFound from './pages/NotFound';
@@ -43,12 +44,16 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  // Check system preference for dark mode
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  // Check system preference for dark mode and set initial theme
   useEffect(() => {
     // Check if user prefers dark mode
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setTheme('dark');
       document.documentElement.classList.add('dark');
     } else {
+      setTheme('light');
       document.documentElement.classList.remove('dark');
     }
 
@@ -56,8 +61,10 @@ function App() {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e: MediaQueryListEvent) => {
       if (e.matches) {
+        setTheme('dark');
         document.documentElement.classList.add('dark');
       } else {
+        setTheme('light');
         document.documentElement.classList.remove('dark');
       }
     };
@@ -66,15 +73,33 @@ function App() {
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
+  // Function to toggle theme
+  const toggleTheme = () => {
+    setTheme(prevTheme => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      
+      if (newTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      
+      return newTheme;
+    });
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
         <HelmetProvider>
           <Router>
-            <div className="flex flex-col min-h-screen w-full bg-light-bg dark:bg-navy">
+            <div className={`flex flex-col min-h-screen w-full ${theme === 'light' ? 'bg-light-bg' : 'bg-navy'}`}>
               <Header />
               <main className="flex-grow w-full">
-                <LanguageSwitcher />
+                <div className="fixed z-50 top-20 right-16 flex gap-2">
+                  <ThemeToggle currentTheme={theme} toggleTheme={toggleTheme} />
+                  <LanguageSwitcher />
+                </div>
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/seo-toronto" element={<SeoToronto />} />
