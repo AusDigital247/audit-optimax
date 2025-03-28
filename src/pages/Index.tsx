@@ -79,8 +79,8 @@ const Index = () => {
     <div className="min-h-screen w-full">
       <Helmet>
         <title>SEO Audit Tool | Website SEO Checker | Free SEO Analysis</title>
-        <meta name="description" content="Free comprehensive SEO audit tool to analyze websites and get actionable recommendations. Check SEO health score and improve search rankings with our SEO checker." />
-        <meta name="keywords" content="SEO audit tool, website SEO checker, SEO analysis, SEO health score, search engine optimization, free SEO tool" />
+        <meta name="description" content="Free comprehensive SEO audit tool to analyze websites and get actionable recommendations. Check SEO health score and improve search rankings with our website checker tool." />
+        <meta name="keywords" content="SEO audit tool, website SEO checker, SEO analysis, SEO health score, search engine optimization, free SEO tool, website checker" />
         <link rel="canonical" href={window.location.href} />
         
         {/* Schema.org markup for the SEO tool */}
@@ -101,7 +101,8 @@ const Index = () => {
               "@type": "AggregateRating",
               "ratingValue": "4.8",
               "ratingCount": "156"
-            }
+            },
+            "featureList": "Technical SEO Analysis, On-Page SEO Audit, Content Analysis, Mobile Friendliness Check, Page Speed Analysis"
           })}
         </script>
       </Helmet>

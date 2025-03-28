@@ -11,6 +11,9 @@ import Footer from "@/components/Footer";
 import Index from './pages/Index';
 import NotFound from './pages/NotFound';
 import SeoToronto from './pages/SeoToronto';
+import SeoOttawa from './pages/SeoOttawa';
+import SeoKitchener from './pages/SeoKitchener';
+import SeoBuffalo from './pages/SeoBuffalo';
 import About from './pages/About';
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
@@ -44,6 +47,9 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/seo-toronto" element={<SeoToronto />} />
+                  <Route path="/seo-ottawa" element={<SeoOttawa />} />
+                  <Route path="/seo-kitchener" element={<SeoKitchener />} />
+                  <Route path="/seo-buffalo" element={<SeoBuffalo />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/contact" element={<Contact />} />
