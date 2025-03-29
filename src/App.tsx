@@ -30,6 +30,7 @@ import RankChecker from './pages/RankChecker';
 import KeywordGenerator from './pages/KeywordGenerator';
 import BlogContentGenerator from './pages/BlogContentGenerator';
 import ParagraphRewriter from './pages/ParagraphRewriter';
+import SentenceRewriter from './pages/SentenceRewriter';
 
 // Import blog posts
 import SeoStrategy2025 from './pages/BlogPosts/SeoStrategy2025';
@@ -126,6 +127,7 @@ function App() {
                   <Route path="/keyword-generator-tool" element={<KeywordGenerator />} />
                   <Route path="/blog-ideas-generator" element={<BlogContentGenerator />} />
                   <Route path="/paragraph-rewriter-tool" element={<ParagraphRewriter />} />
+                  <Route path="/sentence-rewriter-tool" element={<SentenceRewriter />} />
                   
                   {/* Blog post routes */}
                   <Route path="/blog/seo-strategy-2025" element={<SeoStrategy2025 />} />
