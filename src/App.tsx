@@ -26,6 +26,7 @@ import SeoServices from './pages/SeoServices';
 import LocalSeo from './pages/LocalSeo';
 import TermsConditions from './pages/TermsConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import RankChecker from './pages/RankChecker';
 
 // Import blog posts
 import SeoStrategy2025 from './pages/BlogPosts/SeoStrategy2025';
@@ -116,6 +117,7 @@ function App() {
                   <Route path="/services/local-seo" element={<LocalSeo />} />
                   <Route path="/terms" element={<TermsConditions />} />
                   <Route path="/privacy" element={<PrivacyPolicy />} />
+                  <Route path="/rank-checker" element={<RankChecker />} />
                   
                   {/* Blog post routes */}
                   <Route path="/blog/seo-strategy-2025" element={<SeoStrategy2025 />} />

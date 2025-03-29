@@ -6,7 +6,7 @@ import SEOContainer from '@/components/SEOContainer';
 import SEOResults from '@/components/SEOResults';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Link } from 'react-router-dom';
-import { Book, MapPin, Award, TrendingUp, CheckCircle, Zap } from 'lucide-react';
+import { Book, MapPin, Award, TrendingUp, CheckCircle, Zap, BarChart } from 'lucide-react';
 
 const Index = () => {
   const { t } = useLanguage();
@@ -217,18 +217,21 @@ const Index = () => {
                 </div>
               </Link>
               
-              <Link to="/blog/youtube-seo" className="group">
+              <Link to="/rank-checker" className="group">
                 <div className="glass-card-hover h-full flex flex-col">
                   <div className="p-6 flex-grow">
                     <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
-                      YouTube SEO: The Complete Guide
+                      <div className="flex items-center">
+                        <BarChart className="h-5 w-5 text-teal mr-2" />
+                        Google Rank Checker Tool
+                      </div>
                     </h3>
                     <p className="text-navy/70 dark:text-white/70 mb-4">
-                      Master YouTube SEO with our comprehensive guide. Learn proven techniques to rank videos higher and get more views.
+                      Track your website's position in Google search results across different regions with our free rank checker tool.
                     </p>
                   </div>
                   <div className="px-6 pb-6">
-                    <span className="text-teal font-medium group-hover:text-teal-light transition-colors">Read more →</span>
+                    <span className="text-teal font-medium group-hover:text-teal-light transition-colors">Check your rankings →</span>
                   </div>
                 </div>
               </Link>
