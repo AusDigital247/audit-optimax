@@ -1,9 +1,10 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Copy, Check, RotateCcw, Download } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
+import DOMPurify from 'dompurify';
 
 interface SentenceRewriterResultsProps {
   originalText: string;
@@ -18,9 +19,17 @@ const SentenceRewriterResults: React.FC<SentenceRewriterResultsProps> = ({
 }) => {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
+  const [sanitizedOriginal, setSanitizedOriginal] = useState('');
+  const [sanitizedRewritten, setSanitizedRewritten] = useState('');
+
+  // Sanitize inputs on component mount and when inputs change
+  useEffect(() => {
+    setSanitizedOriginal(DOMPurify.sanitize(originalText));
+    setSanitizedRewritten(DOMPurify.sanitize(rewrittenText));
+  }, [originalText, rewrittenText]);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(rewrittenText);
+    navigator.clipboard.writeText(sanitizedRewritten);
     setCopied(true);
     toast({
       title: "Copied!",
@@ -34,7 +43,7 @@ const SentenceRewriterResults: React.FC<SentenceRewriterResultsProps> = ({
 
   const handleDownload = () => {
     const element = document.createElement("a");
-    const file = new Blob([rewrittenText], {type: 'text/plain'});
+    const file = new Blob([sanitizedRewritten], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
     element.download = "rewritten-sentence.txt";
     document.body.appendChild(element);
@@ -57,13 +66,13 @@ const SentenceRewriterResults: React.FC<SentenceRewriterResultsProps> = ({
         
         <TabsContent value="rewritten" className="min-h-[120px]">
           <div className="border rounded-md p-4 bg-white dark:bg-navy-light/50 min-h-[120px] whitespace-pre-wrap">
-            {rewrittenText}
+            {sanitizedRewritten}
           </div>
         </TabsContent>
         
         <TabsContent value="original" className="min-h-[120px]">
           <div className="border rounded-md p-4 bg-gray-50 dark:bg-navy/70 min-h-[120px] whitespace-pre-wrap">
-            {originalText}
+            {sanitizedOriginal}
           </div>
         </TabsContent>
       </Tabs>
