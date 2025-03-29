@@ -44,16 +44,6 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> About Our Company
-                </Link>
-              </li>
-              <li>
-                <Link to="/services" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Our Services
-                </Link>
-              </li>
-              <li>
                 <Link to="/blog" className="text-white/80 hover:text-teal transition-colors flex items-center">
                   <ArrowRight size={14} className="mr-2" /> Blog & Resources
                 </Link>
@@ -67,21 +57,21 @@ const Footer = () => {
           </div>
           
           <div>
-            <h3 className="text-xl font-bold mb-4 border-b border-teal/30 pb-2">SEO Tools</h3>
+            <h3 className="text-xl font-bold mb-4 border-b border-teal/30 pb-2">Locations</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/rank-checker" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Rank Checker
+                <Link to="/seo-kitchener" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Kitchener
                 </Link>
               </li>
               <li>
-                <Link to="/keyword-generator" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Keyword Generator
+                <Link to="/seo-london" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> London
                 </Link>
               </li>
               <li>
-                <Link to="/blog-content-generator" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Blog Content Generator
+                <Link to="/seo-buffalo" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Buffalo
                 </Link>
               </li>
             </ul>

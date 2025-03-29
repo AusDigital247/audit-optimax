@@ -1,4 +1,3 @@
-
 import React from 'react';
 import SEOForm from './SEOForm';
 import SEOContentSection from './SEOContentSection';
@@ -14,10 +13,10 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
   const { t } = useLanguage();
   
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full max-w-full">
       {/* Hero Section - Keep Dark Theme */}
       <section className="bg-gradient-to-b from-navy to-navy-light pt-12 pb-20 md:pt-20 md:pb-32 w-full">
-        <div className="w-full max-w-[1920px] mx-auto px-4 md:px-6 lg:px-8">
+        <div className="w-full max-w-full mx-auto px-4 md:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center mb-10">
             <div className="mb-6">
               <h1 className="text-3xl md:text-5xl font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-white via-teal-light to-white/90">
@@ -44,7 +43,7 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
           </div>
 
           {/* Feature cards - Still in dark theme for hero section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16 px-4 md:px-6">
             <div className="glass-card p-6 rounded-xl animated-card">
               <div className="bg-teal/20 p-3 rounded-full w-fit mb-4">
                 <BarChart3 className="h-6 w-6 text-teal-light" />
@@ -82,7 +81,7 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
 
       {/* Light + Dark Mixed Theme Sections */}
       <section className="bg-light-bg dark:bg-navy-light py-16 w-full">
-        <div className="w-full max-w-[1920px] mx-auto px-4 md:px-6 lg:px-8">
+        <div className="w-full max-w-full mx-auto px-4 md:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-navy dark:text-white">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-white dark:to-teal-light">
@@ -94,7 +93,7 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 md:px-6">
             <div className="glass-card-hover p-6 rounded-xl">
               <div className="bg-teal/10 dark:bg-teal/20 p-4 rounded-full w-fit mb-5">
                 <Gauge className="h-8 w-8 text-teal dark:text-teal-light" />

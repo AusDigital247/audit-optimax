@@ -28,10 +28,6 @@ const Header: React.FC = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-5">
-            <Link to="/" className="text-navy dark:text-gray-200 hover:text-teal dark:hover:text-teal-light transition-colors font-medium">
-              {t('home')}
-            </Link>
-            
             {/* Services Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center text-navy dark:text-gray-200 hover:text-teal dark:hover:text-teal-light transition-colors font-medium">
@@ -56,25 +52,25 @@ const Header: React.FC = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             
-            {/* SEO Tools Dropdown - NEW */}
+            {/* SEO Tools Dropdown - RENAMED LINKS */}
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center text-navy dark:text-gray-200 hover:text-teal dark:hover:text-teal-light transition-colors font-medium">
                 SEO Tools <ChevronDown size={16} className="ml-1" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-white dark:bg-navy-light border border-gray-200 dark:border-gray-700">
                 <DropdownMenuItem asChild>
-                  <Link to="/rank-checker" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    Rank Checker
+                  <Link to="/google-rank-checker-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
+                    Google Rank Checker Tool
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/keyword-generator" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    Keyword Generator
+                  <Link to="/keyword-generator-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
+                    Keyword Generator Tool
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/blog-content-generator" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    Blog Content Generator
+                  <Link to="/blog-ideas-generator" className="hover:bg-gray-100 dark:hover:bg-navy">
+                    Blog Ideas Generator
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -123,10 +119,6 @@ const Header: React.FC = () => {
               Blog
             </Link>
             
-            <Link to="/about" className="text-navy dark:text-gray-200 hover:text-teal dark:hover:text-teal-light transition-colors font-medium">
-              About
-            </Link>
-            
             <Link to="/contact" className="text-navy dark:text-gray-200 hover:text-teal dark:hover:text-teal-light transition-colors font-medium">
               Contact
             </Link>
@@ -152,14 +144,6 @@ const Header: React.FC = () => {
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700 mt-3">
             <nav className="flex flex-col space-y-4">
-              <Link 
-                to="/" 
-                className="text-navy dark:text-gray-200 hover:text-teal dark:hover:text-teal-light transition-colors font-medium py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {t('home')}
-              </Link>
-              
               <div className="py-2">
                 <div className="font-medium text-navy dark:text-gray-200 mb-2">Services</div>
                 <div className="pl-4 space-y-2">
@@ -187,30 +171,30 @@ const Header: React.FC = () => {
                 </div>
               </div>
               
-              {/* SEO Tools Section - NEW for Mobile */}
+              {/* SEO Tools Section - RENAMED for Mobile */}
               <div className="py-2">
                 <div className="font-medium text-navy dark:text-gray-200 mb-2">SEO Tools</div>
                 <div className="pl-4 space-y-2">
                   <Link 
-                    to="/rank-checker" 
+                    to="/google-rank-checker-tool" 
                     className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Rank Checker
+                    Google Rank Checker Tool
                   </Link>
                   <Link 
-                    to="/keyword-generator" 
+                    to="/keyword-generator-tool" 
                     className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Keyword Generator
+                    Keyword Generator Tool
                   </Link>
                   <Link 
-                    to="/blog-content-generator" 
+                    to="/blog-ideas-generator" 
                     className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Blog Content Generator
+                    Blog Ideas Generator
                   </Link>
                 </div>
               </div>
@@ -269,14 +253,6 @@ const Header: React.FC = () => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Blog
-              </Link>
-              
-              <Link 
-                to="/about" 
-                className="text-navy dark:text-gray-200 hover:text-teal dark:hover:text-teal-light transition-colors font-medium py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                About
               </Link>
               
               <Link 

@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from "@/components/ui/toaster";
@@ -119,14 +118,21 @@ function App() {
                   <Route path="/services/local-seo" element={<LocalSeo />} />
                   <Route path="/terms" element={<TermsConditions />} />
                   <Route path="/privacy" element={<PrivacyPolicy />} />
-                  <Route path="/rank-checker" element={<RankChecker />} />
-                  <Route path="/keyword-generator" element={<KeywordGenerator />} />
-                  <Route path="/blog-content-generator" element={<BlogContentGenerator />} />
+                  
+                  {/* Updated route paths for tools */}
+                  <Route path="/google-rank-checker-tool" element={<RankChecker />} />
+                  <Route path="/keyword-generator-tool" element={<KeywordGenerator />} />
+                  <Route path="/blog-ideas-generator" element={<BlogContentGenerator />} />
                   
                   {/* Blog post routes */}
                   <Route path="/blog/seo-strategy-2025" element={<SeoStrategy2025 />} />
                   <Route path="/blog/image-seo" element={<ImageSeo />} />
                   <Route path="/blog/youtube-seo" element={<YoutubeSeo />} />
+                  
+                  {/* Legacy routes - keep them for backward compatibility */}
+                  <Route path="/rank-checker" element={<RankChecker />} />
+                  <Route path="/keyword-generator" element={<KeywordGenerator />} />
+                  <Route path="/blog-content-generator" element={<BlogContentGenerator />} />
                   
                   <Route path="*" element={<NotFound />} />
                 </Routes>
