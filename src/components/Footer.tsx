@@ -78,16 +78,31 @@ const Footer = () => {
           </div>
           
           <div>
-            <h3 className="text-xl font-bold mb-4 border-b border-teal/30 pb-2">Company</h3>
+            <h3 className="text-xl font-bold mb-4 border-b border-teal/30 pb-2">Tools</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/about" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> About Us
+                <Link to="/google-rank-checker-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Google Rank Checker
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Contact Us
+                <Link to="/keyword-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Keyword Generator
+                </Link>
+              </li>
+              <li>
+                <Link to="/blog-ideas-generator" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Blog Ideas Generator
+                </Link>
+              </li>
+              <li>
+                <Link to="/paragraph-rewriter-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Paragraph Rewriter
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> About Us
                 </Link>
               </li>
               <li>

@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from "@/components/ui/toaster";
@@ -28,6 +29,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import RankChecker from './pages/RankChecker';
 import KeywordGenerator from './pages/KeywordGenerator';
 import BlogContentGenerator from './pages/BlogContentGenerator';
+import ParagraphRewriter from './pages/ParagraphRewriter';
 
 // Import blog posts
 import SeoStrategy2025 from './pages/BlogPosts/SeoStrategy2025';
@@ -123,6 +125,7 @@ function App() {
                   <Route path="/google-rank-checker-tool" element={<RankChecker />} />
                   <Route path="/keyword-generator-tool" element={<KeywordGenerator />} />
                   <Route path="/blog-ideas-generator" element={<BlogContentGenerator />} />
+                  <Route path="/paragraph-rewriter-tool" element={<ParagraphRewriter />} />
                   
                   {/* Blog post routes */}
                   <Route path="/blog/seo-strategy-2025" element={<SeoStrategy2025 />} />
