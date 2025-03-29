@@ -27,6 +27,8 @@ import LocalSeo from './pages/LocalSeo';
 import TermsConditions from './pages/TermsConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import RankChecker from './pages/RankChecker';
+import KeywordGenerator from './pages/KeywordGenerator';
+import BlogContentGenerator from './pages/BlogContentGenerator';
 
 // Import blog posts
 import SeoStrategy2025 from './pages/BlogPosts/SeoStrategy2025';
@@ -118,6 +120,8 @@ function App() {
                   <Route path="/terms" element={<TermsConditions />} />
                   <Route path="/privacy" element={<PrivacyPolicy />} />
                   <Route path="/rank-checker" element={<RankChecker />} />
+                  <Route path="/keyword-generator" element={<KeywordGenerator />} />
+                  <Route path="/blog-content-generator" element={<BlogContentGenerator />} />
                   
                   {/* Blog post routes */}
                   <Route path="/blog/seo-strategy-2025" element={<SeoStrategy2025 />} />
