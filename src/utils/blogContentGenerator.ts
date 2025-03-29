@@ -549,7 +549,7 @@ const generateFallbackContent = (formValues: BlogGeneratorFormValues): BlogConte
   const outline = generateOutline(topic, contentType);
   
   // Generate content
-  const content = generateContentFromOutline(topic, contentType, tone, outline, wordCount);
+  const content = generateContentFromOutline(topic, contentType, tone, outline, Number(wordCount));
   
   // Generate meta description
   const metaDescription = generateMetaDescription(topic, targetAudience);

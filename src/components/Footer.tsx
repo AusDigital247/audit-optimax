@@ -19,10 +19,6 @@ const Footer = () => {
             <p className="text-white/80 mb-4">
               We provide comprehensive SEO audit tools and digital marketing solutions to help businesses grow their online presence and increase revenue through proven search engine optimization strategies.
             </p>
-            <Link to="/" className="inline-flex items-center px-4 py-2 mb-4 bg-teal/20 hover:bg-teal/30 dark:bg-teal/10 dark:hover:bg-teal/20 rounded-lg transition-all duration-300 text-white group">
-              <Search size={16} className="mr-2 group-hover:translate-x-1 transition-transform" />
-              Free SEO Analysis Tool
-            </Link>
             <div className="flex space-x-4">
               <a href="#" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-teal transition-colors">
                 <Facebook size={20} />
@@ -44,58 +40,48 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link to="/" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> SEO Audit Tool
+                  <ArrowRight size={14} className="mr-2" /> Home
                 </Link>
               </li>
               <li>
                 <Link to="/about" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> About Our SEO Company
+                  <ArrowRight size={14} className="mr-2" /> About Our Company
                 </Link>
               </li>
               <li>
                 <Link to="/services" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Professional SEO Services
+                  <ArrowRight size={14} className="mr-2" /> Our Services
                 </Link>
               </li>
               <li>
                 <Link to="/blog" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> SEO Blog & Resources
+                  <ArrowRight size={14} className="mr-2" /> Blog & Resources
                 </Link>
               </li>
               <li>
                 <Link to="/contact" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Contact SEO Experts
+                  <ArrowRight size={14} className="mr-2" /> Contact Us
                 </Link>
               </li>
             </ul>
           </div>
           
           <div>
-            <h3 className="text-xl font-bold mb-4 border-b border-teal/30 pb-2">Main Pages</h3>
+            <h3 className="text-xl font-bold mb-4 border-b border-teal/30 pb-2">SEO Tools</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/services/seo" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> SEO Services
+                <Link to="/rank-checker" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Rank Checker
                 </Link>
               </li>
               <li>
-                <Link to="/services/local-seo" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Local SEO
+                <Link to="/keyword-generator" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Keyword Generator
                 </Link>
               </li>
               <li>
-                <Link to="/seo-toronto" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Toronto SEO
-                </Link>
-              </li>
-              <li>
-                <Link to="/seo-vancouver" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Vancouver SEO
-                </Link>
-              </li>
-              <li>
-                <Link to="/seo-ottawa" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Ottawa SEO
+                <Link to="/blog-content-generator" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Blog Content Generator
                 </Link>
               </li>
             </ul>
@@ -131,7 +117,7 @@ const Footer = () => {
               </li>
             </ul>
             <Link to="/contact" className="mt-4 inline-block bg-teal/20 hover:bg-teal/30 dark:bg-teal/10 dark:hover:bg-teal/20 transition-colors py-2 px-4 rounded-lg text-white flex items-center">
-              <Send size={16} className="mr-2" /> Contact Our SEO Team
+              <Send size={16} className="mr-2" /> Contact Our Team
             </Link>
           </div>
         </div>

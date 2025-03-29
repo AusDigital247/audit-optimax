@@ -1,3 +1,4 @@
+
 import React from 'react';
 import SEOForm from './SEOForm';
 import SEOContentSection from './SEOContentSection';
@@ -16,7 +17,7 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
     <div className="flex flex-col w-full">
       {/* Hero Section - Keep Dark Theme */}
       <section className="bg-gradient-to-b from-navy to-navy-light pt-12 pb-20 md:pt-20 md:pb-32 w-full">
-        <div className="container-custom">
+        <div className="w-full max-w-[1920px] mx-auto px-4 md:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center mb-10">
             <div className="mb-6">
               <h1 className="text-3xl md:text-5xl font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-white via-teal-light to-white/90">
@@ -43,7 +44,7 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
           </div>
 
           {/* Feature cards - Still in dark theme for hero section */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
             <div className="glass-card p-6 rounded-xl animated-card">
               <div className="bg-teal/20 p-3 rounded-full w-fit mb-4">
                 <BarChart3 className="h-6 w-6 text-teal-light" />
@@ -80,8 +81,8 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
       </section>
 
       {/* Light + Dark Mixed Theme Sections */}
-      <section className="bg-light-bg dark:bg-navy-light py-16">
-        <div className="container-custom">
+      <section className="bg-light-bg dark:bg-navy-light py-16 w-full">
+        <div className="w-full max-w-[1920px] mx-auto px-4 md:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-navy dark:text-white">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-white dark:to-teal-light">
