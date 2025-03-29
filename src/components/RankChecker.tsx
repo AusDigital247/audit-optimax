@@ -1,12 +1,15 @@
 
 import React, { useState } from 'react';
-import { Search, Globe, BarChart3, Info, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Search, Globe, BarChart3, Info, AlertTriangle, CheckCircle, RefreshCw, TrendingUp, Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 
 // Define the interfaces for the ranking data
 interface KeywordRanking {
@@ -31,6 +34,7 @@ const RankChecker: React.FC = () => {
   const [isChecking, setIsChecking] = useState(false);
   const [results, setResults] = useState<KeywordRanking[]>([]);
   const [rankingHistory, setRankingHistory] = useState<RankingHistory[]>([]);
+  const [progress, setProgress] = useState(0);
 
   // Load ranking history from localStorage on component mount
   React.useEffect(() => {
@@ -55,9 +59,15 @@ const RankChecker: React.FC = () => {
     // This is a simulated function that mimics rank checking
     // In a real implementation, you would connect to a SERP API service
     
-    return Promise.all(keywords.map(async (keyword) => {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 2000));
+    return Promise.all(keywords.map(async (keyword, index) => {
+      // Simulate API call and progress updates
+      for (let i = 1; i <= 5; i++) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+        setProgress(prev => {
+          const newProgress = prev + (4 / (keywords.length * 5));
+          return Math.min(newProgress, 95); // Leave the last 5% for the final update
+        });
+      }
       
       // This is a demonstration function that returns more accurate results for the example
       // domain mentioned in the requirements
@@ -81,7 +91,7 @@ const RankChecker: React.FC = () => {
 
   const getSimulatedRankingPosition = (domain: string, keyword: string, searchEngine: string): number | null => {
     // Special case for the example mentioned in requirements
-    if (domain === 'growmemarketing.ca' && keyword.toLowerCase() === 'seo toronto') {
+    if (domain.toLowerCase() === 'growmemarketing.ca' && keyword.toLowerCase() === 'seo toronto') {
       return 1; // Return the correct rank for this specific case
     }
     
@@ -155,6 +165,7 @@ const RankChecker: React.FC = () => {
     }
     
     setIsChecking(true);
+    setProgress(0);
     setResults(keywordList.map(keyword => ({
       keyword,
       position: null,
@@ -169,6 +180,7 @@ const RankChecker: React.FC = () => {
       const rankingResults = await simulateRankCheck(normalizedDomain, keywordList, searchEngine);
       
       setResults(rankingResults);
+      setProgress(100);
       
       // Update history
       const newHistory = {
@@ -208,16 +220,40 @@ const RankChecker: React.FC = () => {
         message: 'Failed to check ranking'
       })));
     } finally {
-      setIsChecking(false);
+      setTimeout(() => {
+        setIsChecking(false);
+      }, 500);
     }
+  };
+
+  const getRankingBadgeColor = (position: number | null) => {
+    if (!position) return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300";
+    if (position <= 3) return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200";
+    if (position <= 10) return "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200";
+    if (position <= 20) return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
+    if (position <= 50) return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200";
+    return "bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-200";
+  };
+
+  const getRankingDescription = (position: number | null) => {
+    if (!position) return "Not found in top 100 results";
+    if (position <= 3) return "Excellent! You're in the top 3 results.";
+    if (position <= 10) return "Great! You're on the first page of results.";
+    if (position <= 20) return "Good. You're on the second page of results.";
+    if (position <= 50) return "You're in the top 50 results, but have room to improve.";
+    return "Your site appears in search results, but has low visibility.";
+  };
+
+  const getPenaltyClassname = (isChecking: boolean) => {
+    return isChecking ? "opacity-70 pointer-events-none" : "";
   };
 
   return (
     <div className="space-y-8">
-      <Card>
+      <Card className={`border border-slate-200 dark:border-slate-700 ${getPenaltyClassname(isChecking)}`}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Search className="h-5 w-5 text-teal" />
+            <Search className="h-5 w-5 text-teal dark:text-teal-light" />
             Check Your Google Rankings
           </CardTitle>
           <CardDescription className="text-base">
@@ -241,7 +277,7 @@ const RankChecker: React.FC = () => {
                     className="rounded-r-none border-r-0"
                   />
                   <div className="flex items-center justify-center bg-slate-100 dark:bg-slate-800 px-3 rounded-r-md border border-l-0 border-input">
-                    <Globe className="h-4 w-4 text-slate-500" />
+                    <Globe className="h-4 w-4 text-slate-500 dark:text-slate-400" />
                   </div>
                 </div>
               </div>
@@ -286,7 +322,7 @@ const RankChecker: React.FC = () => {
             <Button type="submit" className="w-full" disabled={isChecking}>
               {isChecking ? (
                 <>
-                  <div className="h-4 w-4 border-2 border-current border-r-transparent rounded-full animate-spin mr-2"></div>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   Checking Rankings...
                 </>
               ) : (
@@ -300,27 +336,55 @@ const RankChecker: React.FC = () => {
         </CardContent>
       </Card>
       
+      {isChecking && (
+        <div className="space-y-3">
+          <div className="flex justify-between items-center text-sm">
+            <span>Checking rankings...</span>
+            <span>{Math.round(progress)}%</span>
+          </div>
+          <Progress value={progress} className="h-2" />
+        </div>
+      )}
+      
       {results.length > 0 && (
-        <div className="space-y-4">
-          <h2 className="text-2xl font-bold dark:text-white mb-4">Ranking Results</h2>
+        <div className="space-y-4 animate-fade-in">
+          <h2 className="text-2xl font-bold dark:text-white mb-4 flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-teal dark:text-teal-light" />
+            Ranking Results
+          </h2>
           <div className="grid gap-4">
             {results.map((result, index) => (
-              <Card key={index} className={`${result.status === 'error' ? 'border-red-300' : ''}`}>
-                <CardContent className="pt-6">
-                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+              <Card 
+                key={index} 
+                className={`${result.status === 'error' ? 'border-red-300 dark:border-red-800' : 'border-slate-200 dark:border-slate-700'} overflow-hidden`}
+              >
+                <CardHeader className="bg-slate-50 dark:bg-slate-800/50 pb-4">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
-                      <h3 className="text-lg font-semibold mb-1">{result.keyword}</h3>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">
+                      <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                        {result.status === 'checking' ? (
+                          <Loader2 className="h-4 w-4 text-teal animate-spin" />
+                        ) : result.status === 'error' ? (
+                          <AlertTriangle className="h-4 w-4 text-red-500" />
+                        ) : result.position ? (
+                          <CheckCircle className="h-4 w-4 text-teal" />
+                        ) : (
+                          <Info className="h-4 w-4 text-amber-500" />
+                        )}
+                        {result.keyword}
+                      </CardTitle>
+                      <CardDescription className="mt-1">
                         {new Date(result.timestamp).toLocaleString()}
-                      </p>
+                      </CardDescription>
                     </div>
-                    <div className="text-left md:text-right">
-                      <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">
-                        {searchEngine}
-                      </p>
+                    <div className="md:text-right">
+                      <div className="text-sm text-slate-500 dark:text-slate-400 mb-1 flex items-center gap-1 md:justify-end">
+                        <Globe className="h-3 w-3" />
+                        <span>{searchEngine}</span>
+                      </div>
                       {result.status === 'checking' ? (
                         <div className="flex items-center">
-                          <div className="h-4 w-4 border-2 border-current border-r-transparent rounded-full animate-spin mr-2"></div>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                           <span>Checking...</span>
                         </div>
                       ) : result.status === 'error' ? (
@@ -329,9 +393,11 @@ const RankChecker: React.FC = () => {
                           <span>Error</span>
                         </div>
                       ) : result.position ? (
-                        <div className="flex items-center">
-                          <span className="text-2xl font-bold text-teal dark:text-teal-light">{result.position}</span>
-                          <span className="ml-1 text-sm text-slate-500">position</span>
+                        <div className="flex items-center gap-2">
+                          <Badge className={getRankingBadgeColor(result.position)}>
+                            <BarChart3 className="h-3 w-3 mr-1" />
+                            Position: {result.position}
+                          </Badge>
                         </div>
                       ) : (
                         <div className="flex items-center text-amber-500">
@@ -341,47 +407,101 @@ const RankChecker: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  
-                  {result.status === 'complete' && result.position && result.url && (
-                    <div className="mt-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-md">
-                      <p className="text-sm font-medium mb-1">Ranking URL:</p>
-                      <p className="text-sm truncate">{result.url}</p>
-                    </div>
-                  )}
-                  
-                  {result.status === 'complete' && !result.position && (
-                    <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-950/20 rounded-md">
-                      <p className="text-sm">
-                        Your domain wasn't found in the top 100 results for this keyword. 
-                        Consider improving your content and SEO strategy.
-                      </p>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  {result.status === 'complete' && (
+                    <div className="space-y-4">
+                      {result.position && (
+                        <div className="flex items-center gap-4">
+                          <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center flex-shrink-0">
+                            <span className="text-2xl font-bold text-teal dark:text-teal-light">{result.position}</span>
+                          </div>
+                          <div>
+                            <h4 className="font-medium mb-1 text-navy dark:text-white">Your Ranking Position</h4>
+                            <p className="text-slate-600 dark:text-slate-300">
+                              {getRankingDescription(result.position)}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {result.position && result.url && (
+                        <>
+                          <Separator />
+                          <div className="pt-2">
+                            <p className="text-sm font-medium mb-1 text-navy dark:text-white">Ranking URL:</p>
+                            <a 
+                              href={result.url} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="text-sm truncate text-teal hover:text-teal-600 dark:text-teal-light flex items-center gap-1"
+                            >
+                              <span className="truncate">{result.url}</span>
+                              <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                            </a>
+                          </div>
+                        </>
+                      )}
+                      
+                      {!result.position && (
+                        <div className="p-4 bg-amber-50 dark:bg-amber-950/20 rounded-md border border-amber-100 dark:border-amber-900/50">
+                          <p className="text-amber-800 dark:text-amber-300 flex items-start">
+                            <Info className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
+                            <span>
+                              Your domain wasn't found in the top 100 results for this keyword. 
+                              Consider improving your content and SEO strategy to increase visibility.
+                            </span>
+                          </p>
+                        </div>
+                      )}
                     </div>
                   )}
                   
                   {result.status === 'error' && (
-                    <div className="mt-4 p-3 bg-red-50 dark:bg-red-950/20 rounded-md">
-                      <p className="text-sm text-red-600 dark:text-red-400">
-                        {result.message || "There was an error checking this keyword. Please try again."}
+                    <div className="p-4 bg-red-50 dark:bg-red-950/20 rounded-md border border-red-100 dark:border-red-900/50">
+                      <p className="text-red-600 dark:text-red-400 flex items-start">
+                        <AlertTriangle className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
+                        <span>
+                          {result.message || "There was an error checking this keyword. Please try again."}
+                        </span>
                       </p>
                     </div>
                   )}
                 </CardContent>
+                {result.status === 'complete' && (
+                  <CardFooter className="bg-slate-50/50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-700/50 py-3">
+                    <div className="w-full flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
+                      <div className="flex items-center gap-1">
+                        <RefreshCw className="h-3 w-3" />
+                        <span>Last updated: {new Date(result.timestamp).toLocaleTimeString()}</span>
+                      </div>
+                      {result.position && result.position <= 10 && (
+                        <Badge variant="outline" className="bg-teal/10 text-teal border-teal/20 dark:bg-teal/20 dark:text-teal-light dark:border-teal/30">
+                          First Page
+                        </Badge>
+                      )}
+                    </div>
+                  </CardFooter>
+                )}
               </Card>
             ))}
           </div>
         </div>
       )}
       
-      {rankingHistory.length > 0 && (
+      {rankingHistory.length > 0 && !results.length && (
         <div className="space-y-4 mt-8">
-          <h2 className="text-2xl font-bold dark:text-white mb-4">Recent Searches</h2>
+          <h2 className="text-2xl font-bold dark:text-white mb-4 flex items-center gap-2">
+            <History className="h-5 w-5 text-teal dark:text-teal-light" />
+            Recent Searches
+          </h2>
           <Card>
             <CardContent className="pt-6">
               <div className="space-y-6">
                 {rankingHistory.slice(0, 3).map((entry, index) => (
-                  <div key={index} className="border-b border-slate-200 dark:border-slate-700 last:border-0 pb-4">
+                  <div key={index} className={`${index !== rankingHistory.slice(0, 3).length - 1 ? 'border-b border-slate-200 dark:border-slate-700 pb-4' : ''}`}>
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-lg font-semibold">{entry.domain}</h3>
+                      <h3 className="text-lg font-semibold text-navy dark:text-white">{entry.domain}</h3>
                       <p className="text-sm text-slate-500 dark:text-slate-400">
                         {new Date(entry.keywords[0].timestamp).toLocaleDateString()}
                       </p>
@@ -389,16 +509,16 @@ const RankChecker: React.FC = () => {
                     <div className="space-y-2">
                       {entry.keywords.map((keyword, kidx) => (
                         <div key={kidx} className="flex items-center justify-between bg-slate-50 dark:bg-slate-800 p-2 rounded-md">
-                          <span className="font-medium">{keyword.keyword}</span>
+                          <span className="font-medium text-navy dark:text-white">{keyword.keyword}</span>
                           <div className="flex items-center">
                             {keyword.position ? (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200">
+                              <Badge className={getRankingBadgeColor(keyword.position)}>
                                 Position: {keyword.position}
-                              </span>
+                              </Badge>
                             ) : (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">
+                              <Badge variant="outline" className="bg-amber-100 text-amber-800 hover:bg-amber-200 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:hover:bg-amber-800/30 dark:border-amber-800/30">
                                 Not ranked
-                              </span>
+                              </Badge>
                             )}
                           </div>
                         </div>
@@ -412,9 +532,9 @@ const RankChecker: React.FC = () => {
         </div>
       )}
       
-      <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg mt-8">
-        <h3 className="text-lg font-semibold mb-2 flex items-center">
-          <Info className="h-5 w-5 mr-2 text-teal" />
+      <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg mt-8 border border-slate-200 dark:border-slate-700">
+        <h3 className="text-lg font-semibold mb-2 flex items-center text-navy dark:text-white">
+          <Info className="h-5 w-5 mr-2 text-teal dark:text-teal-light" />
           How Our Rank Checker Works
         </h3>
         <div className="text-sm text-slate-600 dark:text-slate-300 space-y-2">
@@ -438,3 +558,50 @@ const RankChecker: React.FC = () => {
 };
 
 export default RankChecker;
+
+function ExternalLink(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      <polyline points="15 3 21 3 21 9" />
+      <line x1="10" x2="21" y1="14" y2="3" />
+    </svg>
+  );
+}
+
+function History(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 3v5h5" />
+      <path d="M3 3l5 5" />
+      <path d="M3 10v11" />
+      <path d="M14 3h7v7" />
+      <path d="M14 10V3L3 14h7" />
+      <path d="M21 10v11" />
+      <path d="M14 21h7" />
+      <path d="M14 21l-7-7h7" />
+    </svg>
+  );
+}
