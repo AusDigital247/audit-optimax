@@ -1,4 +1,3 @@
-
 import { BlogGeneratorFormValues } from "@/components/BlogContentGeneratorForm";
 import { BlogContentResult } from "@/components/BlogContentResults";
 
@@ -537,4 +536,32 @@ const generateTags = (topic: string, keywords?: string): string[] => {
   const uniqueTags = [...new Set(baseTags)].slice(0, 10);
   
   return uniqueTags;
+};
+
+// Implementation of the missing generateFallbackContent function
+const generateFallbackContent = (formValues: BlogGeneratorFormValues): BlogContentResult => {
+  const { topic, contentType, tone, targetAudience, keywords, wordCount } = formValues;
+  
+  // Generate title
+  const title = generateTitle(topic, contentType);
+  
+  // Generate outline
+  const outline = generateOutline(topic, contentType);
+  
+  // Generate content
+  const content = generateContentFromOutline(topic, contentType, tone, outline, wordCount);
+  
+  // Generate meta description
+  const metaDescription = generateMetaDescription(topic, targetAudience);
+  
+  // Generate tags
+  const suggestedTags = generateTags(topic, keywords);
+  
+  return {
+    title,
+    content,
+    outline,
+    metaDescription,
+    suggestedTags,
+  };
 };

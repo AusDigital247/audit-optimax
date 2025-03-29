@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Search, BarChart3, Menu, X, Globe, ChevronDown, Tool } from 'lucide-react';
+import { Search, BarChart3, Menu, X, Globe, ChevronDown } from 'lucide-react';
 import { Button } from './ui/button';
 import {
   DropdownMenu,
