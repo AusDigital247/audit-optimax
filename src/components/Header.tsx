@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -26,9 +25,7 @@ const Header: React.FC = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-5">
-            {/* Services Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center text-navy dark:text-gray-200 hover:text-teal dark:hover:text-teal-light transition-colors font-medium">
                 Services <ChevronDown size={16} className="ml-1" />
@@ -52,7 +49,6 @@ const Header: React.FC = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             
-            {/* SEO Tools Dropdown - RENAMED LINKS */}
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center text-navy dark:text-gray-200 hover:text-teal dark:hover:text-teal-light transition-colors font-medium">
                 SEO Tools <ChevronDown size={16} className="ml-1" />
@@ -73,10 +69,19 @@ const Header: React.FC = () => {
                     Blog Ideas Generator
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/paragraph-rewriter-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
+                    Paragraph Rewriter Tool
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/sentence-rewriter-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
+                    Sentence Rewriter Tool
+                  </Link>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             
-            {/* Locations Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center text-navy dark:text-gray-200 hover:text-teal dark:hover:text-teal-light transition-colors font-medium">
                 Locations <ChevronDown size={16} className="ml-1" />
@@ -131,7 +136,6 @@ const Header: React.FC = () => {
             </Button>
           </nav>
 
-          {/* Mobile Menu Button */}
           <button 
             className="md:hidden p-2 rounded-md text-navy dark:text-white"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -140,7 +144,6 @@ const Header: React.FC = () => {
           </button>
         </div>
 
-        {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700 mt-3">
             <nav className="flex flex-col space-y-4">
@@ -171,7 +174,6 @@ const Header: React.FC = () => {
                 </div>
               </div>
               
-              {/* SEO Tools Section - RENAMED for Mobile */}
               <div className="py-2">
                 <div className="font-medium text-navy dark:text-gray-200 mb-2">SEO Tools</div>
                 <div className="pl-4 space-y-2">
@@ -195,6 +197,20 @@ const Header: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Blog Ideas Generator
+                  </Link>
+                  <Link 
+                    to="/paragraph-rewriter-tool" 
+                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Paragraph Rewriter Tool
+                  </Link>
+                  <Link 
+                    to="/sentence-rewriter-tool" 
+                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Sentence Rewriter Tool
                   </Link>
                 </div>
               </div>

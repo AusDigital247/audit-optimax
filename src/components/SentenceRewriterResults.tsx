@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy, Check, RotateCcw } from 'lucide-react';
+import { Copy, Check, RotateCcw, Download } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
 
 interface SentenceRewriterResultsProps {
@@ -32,6 +32,21 @@ const SentenceRewriterResults: React.FC<SentenceRewriterResultsProps> = ({
     }, 2000);
   };
 
+  const handleDownload = () => {
+    const element = document.createElement("a");
+    const file = new Blob([rewrittenText], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = "rewritten-sentence.txt";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+    
+    toast({
+      title: "Downloaded!",
+      description: "Rewritten text downloaded as TXT file",
+    });
+  };
+
   return (
     <div className="space-y-6">
       <Tabs defaultValue="rewritten" className="w-full">
@@ -53,7 +68,7 @@ const SentenceRewriterResults: React.FC<SentenceRewriterResultsProps> = ({
         </TabsContent>
       </Tabs>
       
-      <div className="flex space-x-4">
+      <div className="flex flex-col sm:flex-row gap-4">
         <Button 
           onClick={handleCopy} 
           className="w-full bg-teal hover:bg-teal-dark text-white"
@@ -62,10 +77,19 @@ const SentenceRewriterResults: React.FC<SentenceRewriterResultsProps> = ({
           {copied ? "Copied!" : "Copy Rewritten Text"}
         </Button>
         
+        <Button
+          onClick={handleDownload}
+          variant="secondary"
+          className="w-full"
+        >
+          <Download className="mr-2 h-4 w-4" />
+          Download Text
+        </Button>
+        
         <Button 
           variant="outline" 
           onClick={onReset} 
-          className="w-1/3"
+          className="w-full sm:w-1/3"
         >
           <RotateCcw className="mr-2 h-4 w-4" />
           Try Again

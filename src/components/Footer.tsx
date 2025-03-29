@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -98,6 +97,11 @@ const Footer = () => {
               <li>
                 <Link to="/paragraph-rewriter-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
                   <ArrowRight size={14} className="mr-2" /> Paragraph Rewriter
+                </Link>
+              </li>
+              <li>
+                <Link to="/sentence-rewriter-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Sentence Rewriter
                 </Link>
               </li>
               <li>
