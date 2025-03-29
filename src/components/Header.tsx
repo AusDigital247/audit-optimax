@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Search, BarChart3, Menu, X, Globe, ChevronDown } from 'lucide-react';
+import { Search, BarChart3, Menu, X, Globe, ChevronDown, Tool } from 'lucide-react';
 import { Button } from './ui/button';
 import {
   DropdownMenu,
@@ -51,6 +51,30 @@ const Header: React.FC = () => {
                 <DropdownMenuItem asChild>
                   <Link to="/services/local-seo" className="hover:bg-gray-100 dark:hover:bg-navy">
                     Local SEO
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            
+            {/* SEO Tools Dropdown - NEW */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center text-navy dark:text-gray-200 hover:text-teal dark:hover:text-teal-light transition-colors font-medium">
+                SEO Tools <ChevronDown size={16} className="ml-1" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-white dark:bg-navy-light border border-gray-200 dark:border-gray-700">
+                <DropdownMenuItem asChild>
+                  <Link to="/rank-checker" className="hover:bg-gray-100 dark:hover:bg-navy">
+                    Rank Checker
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/keyword-generator" className="hover:bg-gray-100 dark:hover:bg-navy">
+                    Keyword Generator
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/blog-content-generator" className="hover:bg-gray-100 dark:hover:bg-navy">
+                    Blog Content Generator
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -159,6 +183,34 @@ const Header: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Local SEO
+                  </Link>
+                </div>
+              </div>
+              
+              {/* SEO Tools Section - NEW for Mobile */}
+              <div className="py-2">
+                <div className="font-medium text-navy dark:text-gray-200 mb-2">SEO Tools</div>
+                <div className="pl-4 space-y-2">
+                  <Link 
+                    to="/rank-checker" 
+                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Rank Checker
+                  </Link>
+                  <Link 
+                    to="/keyword-generator" 
+                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Keyword Generator
+                  </Link>
+                  <Link 
+                    to="/blog-content-generator" 
+                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Blog Content Generator
                   </Link>
                 </div>
               </div>
