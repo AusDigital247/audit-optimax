@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Loader } from "@/components/Loader";
+import Loader from '@/components/Loader';  // Updated import
 import { rewriteParagraph } from '@/utils/paragraphRewriter';
 import ParagraphRewriterResults from './ParagraphRewriterResults';
 import { useToast } from "@/components/ui/use-toast";
