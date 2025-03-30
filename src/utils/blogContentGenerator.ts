@@ -79,13 +79,20 @@ export const generateBlogContent = async (values: BlogGeneratorFormValues): Prom
     Target audience: ${values.targetAudience || 'general audience'}.
     Additional requirements: ${values.additionalNotes || 'none'}.
     
-    Format your response with a catchy title, well-structured content with proper headings, a meta description for SEO, and 5-7 relevant tags.`;
+    Format your response with the following structure:
+    1. A catchy and SEO-friendly title
+    2. A meta description (150-160 characters) for SEO
+    3. An outline with clear headings (H2, H3)
+    4. Well-structured content following the outline
+    5. 5-7 relevant tags for categorization
+    
+    Make sure the content is engaging, factually correct, and optimized for both readers and search engines.`;
     
     // Use Anyscale API to generate blog content
     const response = await generateOllamaResponse(prompt);
     
     // Extract components from the response
-    const title = response.split('\n')[0].replace(/^#+\s*/, '');
+    const title = extractTitle(response);
     const metaDescription = extractMetaDescription(response);
     const outline = extractOutline(response);
     const suggestedTags = extractTags(response);
@@ -110,10 +117,34 @@ export const generateBlogContent = async (values: BlogGeneratorFormValues): Prom
   }
 };
 
+// Helper function to extract title from the generated content
+const extractTitle = (content: string): string => {
+  // Look for heading patterns
+  const titleMatch = content.match(/^#\s+(.+)$|^(.+)\n={3,}|^(.+)\n-{3,}/m);
+  if (titleMatch) {
+    return (titleMatch[1] || titleMatch[2] || titleMatch[3]).trim();
+  }
+  
+  // Fallback: use the first line if it doesn't start with #
+  const lines = content.split('\n');
+  for (const line of lines) {
+    const trimmedLine = line.trim();
+    if (trimmedLine && !trimmedLine.startsWith('#')) {
+      return trimmedLine;
+    }
+  }
+  
+  return 'Generated Article';
+};
+
 // Helper functions for parsing the generated content
 const extractMetaDescription = (content: string): string => {
   const metaMatch = content.match(/meta\s*description[:\s]+(.*?)(\n\n|\n#)/i);
   if (metaMatch) return metaMatch[1].trim();
+  
+  // Match patterns like "Meta description: ..." or just "Description: ..."
+  const descMatch = content.match(/(?:meta\s*)?description[:\s]+(.*?)(?:\n\n|\n#|$)/i);
+  if (descMatch) return descMatch[1].trim();
   
   // Fallback: use the first paragraph if no meta description is found
   const paragraphs = content.split('\n\n');
@@ -135,7 +166,8 @@ const extractOutline = (content: string): string[] => {
 };
 
 const extractTags = (content: string): string[] => {
-  const tagsMatch = content.match(/tags[:\s]+(.*?)(\n\n|\n#|$)/i);
+  // Try to find tags or keywords section
+  const tagsMatch = content.match(/(?:tags|keywords)[:\s]+(.*?)(?:\n\n|\n#|$)/i);
   if (tagsMatch) {
     return tagsMatch[1]
       .split(/[,;]/)
