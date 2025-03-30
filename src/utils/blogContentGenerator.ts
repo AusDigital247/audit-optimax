@@ -1,5 +1,5 @@
 
-import { generateBlogIdeasWithOllama } from './ollamaApi';
+import { generateBlogIdeasWithOllama, generateOllamaResponse } from './ollamaApi';
 
 /**
  * Generates blog ideas based on the provided parameters
@@ -16,7 +16,7 @@ export const generateBlogIdeas = async (topic: string, count: number = 5): Promi
       throw new Error('Topic too short. Please provide at least 3 characters.');
     }
     
-    // Use OLLAMA API to generate blog ideas
+    // Use Anyscale API to generate blog ideas
     const ideas = await generateBlogIdeasWithOllama(topic, count);
     
     return ideas;
@@ -29,19 +29,21 @@ export const generateBlogIdeas = async (topic: string, count: number = 5): Promi
 /**
  * Interface representing the form values for blog content generation
  */
-interface BlogGeneratorFormValues {
+export interface BlogGeneratorFormValues {
   topic: string;
   contentType: string;
   tone: string;
   wordCount: number;
   keywords: string;
   additionalNotes?: string;
+  targetAudience?: string;
+  generateIdeasOnly?: boolean;
 }
 
 /**
  * Interface representing the response from blog content generation
  */
-interface BlogContentResponse {
+export interface BlogContentResponse {
   success: boolean;
   message?: string;
   data?: {
@@ -70,18 +72,19 @@ export const generateBlogContent = async (values: BlogGeneratorFormValues): Prom
       };
     }
     
+    // Create a prompt that includes all the user's requirements
     const prompt = `Create a ${values.contentType} about "${values.topic}" in a ${values.tone} tone. 
     Target word count: ${values.wordCount}. 
-    Keywords to include: ${values.keywords || 'none specified'}. 
+    Keywords to include: ${values.keywords || 'none specified'}.
+    Target audience: ${values.targetAudience || 'general audience'}.
     Additional requirements: ${values.additionalNotes || 'none'}.
     
     Format your response with a catchy title, well-structured content with proper headings, a meta description for SEO, and 5-7 relevant tags.`;
     
-    // Use OLLAMA API to generate blog content
+    // Use Anyscale API to generate blog content
     const response = await generateOllamaResponse(prompt);
     
     // Extract components from the response
-    // This is a simple parsing approach - in a production app, you might use a more robust method
     const title = response.split('\n')[0].replace(/^#+\s*/, '');
     const metaDescription = extractMetaDescription(response);
     const outline = extractOutline(response);
@@ -157,6 +160,3 @@ const extractTags = (content: string): string[] => {
     .slice(0, 5)
     .map(([word]) => word);
 };
-
-// Import the required function
-import { generateOllamaResponse } from './ollamaApi';
