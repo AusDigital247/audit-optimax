@@ -33,8 +33,8 @@ export interface BlogGeneratorFormValues {
   topic: string;
   contentType: string;
   tone: string;
-  wordCount: number;
-  keywords: string;
+  wordCount: string; // Changed from number to string to match form values
+  keywords?: string;
   additionalNotes?: string;
   targetAudience?: string;
   generateIdeasOnly?: boolean;
