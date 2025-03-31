@@ -1,11 +1,9 @@
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" fill="none">
-  <rect width="60" height="60" rx="12" fill="#5D9EF0"/>
-  <path d="M14 16H46M14 30H46M14 44H46" stroke="white" stroke-width="4" stroke-linecap="round"/>
-  <path d="M24 22L36 22M24 36L36 36" stroke="white" stroke-width="4" stroke-linecap="round"/>
-  <circle cx="18" cy="22" r="4" fill="white"/>
-  <circle cx="42" cy="22" r="4" fill="white"/>
-  <circle cx="18" cy="36" r="4" fill="white"/>
-  <circle cx="42" cy="36" r="4" fill="white"/>
-  <path d="M70 20H76.64V44H83.82V20H90.46V14H70V20ZM93.4488 14V44H110.529V38H100.629V32H108.769V26H100.629V20H110.529V14H93.4488ZM114.222 14V44H121.382V31.4L129.222 44H137.382L128.622 30.4L136.862 14H129.122L121.382 26.8V14H114.222ZM141.328 44H149.068L150.328 39.6H159.828L161.088 44H168.828L159.628 14H150.528L141.328 44ZM152.028 33.6L155.088 22.6L158.128 33.6H152.028ZM171.835 14V44H178.995V31.4L186.835 44H194.995L186.235 30.4L194.475 14H186.735L178.995 26.8V14H171.835ZM198.961 14V44H216.041V38H206.141V32H214.281V26H206.141V20H216.041V14H198.961ZM220.328 14V20H226.968V44H234.128V20H240.768V14H220.328Z" fill="#121a2e"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 60" fill="none">
+  <rect width="60" height="60" rx="12" fill="#1E3A8A"/>
+  <path d="M14 16H46M14 30H46M14 44H46" stroke="#38BDF8" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="30" cy="30" r="12" fill="#38BDF8" opacity="0.6"/>
+  <path d="M24 22L36 22M24 36L36 36" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+  <text x="30" y="34" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="white">SEO</text>
+  <text x="190" y="36" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle" fill="#1E3A8A">SEO AUDIT TOOL</text>
 </svg>
