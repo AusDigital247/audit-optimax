@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from "@/components/ui/toaster";
@@ -95,9 +94,9 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
-        <HelmetProvider>
-          <Router>
+      <HelmetProvider>
+        <Router>
+          <LanguageProvider>
             <div className={`flex flex-col min-h-screen w-full ${theme === 'light' ? 'bg-light-bg' : 'bg-navy'}`}>
               <Header />
               <main className="flex-grow w-full">
@@ -145,9 +144,9 @@ function App() {
               <Footer />
             </div>
             <Toaster />
-          </Router>
-        </HelmetProvider>
-      </LanguageProvider>
+          </LanguageProvider>
+        </Router>
+      </HelmetProvider>
     </QueryClientProvider>
   );
 }
