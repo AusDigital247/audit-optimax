@@ -34,7 +34,7 @@ const Settings = () => {
         const response = await fetch('https://api.endpoints.anyscale.com/v1/chat/completions', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${Deno.env.get('ANYSCALE_API_KEY')}`,
+            'Authorization': `Bearer ${localStorage.getItem('anyscaleApiKey') || ''}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -57,11 +57,11 @@ const Settings = () => {
         if (response.ok) {
           setIsSupabaseKeyConfigured(true);
         } else {
-          console.warn('Supabase API key check failed');
+          console.warn('API key check failed');
           setIsSupabaseKeyConfigured(false);
         }
       } catch (e) {
-        console.warn('Error checking Supabase configuration:', e);
+        console.warn('Error checking API configuration:', e);
         setIsSupabaseKeyConfigured(false);
       } finally {
         setChecking(false);
