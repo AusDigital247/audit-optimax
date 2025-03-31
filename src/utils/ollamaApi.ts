@@ -1,31 +1,37 @@
 
 import axios from 'axios';
+import { supabase } from "@/integrations/supabase/client";
 
-// Anyscale API configuration
+// Anyscale API configuration (fallback for local development only)
 const ANYSCALE_API_URL = 'https://api.endpoints.anyscale.com/v1/chat/completions';
 const MODEL = 'mistralai/Mixtral-8x7B-Instruct-v0.1';
 
 // ADD YOUR DEFAULT API KEY HERE (ONLY FOR DEVELOPMENT/TESTING)
 const DEFAULT_ANYSCALE_API_KEY = 'YOUR_DEFAULT_API_KEY_HERE';
 
-interface AnyscaleResponse {
-  id: string;
-  object: string;
-  created: number;
-  model: string;
-  choices: {
-    index: number;
-    message: {
-      role: string;
-      content: string;
-    };
-    finish_reason: string;
-  }[];
-}
-
-export const generateOllamaResponse = async (prompt: string): Promise<string> => {
+export const generateOllamaResponse = async (prompt: string, systemPrompt?: string): Promise<string> => {
   try {
-    console.log('Sending request to Anyscale API with prompt:', prompt);
+    console.log('Processing AI content request with prompt:', prompt);
+    
+    // First try to use the Supabase Edge Function
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-ai-content', {
+        body: { prompt, systemPrompt }
+      });
+      
+      if (error) {
+        console.warn('Supabase Edge Function error:', error);
+        throw error;
+      }
+      
+      if (data && data.content) {
+        console.log('Received response from Supabase Edge Function');
+        return data.content;
+      }
+    } catch (supabaseError) {
+      console.warn('Failed to use Supabase Edge Function, falling back to client-side API call:', supabaseError);
+      // Fall back to the client-side implementation
+    }
     
     // For development and testing, if API is not available, use a fallback response
     if (process.env.NODE_ENV === 'development' && !process.env.ANYSCALE_API_KEY) {
@@ -46,12 +52,12 @@ export const generateOllamaResponse = async (prompt: string): Promise<string> =>
       return `To generate real content, please provide your Anyscale API key in the settings. This is a fallback response for: "${prompt}"`;
     }
     
-    const response = await axios.post<AnyscaleResponse>(ANYSCALE_API_URL, {
+    const response = await axios.post(ANYSCALE_API_URL, {
       model: MODEL,
       messages: [
         {
           role: "system",
-          content: "You are a helpful assistant that generates high-quality blog content and writing assistance."
+          content: systemPrompt || "You are a helpful assistant that generates high-quality blog content and writing assistance."
         },
         {
           role: "user",
@@ -85,7 +91,8 @@ export const generateOllamaResponse = async (prompt: string): Promise<string> =>
  */
 export const rewriteParagraphWithOllama = async (text: string, tone: string): Promise<string> => {
   const prompt = `Rewrite the following paragraph in a ${tone} tone, maintaining its meaning but using different wording:\n\n"${text}"\n\nRewritten paragraph:`;
-  return generateOllamaResponse(prompt);
+  const systemPrompt = "You are an expert content rewriter. Your task is to rewrite text while maintaining the original meaning but improving the quality, readability, and matching the requested tone.";
+  return generateOllamaResponse(prompt, systemPrompt);
 };
 
 /**
@@ -96,7 +103,8 @@ export const rewriteParagraphWithOllama = async (text: string, tone: string): Pr
  */
 export const rewriteSentenceWithOllama = async (text: string, tone: string): Promise<string> => {
   const prompt = `Rewrite the following sentence in a ${tone} tone, maintaining its meaning but using different wording:\n\n"${text}"\n\nRewritten sentence:`;
-  return generateOllamaResponse(prompt);
+  const systemPrompt = "You are an expert sentence rewriter. Your task is to rewrite sentences while maintaining the original meaning but improving the quality, readability, and matching the requested tone.";
+  return generateOllamaResponse(prompt, systemPrompt);
 };
 
 /**
@@ -107,7 +115,8 @@ export const rewriteSentenceWithOllama = async (text: string, tone: string): Pro
  */
 export const generateBlogIdeasWithOllama = async (topic: string, count: number): Promise<string[]> => {
   const prompt = `Generate ${count} unique and engaging blog post ideas about "${topic}". For each idea, provide a compelling title.`;
-  const response = await generateOllamaResponse(prompt);
+  const systemPrompt = "You are a creative content strategist specializing in generating engaging blog post ideas that drive traffic and engagement.";
+  const response = await generateOllamaResponse(prompt, systemPrompt);
   
   // Parse the response into a list of blog ideas
   const ideas = response
