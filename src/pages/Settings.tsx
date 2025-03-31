@@ -28,17 +28,36 @@ const Settings = () => {
     const checkSupabaseConfiguration = async () => {
       try {
         setChecking(true);
-        const { data, error } = await supabase.functions.invoke('generate-ai-content', {
-          body: { 
-            prompt: "Test connection", 
-            systemPrompt: "Just respond with 'Connection successful'" 
-          }
+        // Since we're not using the edge function, we'll check if the API key is set in Supabase
+        // by attempting a simple API call with a test prompt
+        const testPrompt = "Test connection";
+        const response = await fetch('https://api.endpoints.anyscale.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${Deno.env.get('ANYSCALE_API_KEY')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
+            messages: [
+              {
+                role: "system",
+                content: "Just respond with 'Connection successful'"
+              },
+              {
+                role: "user",
+                content: testPrompt
+              }
+            ],
+            temperature: 0.7,
+            max_tokens: 10,
+          })
         });
         
-        if (!error && data) {
+        if (response.ok) {
           setIsSupabaseKeyConfigured(true);
         } else {
-          console.warn('Supabase Edge Function check failed:', error);
+          console.warn('Supabase API key check failed');
           setIsSupabaseKeyConfigured(false);
         }
       } catch (e) {
@@ -105,7 +124,7 @@ const Settings = () => {
               <p className="text-gray-600 dark:text-gray-300">Checking Supabase configuration...</p>
             ) : (
               <div className="flex items-center space-x-2">
-                <Badge variant={isSupabaseKeyConfigured ? "success" : "destructive"} className={`${isSupabaseKeyConfigured ? 'bg-green-500' : 'bg-red-500'} text-white`}>
+                <Badge variant={isSupabaseKeyConfigured ? "default" : "destructive"} className={`${isSupabaseKeyConfigured ? 'bg-green-500' : 'bg-red-500'} text-white`}>
                   {isSupabaseKeyConfigured ? 'Configured' : 'Not Configured'}
                 </Badge>
                 <p className="text-gray-600 dark:text-gray-300">
