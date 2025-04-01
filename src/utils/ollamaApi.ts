@@ -1,24 +1,18 @@
-
 import axios from 'axios';
 
 // Anyscale API configuration
 const ANYSCALE_API_URL = 'https://api.endpoints.anyscale.com/v1/chat/completions';
 const MODEL = 'mistralai/Mixtral-8x7B-Instruct-v0.1';
 
-// ADD YOUR DEFAULT API KEY HERE (ONLY FOR DEVELOPMENT/TESTING)
-const DEFAULT_ANYSCALE_API_KEY = 'YOUR_DEFAULT_API_KEY_HERE';
-
 export const generateOllamaResponse = async (prompt: string, systemPrompt?: string): Promise<string> => {
   try {
     console.log('Processing AI content request with prompt:', prompt);
     
-    // Get the API key from local storage or default
-    const apiKey = 
-      localStorage.getItem('anyscaleApiKey') || 
-      DEFAULT_ANYSCALE_API_KEY;
+    // Get the API key from local storage
+    const apiKey = localStorage.getItem('anyscaleApiKey');
     
-    if (!apiKey || apiKey === 'YOUR_DEFAULT_API_KEY_HERE') {
-      console.warn('No Anyscale API key found. Using fallback response.');
+    if (!apiKey) {
+      console.warn('No Anyscale API key found. Please configure in Settings.');
       return `To generate real content, please provide your Anyscale API key in the settings. This is a fallback response for: "${prompt}"`;
     }
     
