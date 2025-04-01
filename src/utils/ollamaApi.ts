@@ -22,7 +22,9 @@ export const generateOllamaResponse = async (prompt: string, systemPrompt?: stri
     }
     
     // For development and testing, if we want to use a fallback response
-    if (process.env.NODE_ENV === 'development' && process.env.USE_FALLBACK === 'true') {
+    // Remove process.env usage which is causing the error
+    const useFallback = false; // Replace process.env check with a simple boolean
+    if (useFallback) {
       console.log('Using fallback response for development');
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1000));
