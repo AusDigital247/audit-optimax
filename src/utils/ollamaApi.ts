@@ -1,19 +1,24 @@
+
 import axios from 'axios';
 
 // Anyscale API configuration
 const ANYSCALE_API_URL = 'https://api.endpoints.anyscale.com/v1/chat/completions';
 const MODEL = 'mistralai/Mixtral-8x7B-Instruct-v0.1';
 
+// Hardcoded API key - Note: This approach is not recommended for production applications
+// as it exposes your API key in the client-side code
+const ANYSCALE_API_KEY = 'aph0_CkcwRQIhAI777tQ6BeGm85RmDSjQ_k_TmKHcQO7nelI5nY3zEv83AiAlEHv7MhxnArzlLgG1uUAqunnmJLrOGg1NRDgROaXsmBJjEiC6sb38cpYDGI399Rv9l8KTFeHTsj383DnZdzVPku4ncBgBIh51c3JfY2w3eDQ3Ymw2Y3RmZHA3enc3NjI3bXV1eG46DAi954GfEhDo5dGdAUIMCJGpob8GEOjl0Z0B8gEA';
+
 export const generateOllamaResponse = async (prompt: string, systemPrompt?: string): Promise<string> => {
   try {
     console.log('Processing AI content request with prompt:', prompt);
     
-    // Get the API key from local storage
-    const apiKey = localStorage.getItem('anyscaleApiKey');
+    // Use the hardcoded API key, or check localStorage as fallback
+    const apiKey = ANYSCALE_API_KEY || localStorage.getItem('anyscaleApiKey');
     
     if (!apiKey) {
-      console.warn('No Anyscale API key found. Please configure in Settings.');
-      return `To generate real content, please provide your Anyscale API key in the settings. This is a fallback response for: "${prompt}"`;
+      console.warn('No Anyscale API key available.');
+      return `Unable to generate content. API key not available. This is a fallback response for: "${prompt}"`;
     }
     
     // For development and testing, if we want to use a fallback response
@@ -51,7 +56,7 @@ export const generateOllamaResponse = async (prompt: string, systemPrompt?: stri
     console.error('Error generating Anyscale response:', error);
     
     // Provide a graceful fallback for errors
-    return "I'm sorry, I couldn't generate a response at this time. Please try again later or check your API key.";
+    return "I'm sorry, I couldn't generate a response at this time. Please try again later.";
   }
 };
 
