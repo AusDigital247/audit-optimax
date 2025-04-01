@@ -5,9 +5,8 @@ import axios from 'axios';
 const ANYSCALE_API_URL = 'https://api.endpoints.anyscale.com/v1/chat/completions';
 const MODEL = 'mistralai/Mixtral-8x7B-Instruct-v0.1';
 
-// Hardcoded API key - Note: This approach is not recommended for production applications
-// as it exposes your API key in the client-side code
-const ANYSCALE_API_KEY = 'aph0_CkcwRQIhAI777tQ6BeGm85RmDSjQ_k_TmKHcQO7nelI5nY3zEv83AiAlEHv7MhxnArzlLgG1uUAqunnmJLrOGg1NRDgROaXsmBJjEiC6sb38cpYDGI399Rv9l8KTFeHTsj383DnZdzVPku4ncBgBIh51c3JfY2w3eDQ3Ymw2Y3RmZHA3enc3NjI3bXV1eG46DAi954GfEhDo5dGdAUIMCJGpob8GEOjl0Z0B8gEA';
+// API key for Anyscale
+const ANYSCALE_API_KEY = 'esaph0_CkcwRQIhAI777tQ6BeGm85RmDSjQ_k_TmKHcQO7nelI5nY3zEv83AiAlEHv7MhxnArzlLgG1uUAqunnmJLrOGg1NRDgROaXsmBJjEiC6sb38cpYDGI399Rv9l8KTFeHTsj383DnZdzVPku4ncBgBIh51c3JfY2w3eDQ3Ymw2Y3RmZHA3enc3NjI3bXV1eG46DAi954GfEhDo5dGdAUIMCJGpob8GEOjl0Z0B8gEA';
 
 // Mock response generator for fallback when API is unavailable
 const generateMockResponse = (prompt: string, type: string = 'content'): string => {
@@ -53,16 +52,17 @@ export const generateOllamaResponse = async (prompt: string, systemPrompt?: stri
   try {
     console.log('Processing AI content request with prompt:', prompt);
     
-    // Use the hardcoded API key directly
     if (!ANYSCALE_API_KEY) {
       console.warn('No Anyscale API key available.');
       return generateMockResponse(prompt);
     }
     
     try {
-      const response = await axios.post(
-        ANYSCALE_API_URL, 
-        {
+      // Enhanced API request with better error handling
+      const response = await axios({
+        method: 'post',
+        url: ANYSCALE_API_URL,
+        data: {
           model: MODEL,
           messages: [
             {
@@ -76,17 +76,18 @@ export const generateOllamaResponse = async (prompt: string, systemPrompt?: stri
           ],
           temperature: 0.7,
           max_tokens: 2000,
-        }, 
-        {
-          headers: {
-            'Authorization': `Bearer ${ANYSCALE_API_KEY}`,
-            'Content-Type': 'application/json'
-          },
-          timeout: 30000, // 30 second timeout
+        },
+        headers: {
+          'Authorization': `Bearer ${ANYSCALE_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        timeout: 15000, // Reducing timeout to 15 seconds to fail faster
+        validateStatus: function (status) {
+          return status >= 200 && status < 300; // Only resolve for success status codes
         }
-      );
+      });
       
-      console.log('Received response from Anyscale API');
+      console.log('Received successful response from Anyscale API');
       return response.data.choices[0].message.content;
     } catch (axiosError: any) {
       console.error('Axios error details:', {
@@ -96,14 +97,28 @@ export const generateOllamaResponse = async (prompt: string, systemPrompt?: stri
         status: axiosError.response?.status || 'No status code'
       });
       
-      // Check if we have a response with error details
-      if (axiosError.response?.data?.error) {
-        console.warn('API error received, using mock response instead');
-        return generateMockResponse(prompt);
+      // Special debug for CORS issues
+      if (axiosError.message.includes('CORS')) {
+        console.error('CORS error detected. This might be due to browser security restrictions.');
+        return `Error: CORS policy restriction. The API cannot be called directly from the browser. Please use a backend proxy or serverless function to make this request.`;
       }
       
-      // Network or timeout error - use mock response instead of error message
-      console.warn('Network error detected, using mock response');
+      // Handle API-specific errors
+      if (axiosError.response?.data?.error) {
+        console.error('API error response:', axiosError.response.data.error);
+        const errorMessage = axiosError.response.data.error.message || 'Unknown API error';
+        
+        // Check for authentication errors
+        if (errorMessage.includes('authentication') || axiosError.response.status === 401) {
+          console.error('Authentication error detected. Please check your API key.');
+          return `Error: Authentication failed with Anyscale API. Please check your API key in the Settings page.`;
+        }
+        
+        return `Error from Anyscale API: ${errorMessage}`;
+      }
+      
+      // Network or timeout error
+      console.warn('Network or timeout error detected, using mock response');
       return generateMockResponse(prompt);
     }
   } catch (error) {
