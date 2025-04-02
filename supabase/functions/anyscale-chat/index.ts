@@ -19,10 +19,14 @@ serve(async (req) => {
   }
 
   try {
+    // Validate API key configuration
     if (!ANYSCALE_API_KEY) {
       console.error('Missing ANYSCALE_API_KEY environment variable');
       return new Response(
-        JSON.stringify({ error: 'API key not configured' }),
+        JSON.stringify({ 
+          error: 'API key not configured', 
+          details: 'Please add the Anyscale API key in Supabase Edge Function secrets' 
+        }),
         { 
           status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -30,13 +34,17 @@ serve(async (req) => {
       );
     }
 
+    // Parse incoming request body
     const { prompt, systemPrompt, type } = await req.json();
     
-    console.log('Processing AI content request with prompt:', prompt);
-    console.log('System prompt:', systemPrompt || 'Default system prompt');
-    console.log('Request type:', type || 'Default content type');
+    // Detailed logging for debugging
+    console.log('Processing AI content request:', {
+      promptLength: prompt?.length,
+      systemPromptLength: systemPrompt?.length,
+      requestType: type
+    });
     
-    // Forward to Anyscale API
+    // Forward request to Anyscale API
     const response = await fetch(ANYSCALE_API_URL, {
       method: 'POST',
       headers: {
@@ -60,12 +68,21 @@ serve(async (req) => {
       })
     });
 
-    // If the response is not successful, throw an error
+    // Enhanced error handling
     if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Anyscale API error:', errorData);
+      const errorData = await response.text();
+      console.error('Anyscale API error:', {
+        status: response.status,
+        statusText: response.statusText,
+        errorBody: errorData
+      });
+      
       return new Response(
-        JSON.stringify({ error: errorData.error?.message || 'Unknown API error' }),
+        JSON.stringify({ 
+          error: 'API request failed', 
+          details: errorData,
+          status: response.status 
+        }),
         { 
           status: response.status, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -73,18 +90,33 @@ serve(async (req) => {
       );
     }
 
-    // Handle successful response
+    // Process successful response
     const data = await response.json();
     return new Response(
-      JSON.stringify({ content: data.choices[0].message.content }),
+      JSON.stringify({ 
+        content: data.choices[0].message.content,
+        metadata: {
+          model: MODEL,
+          tokenUsage: data.usage
+        }
+      }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       }
     );
   } catch (error) {
-    console.error('Edge function error:', error);
+    // Comprehensive error logging
+    console.error('Edge function error:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+
     return new Response(
-      JSON.stringify({ error: error.message || 'Unknown error' }),
+      JSON.stringify({ 
+        error: 'Unexpected error', 
+        details: error.message || 'Unknown error occurred' 
+      }),
       { 
         status: 500, 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
