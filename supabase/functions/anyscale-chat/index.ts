@@ -35,7 +35,23 @@ serve(async (req) => {
     }
 
     // Parse incoming request body
-    const { prompt, systemPrompt, type } = await req.json();
+    const requestData = await req.json();
+    const { prompt, systemPrompt, type } = requestData;
+    
+    // Validate that prompt exists
+    if (!prompt) {
+      console.error('Missing prompt in request body');
+      return new Response(
+        JSON.stringify({ 
+          error: 'Missing parameters', 
+          details: 'Prompt is required' 
+        }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
     
     // Detailed logging for debugging
     console.log('Processing AI content request:', {
@@ -92,6 +108,8 @@ serve(async (req) => {
 
     // Process successful response
     const data = await response.json();
+    console.log('Received successful response from DeepSeek API');
+    
     return new Response(
       JSON.stringify({ 
         content: data.choices[0].message.content,

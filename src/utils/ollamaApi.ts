@@ -1,6 +1,7 @@
 
 import axios from 'axios';
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 // Mock response generator for fallback when API is unavailable
 const generateMockResponse = (prompt: string, type: string = 'content'): string => {
@@ -44,25 +45,37 @@ Tags: sample, content, mockup, demonstration, example`;
 
 export const generateOllamaResponse = async (prompt: string, systemPrompt?: string): Promise<string> => {
   try {
-    console.log('Processing AI content request with prompt:', prompt);
+    console.log('Processing AI content request with prompt length:', prompt.length);
     
     try {
-      // Call the Supabase Edge Function instead of Anyscale API directly
+      // Important debugging to identify if the function is being called
+      console.log('Calling anyscale-chat edge function with:', { 
+        promptLength: prompt.length,
+        systemPromptProvided: !!systemPrompt,
+        type: 'content' 
+      });
+      
+      // Call the Supabase Edge Function
       const { data, error } = await supabase.functions.invoke('anyscale-chat', {
-        body: { prompt, systemPrompt, type: 'content' }
+        body: { 
+          prompt, 
+          systemPrompt, 
+          type: 'content' 
+        }
       });
 
       if (error) {
         console.error('Edge function error:', error);
+        toast.error('Error generating content. Using fallback content instead.');
         
         // Check for API key configuration issues
         if (error.message?.includes('API key not configured')) {
-          return `Error: Anyscale API key not configured. Please add the API key in the Supabase Edge Function secrets.`;
+          return `Error: DeepSeek API key not configured. Please add the API key in the Supabase Edge Function secrets.`;
         }
         
         // Check for authentication errors
         if (error.message?.includes('authentication') || error.message?.includes('API key')) {
-          return `Error: Authentication failed with Anyscale API. Please check your API key.`;
+          return `Error: Authentication failed with DeepSeek API. Please check your API key.`;
         }
         
         // Fall back to mock response for other errors
@@ -70,17 +83,23 @@ export const generateOllamaResponse = async (prompt: string, systemPrompt?: stri
         return generateMockResponse(prompt);
       }
       
-      console.log('Received successful response from Edge Function');
+      console.log('Received successful response from Edge Function:', {
+        contentLength: data?.content?.length,
+        modelUsed: data?.metadata?.model
+      });
+      
       return data.content;
     } catch (error: any) {
       console.error('Edge function invocation error:', error);
+      toast.error('Failed to connect to AI service. Using fallback content instead.');
       
       // Network or timeout error
       console.warn('Network or timeout error detected, using mock response');
       return generateMockResponse(prompt);
     }
   } catch (error) {
-    console.error('Error generating Anyscale response:', error);
+    console.error('Error generating DeepSeek response:', error);
+    toast.error('Unexpected error occurred. Using fallback content instead.');
     
     // Generate mock content as a fallback
     return generateMockResponse(prompt);
@@ -88,7 +107,7 @@ export const generateOllamaResponse = async (prompt: string, systemPrompt?: stri
 };
 
 /**
- * Rewrites a paragraph using Anyscale API
+ * Rewrites a paragraph using DeepSeek API
  * @param text Original paragraph text
  * @param tone Desired tone for rewrite
  * @returns Rewritten paragraph
@@ -98,6 +117,8 @@ export const rewriteParagraphWithOllama = async (text: string, tone: string): Pr
   const systemPrompt = "You are an expert content rewriter. Your task is to rewrite text while maintaining the original meaning but improving the quality, readability, and matching the requested tone.";
   
   try {
+    console.log('Calling rewrite-paragraph function with text length:', text.length);
+    
     // Call the Edge Function for paragraph rewriting
     const { data, error } = await supabase.functions.invoke('anyscale-chat', {
       body: { prompt, systemPrompt, type: 'rewrite-paragraph' }
@@ -105,18 +126,21 @@ export const rewriteParagraphWithOllama = async (text: string, tone: string): Pr
 
     if (error) {
       console.error('Error in paragraph rewriting:', error);
+      toast.error('Error rewriting paragraph. Using fallback response instead.');
       return generateMockResponse(text, 'rewrite-paragraph');
     }
     
+    console.log('Paragraph rewritten successfully, response length:', data?.content?.length);
     return data.content;
   } catch (error) {
     console.error('Error in paragraph rewriting:', error);
+    toast.error('Failed to rewrite paragraph. Using fallback response instead.');
     return generateMockResponse(text, 'rewrite-paragraph');
   }
 };
 
 /**
- * Rewrites a sentence using Anyscale API
+ * Rewrites a sentence using DeepSeek API
  * @param text Original sentence text
  * @param tone Desired tone for rewrite
  * @returns Rewritten sentence
@@ -126,6 +150,8 @@ export const rewriteSentenceWithOllama = async (text: string, tone: string): Pro
   const systemPrompt = "You are an expert sentence rewriter. Your task is to rewrite sentences while maintaining the original meaning but improving the quality, readability, and matching the requested tone.";
   
   try {
+    console.log('Calling rewrite-sentence function with text length:', text.length);
+    
     // Call the Edge Function for sentence rewriting
     const { data, error } = await supabase.functions.invoke('anyscale-chat', {
       body: { prompt, systemPrompt, type: 'rewrite-sentence' }
@@ -133,18 +159,21 @@ export const rewriteSentenceWithOllama = async (text: string, tone: string): Pro
 
     if (error) {
       console.error('Error in sentence rewriting:', error);
+      toast.error('Error rewriting sentence. Using fallback response instead.');
       return generateMockResponse(text, 'rewrite-sentence');
     }
     
+    console.log('Sentence rewritten successfully, response length:', data?.content?.length);
     return data.content;
   } catch (error) {
     console.error('Error in sentence rewriting:', error);
+    toast.error('Failed to rewrite sentence. Using fallback response instead.');
     return generateMockResponse(text, 'rewrite-sentence');
   }
 };
 
 /**
- * Generates blog ideas using Anyscale API
+ * Generates blog ideas using DeepSeek API
  * @param topic Blog topic
  * @param count Number of ideas to generate
  * @returns List of blog ideas
@@ -154,6 +183,8 @@ export const generateBlogIdeasWithOllama = async (topic: string, count: number):
   const systemPrompt = "You are a creative content strategist specializing in generating engaging blog post ideas that drive traffic and engagement.";
   
   try {
+    console.log('Calling blog-ideas function with topic:', topic);
+    
     // Call the Edge Function for blog idea generation
     const { data, error } = await supabase.functions.invoke('anyscale-chat', {
       body: { prompt, systemPrompt, type: 'blog-ideas' }
@@ -161,8 +192,11 @@ export const generateBlogIdeasWithOllama = async (topic: string, count: number):
 
     if (error) {
       console.error('Error generating blog ideas:', error);
+      toast.error('Error generating blog ideas. Using sample ideas instead.');
       return generateMockBlogIdeas(topic, count);
     }
+    
+    console.log('Blog ideas generated successfully, response:', data?.content?.substring(0, 100) + '...');
     
     // Parse the response into a list of blog ideas
     const ideas = data.content
@@ -173,6 +207,7 @@ export const generateBlogIdeasWithOllama = async (topic: string, count: number):
     return ideas.length ? ideas : generateMockBlogIdeas(topic, count);
   } catch (error) {
     console.error('Error generating blog ideas:', error);
+    toast.error('Failed to generate blog ideas. Using sample ideas instead.');
     return generateMockBlogIdeas(topic, count);
   }
 };
