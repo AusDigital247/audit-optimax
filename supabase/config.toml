@@ -1,1 +1,5 @@
+
 project_id = "jffgmefblqiwmoputeeq"
+
+[functions.anyscale-chat]
+verify_jwt = false

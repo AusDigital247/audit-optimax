@@ -1,12 +1,6 @@
 
 import axios from 'axios';
-
-// Anyscale API configuration
-const ANYSCALE_API_URL = 'https://api.endpoints.anyscale.com/v1/chat/completions';
-const MODEL = 'mistralai/Mixtral-8x7B-Instruct-v0.1';
-
-// API key for Anyscale
-const ANYSCALE_API_KEY = 'esaph0_CkcwRQIhAI777tQ6BeGm85RmDSjQ_k_TmKHcQO7nelI5nY3zEv83AiAlEHv7MhxnArzlLgG1uUAqunnmJLrOGg1NRDgROaXsmBJjEiC6sb38cpYDGI399Rv9l8KTFeHTsj383DnZdzVPku4ncBgBIh51c3JfY2w3eDQ3Ymw2Y3RmZHA3enc3NjI3bXV1eG46DAi954GfEhDo5dGdAUIMCJGpob8GEOjl0Z0B8gEA';
+import { supabase } from "@/integrations/supabase/client";
 
 // Mock response generator for fallback when API is unavailable
 const generateMockResponse = (prompt: string, type: string = 'content'): string => {
@@ -52,70 +46,34 @@ export const generateOllamaResponse = async (prompt: string, systemPrompt?: stri
   try {
     console.log('Processing AI content request with prompt:', prompt);
     
-    if (!ANYSCALE_API_KEY) {
-      console.warn('No Anyscale API key available.');
-      return generateMockResponse(prompt);
-    }
-    
     try {
-      // Enhanced API request with better error handling
-      const response = await axios({
-        method: 'post',
-        url: ANYSCALE_API_URL,
-        data: {
-          model: MODEL,
-          messages: [
-            {
-              role: "system",
-              content: systemPrompt || "You are a helpful assistant that generates high-quality blog content and writing assistance."
-            },
-            {
-              role: "user",
-              content: prompt
-            }
-          ],
-          temperature: 0.7,
-          max_tokens: 2000,
-        },
-        headers: {
-          'Authorization': `Bearer ${ANYSCALE_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        timeout: 15000, // Reducing timeout to 15 seconds to fail faster
-        validateStatus: function (status) {
-          return status >= 200 && status < 300; // Only resolve for success status codes
+      // Call the Supabase Edge Function instead of Anyscale API directly
+      const { data, error } = await supabase.functions.invoke('anyscale-chat', {
+        body: { prompt, systemPrompt, type: 'content' }
+      });
+
+      if (error) {
+        console.error('Edge function error:', error);
+        
+        // Check for API key configuration issues
+        if (error.message?.includes('API key not configured')) {
+          return `Error: Anyscale API key not configured. Please add the API key in the Supabase Edge Function secrets.`;
         }
-      });
-      
-      console.log('Received successful response from Anyscale API');
-      return response.data.choices[0].message.content;
-    } catch (axiosError: any) {
-      console.error('Axios error details:', {
-        message: axiosError.message,
-        code: axiosError.code,
-        response: axiosError.response?.data || 'No response data',
-        status: axiosError.response?.status || 'No status code'
-      });
-      
-      // Special debug for CORS issues
-      if (axiosError.message.includes('CORS')) {
-        console.error('CORS error detected. This might be due to browser security restrictions.');
-        return `Error: CORS policy restriction. The API cannot be called directly from the browser. Please use a backend proxy or serverless function to make this request.`;
-      }
-      
-      // Handle API-specific errors
-      if (axiosError.response?.data?.error) {
-        console.error('API error response:', axiosError.response.data.error);
-        const errorMessage = axiosError.response.data.error.message || 'Unknown API error';
         
         // Check for authentication errors
-        if (errorMessage.includes('authentication') || axiosError.response.status === 401) {
-          console.error('Authentication error detected. Please check your API key.');
-          return `Error: Authentication failed with Anyscale API. Please check your API key in the Settings page.`;
+        if (error.message?.includes('authentication') || error.message?.includes('API key')) {
+          return `Error: Authentication failed with Anyscale API. Please check your API key.`;
         }
         
-        return `Error from Anyscale API: ${errorMessage}`;
+        // Fall back to mock response for other errors
+        console.warn('Error calling edge function, using mock response');
+        return generateMockResponse(prompt);
       }
+      
+      console.log('Received successful response from Edge Function');
+      return data.content;
+    } catch (error: any) {
+      console.error('Edge function invocation error:', error);
       
       // Network or timeout error
       console.warn('Network or timeout error detected, using mock response');
@@ -140,7 +98,17 @@ export const rewriteParagraphWithOllama = async (text: string, tone: string): Pr
   const systemPrompt = "You are an expert content rewriter. Your task is to rewrite text while maintaining the original meaning but improving the quality, readability, and matching the requested tone.";
   
   try {
-    return await generateOllamaResponse(prompt, systemPrompt);
+    // Call the Edge Function for paragraph rewriting
+    const { data, error } = await supabase.functions.invoke('anyscale-chat', {
+      body: { prompt, systemPrompt, type: 'rewrite-paragraph' }
+    });
+
+    if (error) {
+      console.error('Error in paragraph rewriting:', error);
+      return generateMockResponse(text, 'rewrite-paragraph');
+    }
+    
+    return data.content;
   } catch (error) {
     console.error('Error in paragraph rewriting:', error);
     return generateMockResponse(text, 'rewrite-paragraph');
@@ -158,7 +126,17 @@ export const rewriteSentenceWithOllama = async (text: string, tone: string): Pro
   const systemPrompt = "You are an expert sentence rewriter. Your task is to rewrite sentences while maintaining the original meaning but improving the quality, readability, and matching the requested tone.";
   
   try {
-    return await generateOllamaResponse(prompt, systemPrompt);
+    // Call the Edge Function for sentence rewriting
+    const { data, error } = await supabase.functions.invoke('anyscale-chat', {
+      body: { prompt, systemPrompt, type: 'rewrite-sentence' }
+    });
+
+    if (error) {
+      console.error('Error in sentence rewriting:', error);
+      return generateMockResponse(text, 'rewrite-sentence');
+    }
+    
+    return data.content;
   } catch (error) {
     console.error('Error in sentence rewriting:', error);
     return generateMockResponse(text, 'rewrite-sentence');
@@ -176,10 +154,18 @@ export const generateBlogIdeasWithOllama = async (topic: string, count: number):
   const systemPrompt = "You are a creative content strategist specializing in generating engaging blog post ideas that drive traffic and engagement.";
   
   try {
-    const response = await generateOllamaResponse(prompt, systemPrompt);
+    // Call the Edge Function for blog idea generation
+    const { data, error } = await supabase.functions.invoke('anyscale-chat', {
+      body: { prompt, systemPrompt, type: 'blog-ideas' }
+    });
+
+    if (error) {
+      console.error('Error generating blog ideas:', error);
+      return generateMockBlogIdeas(topic, count);
+    }
     
     // Parse the response into a list of blog ideas
-    const ideas = response
+    const ideas = data.content
       .split(/\d+\./)
       .map(item => item.trim())
       .filter(item => item.length > 0);

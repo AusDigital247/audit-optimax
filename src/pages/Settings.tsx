@@ -8,67 +8,55 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Key, Save, RefreshCw, Server, Database } from 'lucide-react';
+import { Key, Save, RefreshCw, Server, Database, CheckCircle2, AlertCircle } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const Settings = () => {
   const { toast } = useToast();
   const [apiKey, setApiKey] = useState('');
-  const [isSupabaseKeyConfigured, setIsSupabaseKeyConfigured] = useState(false);
+  const [edgeFunctionStatus, setEdgeFunctionStatus] = useState<'loading' | 'success' | 'error'>('loading');
+  const [edgeFunctionMessage, setEdgeFunctionMessage] = useState('Checking Edge Function status...');
   const [checking, setChecking] = useState(true);
   
-  // Load API key from localStorage on component mount and check Supabase configuration
+  // Load API key from localStorage on component mount and check Edge Function status
   useEffect(() => {
     const savedApiKey = localStorage.getItem('anyscaleApiKey');
     if (savedApiKey) {
       setApiKey(savedApiKey);
     }
     
-    // Check if Supabase Edge Function is configured
-    const checkSupabaseConfiguration = async () => {
+    // Check if Edge Function is working
+    const checkEdgeFunction = async () => {
       try {
         setChecking(true);
-        // Since we're not using the edge function, we'll check if the API key is set in Supabase
-        // by attempting a simple API call with a test prompt
-        const testPrompt = "Test connection";
-        const response = await fetch('https://api.endpoints.anyscale.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('anyscaleApiKey') || ''}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
-            messages: [
-              {
-                role: "system",
-                content: "Just respond with 'Connection successful'"
-              },
-              {
-                role: "user",
-                content: testPrompt
-              }
-            ],
-            temperature: 0.7,
-            max_tokens: 10,
-          })
+        // Try to call the edge function with a simple test prompt
+        const { data, error } = await supabase.functions.invoke('anyscale-chat', {
+          body: { 
+            prompt: 'Test connection', 
+            systemPrompt: 'Respond with OK if you can see this message.',
+            type: 'test'
+          }
         });
-        
-        if (response.ok) {
-          setIsSupabaseKeyConfigured(true);
+
+        if (error) {
+          console.error('Edge function error:', error);
+          setEdgeFunctionStatus('error');
+          setEdgeFunctionMessage(`Edge Function error: ${error.message || 'Unknown error'}`);
         } else {
-          console.warn('API key check failed');
-          setIsSupabaseKeyConfigured(false);
+          setEdgeFunctionStatus('success');
+          setEdgeFunctionMessage('Edge Function is working properly. You can now use the AI features.');
         }
       } catch (e) {
-        console.warn('Error checking API configuration:', e);
-        setIsSupabaseKeyConfigured(false);
+        console.error('Error checking Edge Function:', e);
+        setEdgeFunctionStatus('error');
+        setEdgeFunctionMessage('Could not connect to Edge Function. Please check your Supabase setup.');
       } finally {
         setChecking(false);
       }
     };
     
-    checkSupabaseConfiguration();
+    checkEdgeFunction();
   }, []);
   
   const handleSaveApiKey = () => {
@@ -109,6 +97,23 @@ const Settings = () => {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-8 text-navy dark:text-white">Settings</h1>
         
+        <Alert 
+          variant={edgeFunctionStatus === 'success' ? "default" : "destructive"}
+          className="mb-6"
+        >
+          <div className="flex items-center gap-2">
+            {edgeFunctionStatus === 'loading' ? (
+              <div className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full"></div>
+            ) : edgeFunctionStatus === 'success' ? (
+              <CheckCircle2 className="h-5 w-5" />
+            ) : (
+              <AlertCircle className="h-5 w-5" />
+            )}
+            <AlertTitle>Edge Function Status</AlertTitle>
+          </div>
+          <AlertDescription>{edgeFunctionMessage}</AlertDescription>
+        </Alert>
+        
         <Card className="p-6 mb-8">
           <h2 className="text-2xl font-semibold mb-4 text-navy dark:text-white flex items-center">
             <Key className="mr-2 h-6 w-6 text-teal" /> API Configuration
@@ -117,23 +122,22 @@ const Settings = () => {
           <div className="mb-6">
             <div className="flex items-center mb-4">
               <Server className="mr-2 h-5 w-5 text-teal" />
-              <h3 className="text-lg font-medium text-navy dark:text-white">Supabase API Configuration</h3>
+              <h3 className="text-lg font-medium text-navy dark:text-white">Supabase Edge Function</h3>
             </div>
             
-            {checking ? (
-              <p className="text-gray-600 dark:text-gray-300">Checking Supabase configuration...</p>
-            ) : (
-              <div className="flex items-center space-x-2">
-                <Badge variant={isSupabaseKeyConfigured ? "default" : "destructive"} className={`${isSupabaseKeyConfigured ? 'bg-green-500' : 'bg-red-500'} text-white`}>
-                  {isSupabaseKeyConfigured ? 'Configured' : 'Not Configured'}
-                </Badge>
-                <p className="text-gray-600 dark:text-gray-300">
-                  {isSupabaseKeyConfigured 
-                    ? 'The Anyscale API key is successfully configured in Supabase. AI tools will use this key.' 
-                    : 'Anyscale API key not detected in Supabase. Contact your administrator to configure it.'}
-                </p>
-              </div>
-            )}
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
+              This application uses a Supabase Edge Function to securely proxy requests to the Anyscale API.
+              The Edge Function avoids CORS issues and provides better security by keeping your API key on the server side.
+            </p>
+            
+            <div className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-800">
+              <h4 className="font-medium mb-2">Important Note</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                The Anyscale API key should be configured as a secret in your Supabase project.
+                Go to Supabase Dashboard &gt; Settings &gt; API &gt; Edge Function Secrets 
+                and add a secret named <code className="bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded">ANYSCALE_API_KEY</code> with your API key.
+              </p>
+            </div>
           </div>
           
           <Separator className="my-6" />
@@ -141,13 +145,12 @@ const Settings = () => {
           <div>
             <div className="flex items-center mb-4">
               <Database className="mr-2 h-5 w-5 text-teal" />
-              <h3 className="text-lg font-medium text-navy dark:text-white">Browser Storage API Key (Fallback)</h3>
+              <h3 className="text-lg font-medium text-navy dark:text-white">Browser Storage API Key (Legacy)</h3>
             </div>
             
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              {isSupabaseKeyConfigured 
-                ? 'The key below is a fallback and will only be used if the Supabase configuration is unavailable.' 
-                : 'Since no Supabase API key is configured, the browser storage key below will be used for AI features.'}
+              The browser storage method is no longer used with the Edge Function approach.
+              This setting is kept for backward compatibility only.
             </p>
             
             <div className="space-y-4">
@@ -189,8 +192,8 @@ const Settings = () => {
             <li>Create an account or sign in to your existing account</li>
             <li>Navigate to the API section in your account settings</li>
             <li>Generate a new API key</li>
-            <li>Copy the API key and paste it in the field above</li>
-            <li>Click "Save API Key" to store it locally in your browser</li>
+            <li>Copy the API key</li>
+            <li>Go to your Supabase project dashboard and add the key as an Edge Function secret named <code className="bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded">ANYSCALE_API_KEY</code></li>
           </ol>
           <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
             <p className="text-yellow-800 dark:text-yellow-200">
