@@ -1,11 +1,11 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const ANYSCALE_API_URL = 'https://api.endpoints.anyscale.com/v1/chat/completions';
-const MODEL = 'mistralai/Mixtral-8x7B-Instruct-v0.1';
+const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+const MODEL = 'deepseek-chat';
 
 // Get the API key from environment variables
-const ANYSCALE_API_KEY = Deno.env.get('ANYSCALE_API_KEY');
+const DEEPSEEK_API_KEY = Deno.env.get('DEEPSEEK_API_KEY');
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -20,12 +20,12 @@ serve(async (req) => {
 
   try {
     // Validate API key configuration
-    if (!ANYSCALE_API_KEY) {
-      console.error('Missing ANYSCALE_API_KEY environment variable');
+    if (!DEEPSEEK_API_KEY) {
+      console.error('Missing DEEPSEEK_API_KEY environment variable');
       return new Response(
         JSON.stringify({ 
           error: 'API key not configured', 
-          details: 'Please add the Anyscale API key in Supabase Edge Function secrets' 
+          details: 'Please add the DeepSeek API key in Supabase Edge Function secrets' 
         }),
         { 
           status: 500, 
@@ -44,11 +44,11 @@ serve(async (req) => {
       requestType: type
     });
     
-    // Forward request to Anyscale API
-    const response = await fetch(ANYSCALE_API_URL, {
+    // Forward request to DeepSeek API
+    const response = await fetch(DEEPSEEK_API_URL, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${ANYSCALE_API_KEY}`,
+        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -71,7 +71,7 @@ serve(async (req) => {
     // Enhanced error handling
     if (!response.ok) {
       const errorData = await response.text();
-      console.error('Anyscale API error:', {
+      console.error('DeepSeek API error:', {
         status: response.status,
         statusText: response.statusText,
         errorBody: errorData
