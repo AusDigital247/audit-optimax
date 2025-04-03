@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -77,6 +78,34 @@ const Header: React.FC = () => {
                 <DropdownMenuItem asChild>
                   <Link to="/sentence-rewriter-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
                     Sentence Rewriter Tool
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center text-navy dark:text-gray-200 hover:text-teal dark:hover:text-teal-light transition-colors font-medium">
+                Content Tools <ChevronDown size={16} className="ml-1" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-white dark:bg-navy-light border border-gray-200 dark:border-gray-700">
+                <DropdownMenuItem asChild>
+                  <Link to="/grammar-checker-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
+                    Grammar Checker
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/conclusion-generator-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
+                    Conclusion Generator
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/paraphrasing-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
+                    Paraphrasing Tool
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/instagram-bio-generator-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
+                    Instagram Bio Generator
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -211,6 +240,40 @@ const Header: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Sentence Rewriter Tool
+                  </Link>
+                </div>
+              </div>
+              
+              <div className="py-2">
+                <div className="font-medium text-navy dark:text-gray-200 mb-2">Content Tools</div>
+                <div className="pl-4 space-y-2">
+                  <Link 
+                    to="/grammar-checker-tool" 
+                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Grammar Checker
+                  </Link>
+                  <Link 
+                    to="/conclusion-generator-tool" 
+                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Conclusion Generator
+                  </Link>
+                  <Link 
+                    to="/paraphrasing-tool" 
+                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Paraphrasing Tool
+                  </Link>
+                  <Link 
+                    to="/instagram-bio-generator-tool" 
+                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Instagram Bio Generator
                   </Link>
                 </div>
               </div>
