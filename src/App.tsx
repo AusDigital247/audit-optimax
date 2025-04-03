@@ -38,6 +38,7 @@ import GrammarChecker from './pages/GrammarChecker';
 import ConclusionGenerator from './pages/ConclusionGenerator';
 import ParaphrasingTool from './pages/ParaphrasingTool';
 import InstagramBioGenerator from './pages/InstagramBioGenerator';
+import BlogIdeasGenerator from './pages/BlogIdeasGenerator';
 
 // Import blog posts
 import SeoStrategy2025 from './pages/BlogPosts/SeoStrategy2025';
@@ -133,7 +134,7 @@ function App() {
                   {/* Tool routes */}
                   <Route path="/google-rank-checker-tool" element={<RankChecker />} />
                   <Route path="/keyword-generator-tool" element={<KeywordGenerator />} />
-                  <Route path="/blog-ideas-generator" element={<BlogContentGenerator />} />
+                  <Route path="/blog-ideas-generator" element={<BlogIdeasGenerator />} />
                   <Route path="/paragraph-rewriter-tool" element={<ParagraphRewriter />} />
                   <Route path="/sentence-rewriter-tool" element={<SentenceRewriter />} />
                   

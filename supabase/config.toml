@@ -1,5 +1,26 @@
 
 project_id = "jffgmefblqiwmoputeeq"
 
-[functions.anyscale-chat]
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage"]
+
+[db]
+port = 54322
+
+[studio]
+port = 54323
+
+[inbucket]
+port = 54324
+
+[auth]
+enabled = true
+port = 9999
+
+[storage]
+enabled = true
+
+[functions.send-email]
 verify_jwt = false

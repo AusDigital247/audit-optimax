@@ -1,12 +1,13 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import Loader from "@/components/Loader";
 import { toast } from "sonner";
-import { Loader } from "@/components/Loader";
 import { generateOllamaResponse } from "@/utils/ollamaApi";
 import {
   Select,
@@ -15,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from '@/components/ui/textarea';
 
 const InstagramBioGenerator: React.FC = () => {
   const { t } = useLanguage();
@@ -104,7 +104,7 @@ const InstagramBioGenerator: React.FC = () => {
           
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Name (Optional)</label>
+              <Label className="block text-sm font-medium mb-1">Name (Optional)</Label>
               <Input 
                 placeholder="Your name or username" 
                 value={name}
@@ -113,7 +113,7 @@ const InstagramBioGenerator: React.FC = () => {
             </div>
             
             <div>
-              <label className="block text-sm font-medium mb-1">Occupation/Role (Optional)</label>
+              <Label className="block text-sm font-medium mb-1">Occupation/Role (Optional)</Label>
               <Input 
                 placeholder="E.g., Photographer, Fitness Coach, Student" 
                 value={occupation}
@@ -122,7 +122,7 @@ const InstagramBioGenerator: React.FC = () => {
             </div>
             
             <div>
-              <label className="block text-sm font-medium mb-1">Interests/Passions (Required)</label>
+              <Label className="block text-sm font-medium mb-1">Interests/Passions (Required)</Label>
               <Textarea 
                 placeholder="E.g., travel, fitness, photography, cooking, fashion" 
                 value={interests}
@@ -131,7 +131,7 @@ const InstagramBioGenerator: React.FC = () => {
             </div>
             
             <div>
-              <label className="block text-sm font-medium mb-1">Achievements (Optional)</label>
+              <Label className="block text-sm font-medium mb-1">Achievements (Optional)</Label>
               <Input 
                 placeholder="E.g., Award winner, Published author, 10k marathon" 
                 value={achievements}
@@ -141,7 +141,7 @@ const InstagramBioGenerator: React.FC = () => {
             
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Bio Style</label>
+                <Label className="block text-sm font-medium mb-1">Bio Style</Label>
                 <Select value={style} onValueChange={setStyle}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select style" />
@@ -157,7 +157,7 @@ const InstagramBioGenerator: React.FC = () => {
               </div>
               
               <div>
-                <label className="block text-sm font-medium mb-1">Emoji Usage</label>
+                <Label className="block text-sm font-medium mb-1">Emoji Usage</Label>
                 <Select value={emojis} onValueChange={setEmojis}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select emoji usage" />

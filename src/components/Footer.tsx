@@ -110,6 +110,26 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/grammar-checker-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Grammar Checker
+                </Link>
+              </li>
+              <li>
+                <Link to="/conclusion-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Conclusion Generator
+                </Link>
+              </li>
+              <li>
+                <Link to="/paraphrasing-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Paraphrasing Tool
+                </Link>
+              </li>
+              <li>
+                <Link to="/instagram-bio-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Instagram Bio Generator
+                </Link>
+              </li>
+              <li>
                 <Link to="/about" className="text-white/80 hover:text-teal transition-colors flex items-center">
                   <ArrowRight size={14} className="mr-2" /> About Us
                 </Link>
