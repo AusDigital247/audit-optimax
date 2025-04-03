@@ -1,104 +1,123 @@
 
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { Resend } from "https://esm.sh/resend@1.0.0";
 
-// Create a new Resend client using the API key from environment variables
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") || "";
+const FROM_EMAIL = "noreply@yourdomain.com"; // Update this to your domain
 
-// CORS headers for cross-origin requests
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
-};
+const resend = new Resend(RESEND_API_KEY);
 
-// Define the structure of email requests
-interface EmailRequest {
+interface EmailRequestBody {
   to: string;
+  name: string;
   subject: string;
-  name?: string;
   email?: string;
   message?: string;
   type: "contact" | "notification";
 }
 
-// The main handler function for the edge function
-const handler = async (req: Request): Promise<Response> => {
-  // Handle CORS preflight requests
+serve(async (req) => {
+  // Handle CORS preflight request
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Max-Age": "86400",
+      },
+    });
   }
 
   try {
-    const { to, subject, name, email, message, type }: EmailRequest = await req.json();
-
-    // Validate required fields
-    if (!to || !subject || !type) {
-      throw new Error("Missing required fields: to, subject, and type are required");
+    if (!RESEND_API_KEY) {
+      throw new Error("RESEND_API_KEY is not set");
     }
 
-    // Different email templates based on type
-    let html;
-    let from;
-    let replyTo;
+    const { to, name, subject, email, message, type } = await req.json() as EmailRequestBody;
+
+    if (!to || !type) {
+      throw new Error("Missing required fields");
+    }
+
+    let html = "";
+    let textContent = "";
 
     if (type === "contact") {
-      // Contact form submission - send to admin
-      if (!name || !email || !message) {
-        throw new Error("Contact form requires name, email, and message");
+      // Admin email for contact form submission
+      if (!email || !message) {
+        throw new Error("Email and message required for contact form");
       }
 
-      from = "Contact Form <onboarding@resend.dev>";
-      replyTo = email;
-      
       html = `
-        <h1>New Contact Form Submission</h1>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <h2>Message:</h2>
-        <p>${message.replace(/\n/g, '<br>')}</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #0f172a;">New Contact Form Submission</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Subject:</strong> ${subject}</p>
+          <p><strong>Message:</strong></p>
+          <div style="background-color: #f8fafc; padding: 15px; border-radius: 5px; margin: 10px 0;">
+            ${message.replace(/\n/g, "<br>")}
+          </div>
+        </div>
+      `;
+
+      textContent = `
+        New Contact Form Submission
+        Name: ${name}
+        Email: ${email}
+        Subject: ${subject}
+        Message: ${message}
       `;
     } else if (type === "notification") {
-      // Notification to user
-      from = "SEO Audit Tool <onboarding@resend.dev>";
-      
+      // User notification/confirmation email
       html = `
-        <h1>Thank you for contacting us!</h1>
-        <p>Hello ${name},</p>
-        <p>We have received your message and will get back to you as soon as possible.</p>
-        <p>Best regards,<br>The SEO Audit Tool Team</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #0f172a;">Thank You for Contacting Us</h2>
+          <p>Hello ${name},</p>
+          <p>Thank you for reaching out to SEO Audit Tool. We have received your message and will get back to you as soon as possible.</p>
+          <p>Best regards,</p>
+          <p>The SEO Audit Tool Team</p>
+        </div>
       `;
-    } else {
-      throw new Error("Invalid email type");
+
+      textContent = `
+        Thank You for Contacting Us
+        Hello ${name},
+        Thank you for reaching out to SEO Audit Tool. We have received your message and will get back to you as soon as possible.
+        Best regards,
+        The SEO Audit Tool Team
+      `;
     }
 
-    const emailResponse = await resend.emails.send({
-      from,
-      to,
-      subject,
-      html,
-      reply_to: replyTo,
+    const data = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: to,
+      subject: subject,
+      html: html,
+      text: textContent,
     });
 
-    console.log("Email sent successfully:", emailResponse);
-
-    return new Response(JSON.stringify(emailResponse), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        ...corsHeaders,
-      },
-    });
-  } catch (error: any) {
-    console.error("Error in send-email function:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({
+        success: true,
+        data,
+      }),
       {
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+        status: 200,
+      }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error: error.message,
+      }),
+      {
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
         status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
       }
     );
   }
-};
-
-serve(handler);
+});
