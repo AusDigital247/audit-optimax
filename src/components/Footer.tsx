@@ -130,6 +130,36 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/instagram-hashtag-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Instagram Hashtag Generator
+                </Link>
+              </li>
+              <li>
+                <Link to="/instagram-name-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Instagram Name Generator
+                </Link>
+              </li>
+              <li>
+                <Link to="/tiktok-hashtag-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> TikTok Hashtag Generator
+                </Link>
+              </li>
+              <li>
+                <Link to="/tiktok-username-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> TikTok Username Generator
+                </Link>
+              </li>
+              <li>
+                <Link to="/youtube-channel-description-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> YouTube Description Generator
+                </Link>
+              </li>
+              <li>
+                <Link to="/youtube-name-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> YouTube Name Generator
+                </Link>
+              </li>
+              <li>
                 <Link to="/about" className="text-white/80 hover:text-teal transition-colors flex items-center">
                   <ArrowRight size={14} className="mr-2" /> About Us
                 </Link>

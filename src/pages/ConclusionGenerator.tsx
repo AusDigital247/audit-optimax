@@ -1,243 +1,280 @@
+
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { Card } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skeleton } from "@/components/ui/skeleton";
-import Loader from "@/components/Loader";
-import { generateOllamaResponse } from "@/utils/ollamaApi";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
+import { Copy, DownloadIcon, RefreshCcw } from 'lucide-react';
+import Loader from '@/components/Loader';
+import { generateOllamaResponse } from '@/utils/ollamaApi';
+import DOMPurify from 'dompurify';
 
-const ConclusionGenerator: React.FC = () => {
-  const { t } = useLanguage();
-  const [mainPoints, setMainPoints] = useState('');
+const ConclusionGenerator = () => {
   const [topic, setTopic] = useState('');
-  const [tone, setTone] = useState('professional');
-  const [length, setLength] = useState('medium');
+  const [keyPoints, setKeyPoints] = useState('');
+  const [style, setStyle] = useState('professional');
+  const [conclusionLength, setConclusionLength] = useState('medium');
   const [conclusion, setConclusion] = useState('');
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
-  const handleGenerate = async () => {
-    if (!mainPoints || mainPoints.trim().length < 20) {
-      toast.error('Please enter at least 20 characters summarizing your main points');
-      return;
-    }
-
-    if (!topic || topic.trim().length < 3) {
-      toast.error('Please enter a topic for your conclusion');
+  const generateConclusion = async () => {
+    if (!topic.trim()) {
+      toast({
+        title: "Topic is required",
+        description: "Please enter the main topic or title of your content.",
+        variant: "destructive",
+      });
       return;
     }
 
     setLoading(true);
-    setConclusion('');
-
     try {
-      const lengthInWords = {
-        short: "100-150 words",
-        medium: "150-250 words",
-        long: "250-350 words"
-      }[length];
-
-      const prompt = `Generate a ${tone} conclusion for an article about "${topic}". 
-      The conclusion should be ${lengthInWords} and should summarize these main points:
-      ${mainPoints}
+      const prompt = `
+      Generate a ${conclusionLength} length conclusion for content about "${topic}" with a ${style} tone.
+      ${keyPoints ? `Key points to summarize: ${keyPoints}` : ''}
       
-      The conclusion should summarize the key points, provide closure, and include a relevant call to action or final thought. Make it engaging and memorable.`;
+      The conclusion should:
+      - Summarize the main points
+      - Provide closure
+      - Leave the reader with something to think about
+      - Maintain a ${style} tone throughout
+      
+      Format the conclusion with proper paragraphs and markdown styling if needed.
+      `;
 
-      const systemPrompt = "You are an expert content writer specialized in crafting compelling conclusions for articles, essays, and blog posts. Your conclusions are engaging, summarize key points effectively, and leave readers with a strong final impression.";
+      const systemPrompt = "You're an expert conclusion writer. Create engaging, well-structured conclusions that effectively summarize content and provide closure while maintaining the requested tone and length. Return just the conclusion text without additional commentary.";
       
       const response = await generateOllamaResponse(prompt, systemPrompt);
       setConclusion(response);
-      toast.success('Conclusion generated successfully');
     } catch (error) {
       console.error('Error generating conclusion:', error);
-      toast.error('Failed to generate conclusion. Please try again later.');
+      toast({
+        title: "Error",
+        description: "Failed to generate conclusion. Please try again later.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
   };
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(conclusion);
+    toast({
+      title: "Copied!",
+      description: "Conclusion copied to clipboard.",
+    });
+  };
+
+  const downloadAsText = () => {
+    const element = document.createElement('a');
+    const file = new Blob([conclusion], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = `conclusion_${topic.substring(0, 20).replace(/\s+/g, '_')}.txt`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
   return (
-    <div className="container max-w-6xl mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-12">
       <Helmet>
-        <title>Conclusion Generator Tool | Craft Perfect Endings</title>
-        <meta name="description" content="Instantly craft compelling conclusions with our free AI conclusion generator. Create powerful endings for your essays, blog posts, and articles effortlessly." />
+        <title>Free Conclusion Generator | Create Powerful Endings for Your Content</title>
+        <meta name="description" content="Generate compelling conclusions for your essays, articles, and blog posts instantly. Our free AI tool creates powerful endings that leave a lasting impression." />
+        <meta name="keywords" content="conclusion generator, essay conclusion, article conclusion, free conclusion writer, AI conclusion tool" />
       </Helmet>
 
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-display font-bold text-navy dark:text-white mb-4">Conclusion Generator Tool</h1>
-        <p className="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-          Instantly craft compelling conclusions with this user-friendly tool. Elevate your writing effortlessly with powerful endings that leave a lasting impression.
+      <h1 className="text-3xl md:text-4xl font-bold mb-4 text-center text-navy dark:text-white">Conclusion Generator</h1>
+      <div className="max-w-4xl mx-auto mb-8">
+        <p className="text-gray-600 dark:text-gray-300 text-center mb-8">
+          Instantly craft compelling conclusions for your essays, articles, blog posts, and more with our AI-powered conclusion generator.
         </p>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        <Card className="p-6 shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-navy dark:text-white">Generate Your Conclusion</h2>
-          
-          <div className="space-y-4">
+        <Card className="p-6 shadow-lg mb-8">
+          <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium mb-1">Topic</label>
-              <Input 
-                placeholder="Enter your topic or title" 
+              <Label htmlFor="topic" className="block mb-2">Content Topic or Title *</Label>
+              <Textarea 
+                id="topic" 
+                placeholder="Enter the main topic or title of your content"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
+                className="min-h-[80px]"
               />
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium mb-1">Main Points</label>
+              <Label htmlFor="keyPoints" className="block mb-2">Key Points (Optional)</Label>
               <Textarea 
-                placeholder="List the key points you want to summarize in your conclusion..." 
-                className="min-h-[150px]"
-                value={mainPoints}
-                onChange={(e) => setMainPoints(e.target.value)}
+                id="keyPoints" 
+                placeholder="Enter key points you want to include in the conclusion, separated by new lines"
+                value={keyPoints}
+                onChange={(e) => setKeyPoints(e.target.value)}
+                className="min-h-[120px]"
               />
             </div>
-            
-            <div className="grid grid-cols-2 gap-4">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium mb-1">Tone</label>
-                <Select value={tone} onValueChange={setTone}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select tone" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="professional">Professional</SelectItem>
-                    <SelectItem value="casual">Casual</SelectItem>
-                    <SelectItem value="academic">Academic</SelectItem>
-                    <SelectItem value="persuasive">Persuasive</SelectItem>
-                    <SelectItem value="inspirational">Inspirational</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="style" className="block mb-2">Writing Style</Label>
+                <select 
+                  id="style"
+                  value={style}
+                  onChange={(e) => setStyle(e.target.value)}
+                  className="w-full p-2 border rounded-md bg-white dark:bg-gray-800 dark:border-gray-700"
+                >
+                  <option value="professional">Professional</option>
+                  <option value="conversational">Conversational</option>
+                  <option value="academic">Academic</option>
+                  <option value="persuasive">Persuasive</option>
+                  <option value="inspiring">Inspiring</option>
+                  <option value="reflective">Reflective</option>
+                </select>
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium mb-1">Length</label>
-                <Select value={length} onValueChange={setLength}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select length" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="short">Short</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="long">Long</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="length" className="block mb-2">Conclusion Length</Label>
+                <select 
+                  id="length"
+                  value={conclusionLength}
+                  onChange={(e) => setConclusionLength(e.target.value)}
+                  className="w-full p-2 border rounded-md bg-white dark:bg-gray-800 dark:border-gray-700"
+                >
+                  <option value="short">Short (1-2 sentences)</option>
+                  <option value="medium">Medium (1 paragraph)</option>
+                  <option value="long">Long (2-3 paragraphs)</option>
+                </select>
               </div>
             </div>
-            
+
             <Button 
-              onClick={handleGenerate} 
-              className="w-full bg-teal hover:bg-teal-light text-white"
+              onClick={generateConclusion} 
+              className="w-full bg-teal hover:bg-teal-dark text-white"
               disabled={loading}
             >
-              {loading ? <Loader size="sm" /> : 'Generate Conclusion'}
+              {loading ? <Loader size="medium" className="mr-2" /> : <RefreshCcw className="mr-2 h-4 w-4" />}
+              Generate Conclusion
             </Button>
           </div>
         </Card>
 
-        <Card className="p-6 shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-navy dark:text-white">Your Conclusion</h2>
-          
-          {loading ? (
-            <div className="flex justify-center items-center min-h-[300px]">
-              <Loader size="lg" />
+        {(loading || conclusion) && (
+          <Card className="p-6 shadow-lg">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-navy dark:text-white">Your Conclusion</h2>
+              {conclusion && (
+                <div className="flex space-x-2">
+                  <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                    <Copy className="mr-2 h-4 w-4" /> Copy
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={downloadAsText}>
+                    <DownloadIcon className="mr-2 h-4 w-4" /> Download
+                  </Button>
+                </div>
+              )}
             </div>
-          ) : conclusion ? (
-            <div className="min-h-[300px] p-4 border rounded-md bg-gray-50 dark:bg-navy-light overflow-auto">
-              {conclusion}
-            </div>
-          ) : (
-            <div className="min-h-[300px] flex justify-center items-center text-gray-500 dark:text-gray-400 text-center">
-              <p>Your generated conclusion will appear here</p>
-            </div>
-          )}
-          
-          {conclusion && (
-            <Button 
-              onClick={() => {
-                navigator.clipboard.writeText(conclusion);
-                toast.success('Conclusion copied to clipboard');
-              }}
-              variant="outline"
-              className="w-full mt-4"
-            >
-              Copy to Clipboard
-            </Button>
-          )}
-        </Card>
-      </div>
 
-      <div className="prose prose-lg dark:prose-invert max-w-none">
-        <h2>Why a Strong Conclusion Matters</h2>
-        <p>A well-crafted conclusion is more than just a summary of your work—it's your final opportunity to make an impression on your reader. The conclusion serves as the last word on your topic, providing closure, synthesizing information, and leaving your audience with something to think about. Whether you're writing an academic paper, a blog post, or marketing content, your conclusion can make the difference between forgettable content and a memorable piece that achieves its purpose.</p>
-        
-        <h2>Common Challenges in Writing Conclusions</h2>
-        <p>Many writers struggle with conclusions for various reasons:</p>
-        
-        <ul>
-          <li><strong>Fatigue:</strong> After spending significant time crafting the main body of your content, mental fatigue can make it difficult to generate fresh insight for your conclusion.</li>
-          <li><strong>Repetition:</strong> Finding the balance between summarizing key points without merely repeating what you've already written can be challenging.</li>
-          <li><strong>Closure:</strong> Creating a sense of completion while still leaving readers with something to consider requires careful consideration.</li>
-          <li><strong>Impact:</strong> Crafting a conclusion that resonates and leaves a lasting impression often demands creativity that may be depleted after completing the main content.</li>
-        </ul>
-        
-        <h2>How Our Conclusion Generator Helps</h2>
-        <p>Our AI-powered conclusion generator addresses these challenges by providing:</p>
-        
-        <ul>
-          <li><strong>Fresh Perspective:</strong> By analyzing your main points and topic, our tool can generate conclusions that offer new insights and thoughtful framing.</li>
-          <li><strong>Balanced Summary:</strong> The generator creates conclusions that effectively recap your key points without unnecessary repetition.</li>
-          <li><strong>Appropriate Tone:</strong> Whether you need a professional, academic, persuasive, or inspirational conclusion, our tool adapts to your specified tone.</li>
-          <li><strong>Custom Length:</strong> Generate conclusions of varying lengths depending on your content requirements.</li>
-          <li><strong>Strong Closing Statements:</strong> Our AI excels at creating memorable final thoughts and appropriate calls to action that enhance the impact of your writing.</li>
-        </ul>
-        
-        <h2>Types of Conclusions Our Generator Creates</h2>
-        <p>Our tool can help you craft various types of conclusions:</p>
-        
-        <ul>
-          <li><strong>Summarizing Conclusions:</strong> Recap the main arguments or points of your content in a fresh way.</li>
-          <li><strong>Reflective Conclusions:</strong> Consider the implications of your topic and provide thoughtful insights.</li>
-          <li><strong>Action-Oriented Conclusions:</strong> Encourage readers to take specific steps or consider certain perspectives.</li>
-          <li><strong>Question-Based Conclusions:</strong> Leave readers with thought-provoking questions that extend the conversation.</li>
-          <li><strong>Full-Circle Conclusions:</strong> Connect back to your introduction to create a sense of completion and harmony.</li>
-        </ul>
-        
-        <h2>Best Practices for Using Our Conclusion Generator</h2>
-        <p>To get the most out of our tool:</p>
-        
-        <ol>
-          <li><strong>Be Specific with Your Topic:</strong> The more precise you are about your subject, the more relevant your generated conclusion will be.</li>
-          <li><strong>Include Key Points:</strong> Provide all the main arguments or ideas you want summarized in your conclusion.</li>
-          <li><strong>Choose the Right Tone:</strong> Select a tone that matches the rest of your content for consistency.</li>
-          <li><strong>Review and Refine:</strong> Use the generated conclusion as a strong foundation, then personalize it to perfectly match your voice and style.</li>
-          <li><strong>Test Different Options:</strong> Try generating multiple conclusions with different tones or lengths to find the perfect fit for your content.</li>
-        </ol>
-        
-        <h2>When to Use a Conclusion Generator</h2>
-        <p>Our tool is particularly helpful for:</p>
-        
-        <ul>
-          <li><strong>Academic Papers:</strong> Create scholarly conclusions for essays, research papers, and dissertations.</li>
-          <li><strong>Blog Posts:</strong> Wrap up your blog content with engaging, memorable conclusions.</li>
-          <li><strong>Business Reports:</strong> End your professional reports with clear, authoritative closing statements.</li>
-          <li><strong>Marketing Content:</strong> Finish your marketing materials with persuasive conclusions that drive action.</li>
-          <li><strong>Speeches and Presentations:</strong> Develop powerful closing remarks that leave a lasting impression on your audience.</li>
-        </ul>
-        
-        <p>Start using our conclusion generator today to transform your content's closing statements from an afterthought into a powerful, strategic element of your writing. With just a few clicks, you can create conclusions that effectively summarize your work, engage your readers, and leave a lasting impression.</p>
+            {loading ? (
+              <div className="flex justify-center p-8">
+                <Loader size="large" />
+              </div>
+            ) : (
+              <div 
+                className="prose dark:prose-invert max-w-none p-4 bg-gray-50 dark:bg-gray-800 rounded-lg whitespace-pre-wrap"
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(conclusion) }}
+              />
+            )}
+          </Card>
+        )}
+
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold mb-6 text-navy dark:text-white">How to Write Effective Conclusions</h2>
+          
+          <Tabs defaultValue="purpose">
+            <TabsList className="grid w-full grid-cols-3 mb-8">
+              <TabsTrigger value="purpose">Purpose</TabsTrigger>
+              <TabsTrigger value="structure">Structure</TabsTrigger>
+              <TabsTrigger value="tips">Pro Tips</TabsTrigger>
+            </TabsList>
+            <TabsContent value="purpose" className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+              <h3 className="text-xl font-semibold mb-4">The Purpose of a Conclusion</h3>
+              <p className="mb-4">A good conclusion serves several important purposes:</p>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                <li>Summarizes key points without simply repeating them</li>
+                <li>Provides closure to your writing</li>
+                <li>Leaves readers with a final impression or thought</li>
+                <li>Connects back to your main thesis or central idea</li>
+                <li>Creates a sense of completeness</li>
+              </ul>
+              <p>Think of your conclusion as the final chord in a musical piece—it should feel satisfying and complete.</p>
+            </TabsContent>
+            <TabsContent value="structure" className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+              <h3 className="text-xl font-semibold mb-4">Structure of an Effective Conclusion</h3>
+              <ol className="list-decimal pl-6 space-y-4">
+                <li>
+                  <p className="font-medium">Restate your main point</p>
+                  <p className="text-gray-600 dark:text-gray-300">Begin by restating your thesis or main argument in fresh words.</p>
+                </li>
+                <li>
+                  <p className="font-medium">Summarize key supporting points</p>
+                  <p className="text-gray-600 dark:text-gray-300">Briefly remind readers of the main evidence or arguments you presented.</p>
+                </li>
+                <li>
+                  <p className="font-medium">Provide a broader context</p>
+                  <p className="text-gray-600 dark:text-gray-300">Show how your topic connects to larger issues or the "big picture."</p>
+                </li>
+                <li>
+                  <p className="font-medium">End with impact</p>
+                  <p className="text-gray-600 dark:text-gray-300">Finish with a thought-provoking statement, call to action, or relevant quote.</p>
+                </li>
+              </ol>
+            </TabsContent>
+            <TabsContent value="tips" className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+              <h3 className="text-xl font-semibold mb-4">Professional Tips for Conclusions</h3>
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <span className="text-teal mr-2">✓</span>
+                  <div>
+                    <p className="font-medium">Avoid introducing completely new ideas</p>
+                    <p className="text-gray-600 dark:text-gray-300">Your conclusion should wrap up existing points, not open new lines of inquiry.</p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-teal mr-2">✓</span>
+                  <div>
+                    <p className="font-medium">Keep it concise</p>
+                    <p className="text-gray-600 dark:text-gray-300">A conclusion should generally be about 10% of your total word count.</p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-teal mr-2">✓</span>
+                  <div>
+                    <p className="font-medium">Avoid apologetic language</p>
+                    <p className="text-gray-600 dark:text-gray-300">Don't use phrases like "In conclusion" or "To sum up" which can sound formulaic.</p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-teal mr-2">✓</span>
+                  <div>
+                    <p className="font-medium">Match your tone to your content</p>
+                    <p className="text-gray-600 dark:text-gray-300">Academic papers require formal conclusions, while blog posts can be more conversational.</p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-teal mr-2">✓</span>
+                  <div>
+                    <p className="font-medium">Revise and polish</p>
+                    <p className="text-gray-600 dark:text-gray-300">Since it's the last thing readers see, make sure your conclusion is particularly well-written.</p>
+                  </div>
+                </li>
+              </ul>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </div>
   );

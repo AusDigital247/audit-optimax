@@ -1,290 +1,303 @@
+
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { Card } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import Loader from "@/components/Loader";
-import { toast } from "sonner";
-import { generateOllamaResponse } from "@/utils/ollamaApi";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/components/ui/use-toast";
+import { Copy, RefreshCcw, Instagram, Smile, Heart, Camera, Users } from 'lucide-react';
+import { generateOllamaResponse } from '@/utils/ollamaApi';
+import DOMPurify from 'dompurify';
+import Loader from '@/components/Loader';
 
-const InstagramBioGenerator: React.FC = () => {
-  const { t } = useLanguage();
-  const [loading, setLoading] = useState(false);
-  const [generatedBios, setGeneratedBios] = useState<string[]>([]);
+const InstagramBioGenerator = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    niche: '',
+    keywords: '',
+    tone: 'professional',
+    includeEmojis: true,
+  });
   
-  // Form fields
-  const [name, setName] = useState('');
-  const [interests, setInterests] = useState('');
-  const [occupation, setOccupation] = useState('');
-  const [style, setStyle] = useState('professional');
-  const [achievements, setAchievements] = useState('');
-  const [emojis, setEmojis] = useState('moderate');
+  const [bios, setBios] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
-  const handleGenerate = async () => {
-    if (!interests || interests.trim().length < 3) {
-      toast.error('Please enter your interests');
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSwitchChange = (name: string, checked: boolean) => {
+    setFormData(prev => ({ ...prev, [name]: checked }));
+  };
+
+  const generateBios = async () => {
+    if (!formData.niche) {
+      toast({
+        title: "Niche Required",
+        description: "Please enter your niche or industry to generate relevant bios.",
+        variant: "destructive",
+      });
       return;
     }
 
     setLoading(true);
-    setGeneratedBios([]);
+    setBios([]);
 
     try {
-      const prompt = `Generate 5 unique Instagram bio options for someone with the following details:
-      ${name ? `Name: ${name}` : ''}
-      ${occupation ? `Occupation/Role: ${occupation}` : ''}
-      Interests: ${interests}
-      ${achievements ? `Achievements: ${achievements}` : ''}
-      Style: ${style}
-      Emoji usage: ${emojis}
-      
-      Each bio should be:
-      1. Under 150 characters (Instagram's limit)
-      2. Engaging and authentic
-      3. Reflect the person's interests and personality
-      4. In the "${style}" style
-      5. Include ${emojis === 'minimal' ? 'few' : emojis === 'moderate' ? 'some' : 'many'} relevant emojis
-      
-      Format your response as 5 separate bio options only, each on a new line. Do not number them or add any explanations.`;
+      const prompt = `
+        Generate 5 unique, engaging, and SEO-optimized Instagram bios for a ${formData.niche} account.
+        ${formData.name ? `The account is for ${formData.name}.` : ''}
+        ${formData.keywords ? `Include these keywords or themes if possible: ${formData.keywords}` : ''}
+        The tone should be ${formData.tone}.
+        ${formData.includeEmojis ? 'Include relevant emojis.' : 'Do not include emojis.'}
+        
+        Each bio should:
+        1. Be under 150 characters (Instagram's limit)
+        2. Be engaging and attention-grabbing
+        3. Include a call-to-action where appropriate
+        4. Clearly communicate the value proposition
+        5. Be formatted in a way that's easy to copy directly to Instagram
+        
+        Format the response as a numbered list of 5 bios, each on its own line.
+      `;
 
-      const systemPrompt = "You are a social media expert who specializes in creating engaging, authentic Instagram bios that perfectly capture a person's essence in limited space. You understand how to balance personality, professionalism, and creativity to help people stand out.";
+      const systemPrompt = "You are an expert in social media marketing and branding, specializing in creating engaging Instagram bios that help accounts attract followers and communicate their brand effectively.";
       
       const response = await generateOllamaResponse(prompt, systemPrompt);
       
-      // Parse the response into separate bios
-      const bios = response
-        .split('\n')
+      // Parse the response to extract the individual bios
+      const bioList = response
+        .split(/\n\d+[\.\)]\s+|\n\-\s+/)
         .map(bio => bio.trim())
-        .filter(bio => bio.length > 0 && bio.length <= 150)
-        .slice(0, 5);
+        .filter(bio => bio.length > 0 && bio.length <= 200);
       
-      if (bios.length === 0) {
-        // If parsing failed, create a default bio
-        setGeneratedBios([`${interests} enthusiast ${occupation ? `| ${occupation}` : ''} ${style === 'professional' ? '| Connect with me' : '✨'}`]);
-        toast.warning('Had some trouble generating multiple bios, showing a simple option');
+      if (bioList.length === 0) {
+        // If parsing fails, just use the whole response
+        setBios([response]);
       } else {
-        setGeneratedBios(bios);
-        toast.success('Instagram bios generated successfully');
+        setBios(bioList);
       }
     } catch (error) {
       console.error('Error generating Instagram bios:', error);
-      toast.error('Failed to generate Instagram bios. Please try again later.');
+      toast({
+        title: "Error",
+        description: "Failed to generate Instagram bios. Please try again later.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
   };
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied!",
+      description: "Bio copied to clipboard.",
+    });
+  };
+
   return (
-    <div className="container max-w-6xl mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-12">
       <Helmet>
-        <title>Instagram Bio Generator | Create Engaging Profile Bios</title>
-        <meta name="description" content="Create the perfect Instagram bio with our free AI generator. Get personalized, engaging bios that reflect your personality and help you stand out." />
+        <title>Instagram Bio Generator | Create Engaging Instagram Bios</title>
+        <meta name="description" content="Generate engaging, SEO-optimized Instagram bios that attract followers. Our free AI tool helps you create the perfect Instagram bio for your profile." />
+        <meta name="keywords" content="Instagram bio generator, Instagram profile, bio creator, social media marketing, Instagram marketing" />
       </Helmet>
 
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-display font-bold text-navy dark:text-white mb-4">Instagram Bio Generator</h1>
-        <p className="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-          Elevate your Instagram presence with our cutting-edge AI Bio Generator. Craft personalized, engaging bios that capture your personality and boost your profile.
+      <h1 className="text-3xl md:text-4xl font-bold mb-4 text-center text-navy dark:text-white">Instagram Bio Generator</h1>
+      <div className="max-w-4xl mx-auto mb-8">
+        <p className="text-gray-600 dark:text-gray-300 text-center mb-8">
+          Create the perfect Instagram bio that captures attention, showcases your brand, and helps you gain more followers.
         </p>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        <Card className="p-6 shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-navy dark:text-white">Create Your Bio</h2>
-          
-          <div className="space-y-4">
+        <Card className="p-6 shadow-lg mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <Label className="block text-sm font-medium mb-1">Name (Optional)</Label>
+              <Label htmlFor="name" className="block mb-2">Name/Brand (Optional)</Label>
               <Input 
-                placeholder="Your name or username" 
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                id="name" 
+                name="name"
+                placeholder="Your name or brand"
+                value={formData.name}
+                onChange={handleInputChange}
               />
             </div>
-            
+
             <div>
-              <Label className="block text-sm font-medium mb-1">Occupation/Role (Optional)</Label>
+              <Label htmlFor="niche" className="block mb-2">Niche/Industry *</Label>
               <Input 
-                placeholder="E.g., Photographer, Fitness Coach, Student" 
-                value={occupation}
-                onChange={(e) => setOccupation(e.target.value)}
+                id="niche" 
+                name="niche"
+                placeholder="e.g., Fitness, Fashion, Travel, Food"
+                value={formData.niche}
+                onChange={handleInputChange}
+                required
               />
             </div>
-            
-            <div>
-              <Label className="block text-sm font-medium mb-1">Interests/Passions (Required)</Label>
-              <Textarea 
-                placeholder="E.g., travel, fitness, photography, cooking, fashion" 
-                value={interests}
-                onChange={(e) => setInterests(e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <Label className="block text-sm font-medium mb-1">Achievements (Optional)</Label>
-              <Input 
-                placeholder="E.g., Award winner, Published author, 10k marathon" 
-                value={achievements}
-                onChange={(e) => setAchievements(e.target.value)}
-              />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label className="block text-sm font-medium mb-1">Bio Style</Label>
-                <Select value={style} onValueChange={setStyle}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select style" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="professional">Professional</SelectItem>
-                    <SelectItem value="creative">Creative</SelectItem>
-                    <SelectItem value="humorous">Humorous</SelectItem>
-                    <SelectItem value="minimalist">Minimalist</SelectItem>
-                    <SelectItem value="inspirational">Inspirational</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <Label className="block text-sm font-medium mb-1">Emoji Usage</Label>
-                <Select value={emojis} onValueChange={setEmojis}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select emoji usage" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="minimal">Minimal</SelectItem>
-                    <SelectItem value="moderate">Moderate</SelectItem>
-                    <SelectItem value="heavy">Heavy</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            
-            <Button 
-              onClick={handleGenerate} 
-              className="w-full bg-teal hover:bg-teal-light text-white"
-              disabled={loading}
-            >
-              {loading ? <Loader size="sm" /> : 'Generate Instagram Bios'}
-            </Button>
           </div>
+
+          <div className="mt-4">
+            <Label htmlFor="keywords" className="block mb-2">Keywords or Themes (Optional)</Label>
+            <Textarea 
+              id="keywords" 
+              name="keywords"
+              placeholder="Enter keywords or themes to include (e.g., vegan, sustainable, digital nomad)"
+              value={formData.keywords}
+              onChange={handleInputChange}
+              className="min-h-[80px]"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+            <div>
+              <Label htmlFor="tone" className="block mb-2">Tone</Label>
+              <select 
+                id="tone"
+                name="tone"
+                value={formData.tone}
+                onChange={handleInputChange}
+                className="w-full p-2 border rounded-md bg-white dark:bg-gray-800 dark:border-gray-700"
+              >
+                <option value="professional">Professional</option>
+                <option value="casual">Casual & Friendly</option>
+                <option value="humorous">Humorous</option>
+                <option value="inspirational">Inspirational</option>
+                <option value="educational">Educational</option>
+                <option value="bold">Bold & Confident</option>
+              </select>
+            </div>
+
+            <div className="flex items-center space-x-2 mt-8">
+              <input 
+                type="checkbox" 
+                id="includeEmojis" 
+                checked={formData.includeEmojis}
+                onChange={(e) => handleSwitchChange('includeEmojis', e.target.checked)}
+                className="rounded border-gray-300"
+              />
+              <Label htmlFor="includeEmojis">Include Emojis</Label>
+            </div>
+          </div>
+
+          <Button 
+            onClick={generateBios} 
+            className="w-full mt-6 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white"
+            disabled={loading}
+          >
+            {loading ? <Loader size="medium" className="mr-2" /> : <Instagram className="mr-2 h-5 w-5" />}
+            Generate Instagram Bios
+          </Button>
         </Card>
 
-        <Card className="p-6 shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-navy dark:text-white">Your Instagram Bios</h2>
+        {(loading || bios.length > 0) && (
+          <Card className="p-6 shadow-lg">
+            <h2 className="text-xl font-semibold mb-6 text-navy dark:text-white flex items-center">
+              <Smile className="mr-2 h-5 w-5 text-pink-500" /> Your Instagram Bios
+            </h2>
+
+            {loading ? (
+              <div className="flex justify-center p-8">
+                <Loader size="large" />
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {bios.map((bio, index) => (
+                  <div key={index} className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg relative">
+                    <Badge className="absolute top-3 right-3 bg-pink-500">Bio {index + 1}</Badge>
+                    <p 
+                      className="pr-16 mb-4" 
+                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(bio) }}
+                    />
+                    <div className="flex justify-end">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => copyToClipboard(bio)}
+                        className="text-pink-500 border-pink-500 hover:bg-pink-50 dark:hover:bg-pink-950"
+                      >
+                        <Copy className="mr-2 h-4 w-4" /> Copy
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+        )}
+
+        <div className="mt-12 space-y-8">
+          <h2 className="text-2xl font-bold text-navy dark:text-white">Instagram Bio Tips for Better Reach</h2>
           
-          {loading ? (
-            <div className="flex justify-center items-center min-h-[300px]">
-              <Loader size="lg" />
-            </div>
-          ) : generatedBios.length > 0 ? (
-            <div className="space-y-4">
-              {generatedBios.map((bio, index) => (
-                <div key={index} className="p-4 border rounded-md bg-gray-50 dark:bg-navy-light relative group">
-                  <p className="pr-10">{bio}</p>
-                  <span className="text-xs text-gray-500 absolute bottom-1 right-2">
-                    {bio.length}/150
-                  </span>
-                  <Button 
-                    onClick={() => {
-                      navigator.clipboard.writeText(bio);
-                      toast.success('Bio copied to clipboard');
-                    }}
-                    variant="ghost"
-                    size="sm"
-                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    Copy
-                  </Button>
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card className="p-5 border-l-4 border-pink-500">
+              <div className="flex items-start">
+                <Heart className="h-8 w-8 text-pink-500 mr-3 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Include Relevant Keywords</h3>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    Instagram bios are searchable, so including relevant keywords can help people find your profile when searching for content in your niche.
+                  </p>
                 </div>
-              ))}
+              </div>
+            </Card>
+            
+            <Card className="p-5 border-l-4 border-purple-500">
+              <div className="flex items-start">
+                <Camera className="h-8 w-8 text-purple-500 mr-3 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Add a Clear Call-to-Action</h3>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    Tell people what you want them to do, whether it's "Shop our latest collection" or "Click the link to read more."
+                  </p>
+                </div>
+              </div>
+            </Card>
+            
+            <Card className="p-5 border-l-4 border-blue-500">
+              <div className="flex items-start">
+                <Users className="h-8 w-8 text-blue-500 mr-3 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Show Your Personality</h3>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    Let your authentic voice shine through. People connect with real personalities, not generic corporate speak.
+                  </p>
+                </div>
+              </div>
+            </Card>
+            
+            <Card className="p-5 border-l-4 border-green-500">
+              <div className="flex items-start">
+                <RefreshCcw className="h-8 w-8 text-green-500 mr-3 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Update Regularly</h3>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    Keep your bio fresh by updating it with seasonal themes, new offerings, or current promotions.
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
+          
+          <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 p-6 rounded-lg">
+            <h3 className="text-xl font-semibold mb-4 text-navy dark:text-white">Instagram Bio Character Limit</h3>
+            <p className="mb-4">
+              Remember that Instagram limits your bio to <strong>150 characters</strong>. Make every character count!
+            </p>
+            <div className="flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-lg">
+              <span className="font-medium">Example character count:</span>
+              <Badge variant="outline" className="px-3 py-1">
+                "Travel photographer 📸 | Dog lover 🐕 | Coffee enthusiast ☕ | DM for collabs | Link in bio for prints"
+                <span className="ml-2 text-pink-500 font-bold">93/150</span>
+              </Badge>
             </div>
-          ) : (
-            <div className="min-h-[300px] flex justify-center items-center text-gray-500 dark:text-gray-400 text-center">
-              <p>Your generated Instagram bios will appear here</p>
-            </div>
-          )}
-        </Card>
-      </div>
-
-      <div className="prose prose-lg dark:prose-invert max-w-none">
-        <h2>Create the Perfect Instagram Bio to Showcase Your Personality</h2>
-        <p>Your Instagram bio is prime real estate—it's often the first impression visitors have of your profile and personality. In just 150 characters, you need to capture who you are, what you do, and why people should follow you. Our Instagram Bio Generator helps you create a compelling, authentic bio that makes you stand out in a crowded social media landscape.</p>
-        
-        <h2>Why Your Instagram Bio Matters</h2>
-        <p>A well-crafted Instagram bio serves multiple important purposes:</p>
-        
-        <ul>
-          <li><strong>First Impressions:</strong> Visitors typically decide whether to follow you within seconds of viewing your profile, and your bio plays a crucial role in this decision.</li>
-          <li><strong>Personal Branding:</strong> Your bio helps establish and reinforce your personal or professional brand identity.</li>
-          <li><strong>Searchability:</strong> Including relevant keywords in your bio can help people with similar interests find your profile.</li>
-          <li><strong>Call-to-Action:</strong> An effective bio can direct followers to take specific actions, like visiting your website or using a branded hashtag.</li>
-          <li><strong>Personality Showcase:</strong> In a visual platform, your bio is one of the few places where you can directly express your personality through text.</li>
-        </ul>
-        
-        <h2>Elements of an Engaging Instagram Bio</h2>
-        <p>The most effective Instagram bios typically include a mix of these elements:</p>
-        
-        <h3>Clear Identity</h3>
-        <p>Introduce who you are and what you do concisely. This could be your profession, passion, or a unique descriptor that sets you apart.</p>
-        
-        <h3>Value Proposition</h3>
-        <p>Indicate what value followers will get from your account. Will they find inspiration, education, entertainment, or something else?</p>
-        
-        <h3>Personality</h3>
-        <p>Let your unique voice shine through. Whether you're professional, humorous, inspirational, or quirky, authenticity is key to connecting with your audience.</p>
-        
-        <h3>Relevant Emojis</h3>
-        <p>Strategic use of emojis can add visual appeal, break up text, and convey personality without using precious character space.</p>
-        
-        <h3>Call-to-Action</h3>
-        <p>Guide visitors on what to do next, whether it's checking out your latest work, visiting your website, or using your branded hashtag.</p>
-        
-        <h2>How Our Instagram Bio Generator Works</h2>
-        <p>Our AI-powered tool creates personalized Instagram bio options based on your unique details:</p>
-        
-        <ol>
-          <li><strong>Input Your Information:</strong> Tell us about yourself, including your name, occupation, interests, and achievements.</li>
-          <li><strong>Choose Your Style:</strong> Select the tone that best represents your brand—professional, creative, humorous, minimalist, or inspirational.</li>
-          <li><strong>Set Emoji Preferences:</strong> Decide how many emojis you want incorporated into your bio.</li>
-          <li><strong>Generate Options:</strong> Our AI will create multiple bio options tailored to your specifications.</li>
-          <li><strong>Select and Customize:</strong> Choose the bio you like best, and feel free to tweak it to make it perfectly yours.</li>
-        </ol>
-        
-        <h2>Bio Styles to Match Your Personality</h2>
-        <p>Our generator offers various bio styles to match different personal and professional brands:</p>
-        
-        <ul>
-          <li><strong>Professional:</strong> Polished, achievement-focused bios ideal for entrepreneurs, business accounts, and industry professionals.</li>
-          <li><strong>Creative:</strong> Artistic, expressive bios that showcase your unique perspective and creative pursuits.</li>
-          <li><strong>Humorous:</strong> Fun, witty bios that highlight your personality and entertain potential followers.</li>
-          <li><strong>Minimalist:</strong> Clean, concise bios that communicate the essentials with elegant simplicity.</li>
-          <li><strong>Inspirational:</strong> Motivational, uplifting bios that share your philosophy and inspire your audience.</li>
-        </ul>
-        
-        <h2>Tips for Maximizing Your Instagram Bio</h2>
-        <p>Once you've generated your perfect bio, consider these additional tips:</p>
-        
-        <ul>
-          <li><strong>Update Regularly:</strong> Refresh your bio periodically to reflect current projects, evolving interests, or seasonal themes.</li>
-          <li><strong>A/B Test:</strong> Try different bios to see which generates more engagement and followers.</li>
-          <li><strong>Use Line Breaks:</strong> Structure your bio with line breaks (which you can create in a notes app and paste in) for better readability.</li>
-          <li><strong>Leverage the Link Section:</strong> Remember that your link is separate from your 150-character bio, so use it strategically.</li>
-          <li><strong>Consider Hashtags:</strong> If relevant to your brand, include a branded hashtag that encourages user-generated content.</li>
-        </ul>
-        
-        <p>Whether you're launching a new Instagram account, rebranding your existing profile, or simply refreshing your online presence, our Instagram Bio Generator provides the perfect starting point for creating a bio that authentically represents you and attracts your ideal audience. Generate your personalized options today and make your profile stand out in the Instagram community.</p>
+          </div>
+        </div>
       </div>
     </div>
   );

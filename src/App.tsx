@@ -33,12 +33,20 @@ import ParagraphRewriter from './pages/ParagraphRewriter';
 import SentenceRewriter from './pages/SentenceRewriter';
 import Settings from './pages/Settings';
 
-// New pages
+// Tool pages
 import GrammarChecker from './pages/GrammarChecker';
 import ConclusionGenerator from './pages/ConclusionGenerator';
 import ParaphrasingTool from './pages/ParaphrasingTool';
 import InstagramBioGenerator from './pages/InstagramBioGenerator';
 import BlogIdeasGenerator from './pages/BlogIdeasGenerator';
+
+// New tool pages
+import InstagramHashtagGenerator from './pages/InstagramHashtagGenerator';
+import InstagramNameGenerator from './pages/InstagramNameGenerator';
+import TikTokHashtagGenerator from './pages/TikTokHashtagGenerator';
+import TikTokUsernameGenerator from './pages/TikTokUsernameGenerator';
+import YouTubeChannelDescriptionGenerator from './pages/YouTubeChannelDescriptionGenerator';
+import YouTubeNameGenerator from './pages/YouTubeNameGenerator';
 
 // Import blog posts
 import SeoStrategy2025 from './pages/BlogPosts/SeoStrategy2025';
@@ -137,12 +145,18 @@ function App() {
                   <Route path="/blog-ideas-generator" element={<BlogIdeasGenerator />} />
                   <Route path="/paragraph-rewriter-tool" element={<ParagraphRewriter />} />
                   <Route path="/sentence-rewriter-tool" element={<SentenceRewriter />} />
-                  
-                  {/* New tool routes */}
                   <Route path="/grammar-checker-tool" element={<GrammarChecker />} />
                   <Route path="/conclusion-generator-tool" element={<ConclusionGenerator />} />
                   <Route path="/paraphrasing-tool" element={<ParaphrasingTool />} />
                   <Route path="/instagram-bio-generator-tool" element={<InstagramBioGenerator />} />
+                  
+                  {/* New tool routes */}
+                  <Route path="/instagram-hashtag-generator-tool" element={<InstagramHashtagGenerator />} />
+                  <Route path="/instagram-name-generator-tool" element={<InstagramNameGenerator />} />
+                  <Route path="/tiktok-hashtag-generator-tool" element={<TikTokHashtagGenerator />} />
+                  <Route path="/tiktok-username-generator-tool" element={<TikTokUsernameGenerator />} />
+                  <Route path="/youtube-channel-description-generator-tool" element={<YouTubeChannelDescriptionGenerator />} />
+                  <Route path="/youtube-name-generator-tool" element={<YouTubeNameGenerator />} />
                   
                   {/* Blog post routes */}
                   <Route path="/blog/seo-strategy-2025" element={<SeoStrategy2025 />} />

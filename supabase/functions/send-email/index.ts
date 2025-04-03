@@ -2,14 +2,17 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
 
+// Create a new Resend client using the API key from environment variables
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
+// CORS headers for cross-origin requests
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
 };
 
+// Define the structure of email requests
 interface EmailRequest {
   to: string;
   subject: string;
@@ -19,6 +22,7 @@ interface EmailRequest {
   type: "contact" | "notification";
 }
 
+// The main handler function for the edge function
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -56,13 +60,13 @@ const handler = async (req: Request): Promise<Response> => {
       `;
     } else if (type === "notification") {
       // Notification to user
-      from = "AUS Digital <onboarding@resend.dev>";
+      from = "SEO Audit Tool <onboarding@resend.dev>";
       
       html = `
         <h1>Thank you for contacting us!</h1>
         <p>Hello ${name},</p>
         <p>We have received your message and will get back to you as soon as possible.</p>
-        <p>Best regards,<br>The AUS Digital Team</p>
+        <p>Best regards,<br>The SEO Audit Tool Team</p>
       `;
     } else {
       throw new Error("Invalid email type");

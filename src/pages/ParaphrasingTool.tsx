@@ -1,25 +1,30 @@
+
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { Card } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import Loader from "@/components/Loader";
-import { toast } from "sonner";
-import { generateOllamaResponse } from "@/utils/ollamaApi";
+import { useToast } from "@/components/ui/use-toast";
+import { Copy, RefreshCcw } from 'lucide-react';
+import { generateOllamaResponse } from '@/utils/ollamaApi';
+import Loader from '@/components/Loader';
+import DOMPurify from 'dompurify';
 
-const ParaphrasingTool: React.FC = () => {
-  const { t } = useLanguage();
-  const [text, setText] = useState('');
+const ParaphrasingTool = () => {
+  const [inputText, setInputText] = useState('');
   const [paraphrasedText, setParaphrasedText] = useState('');
+  const [style, setStyle] = useState('standard');
   const [loading, setLoading] = useState(false);
-  const [tone, setTone] = useState('neutral');
+  const { toast } = useToast();
 
-  const handleParaphrase = async () => {
-    if (!text || text.trim().length < 15) {
-      toast.error('Please enter at least 15 characters to paraphrase');
+  const paraphraseText = async () => {
+    if (!inputText.trim()) {
+      toast({
+        title: "Empty Text",
+        description: "Please enter some text to paraphrase.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -27,160 +32,179 @@ const ParaphrasingTool: React.FC = () => {
     setParaphrasedText('');
 
     try {
-      const prompt = `Please paraphrase the following text in a ${tone} tone.
+      const prompt = `
+        Paraphrase the following text in a ${style} style. Maintain the original meaning but use different wording, sentence structure, and phrasing:
 
-Original text:
-"${text}"
+        "${inputText}"
 
-Paraphrased text:`;
+        Return only the paraphrased text, maintaining appropriate paragraph breaks.
+      `;
 
-      const systemPrompt = "You are a professional writing assistant. You excel at rephrasing text while maintaining its original meaning and intent. You can adjust the tone of the text as requested.";
+      const systemPrompt = "You are an expert paraphraser. Your task is to rephrase text while maintaining its meaning but using different words and sentence structures. Adapt to the requested style while ensuring the quality and readability of the output.";
       
       const response = await generateOllamaResponse(prompt, systemPrompt);
-      
-      setParaphrasedText(response.trim());
-      toast.success('Text paraphrased successfully');
+      setParaphrasedText(response);
     } catch (error) {
       console.error('Error paraphrasing text:', error);
-      toast.error('Failed to paraphrase text. Please try again later.');
+      toast({
+        title: "Error",
+        description: "Failed to paraphrase text. Please try again later.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
   };
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(paraphrasedText);
+    toast({
+      title: "Copied!",
+      description: "Paraphrased text copied to clipboard.",
+    });
+  };
+
   return (
-    <div className="container max-w-6xl mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-12">
       <Helmet>
-        <title>Free Paraphrasing Tool | Rephrase Your Content</title>
-        <meta name="description" content="Use our free AI paraphrasing tool to rephrase your content quickly and easily. Improve your writing and avoid plagiarism with our advanced paraphraser." />
+        <title>Free Paraphrasing Tool | Reword and Rephrase Text Easily</title>
+        <meta name="description" content="Reword and rephrase any text with our free paraphrasing tool. Change the wording while keeping the meaning for essays, articles, and more." />
+        <meta name="keywords" content="paraphrasing tool, text rewriter, rephrase, reword, content rephraser, plagiarism" />
       </Helmet>
 
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-display font-bold text-navy dark:text-white mb-4">Free Paraphrasing Tool</h1>
-        <p className="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-          Rephrase your content with our free AI paraphrasing tool. Improve your writing and avoid plagiarism with our advanced paraphraser.
+      <h1 className="text-3xl md:text-4xl font-bold mb-4 text-center text-navy dark:text-white">Paraphrasing Tool</h1>
+      <div className="max-w-4xl mx-auto mb-8">
+        <p className="text-gray-600 dark:text-gray-300 text-center mb-8">
+          Reword and rephrase your content while maintaining the original meaning. Perfect for essays, articles, emails, and more.
         </p>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        <Card className="p-6 shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-navy dark:text-white">Input Text</h2>
-          <Textarea 
-            placeholder="Paste or type your text here to paraphrase..." 
-            className="min-h-[250px] mb-4 text-base"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="p-6 shadow-lg h-full flex flex-col">
+            <div className="mb-4 flex justify-between items-center">
+              <Label htmlFor="inputText" className="text-lg font-medium">Original Text</Label>
+              <select 
+                value={style}
+                onChange={(e) => setStyle(e.target.value)}
+                className="p-2 border rounded-md bg-white dark:bg-gray-800 dark:border-gray-700"
+              >
+                <option value="standard">Standard</option>
+                <option value="formal">Formal</option>
+                <option value="casual">Casual</option>
+                <option value="simple">Simplified</option>
+                <option value="creative">Creative</option>
+                <option value="academic">Academic</option>
+                <option value="professional">Professional</option>
+              </select>
+            </div>
+            <Textarea 
+              id="inputText" 
+              placeholder="Enter the text you want to paraphrase..."
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              className="flex-grow min-h-[300px] mb-4"
+            />
+            <Button 
+              onClick={paraphraseText} 
+              className="w-full bg-teal hover:bg-teal-dark text-white"
+              disabled={loading || !inputText.trim()}
+            >
+              {loading ? <Loader size="medium" className="mr-2" /> : <RefreshCcw className="mr-2 h-4 w-4" />}
+              Paraphrase
+            </Button>
+          </Card>
+
+          <Card className="p-6 shadow-lg h-full flex flex-col">
+            <div className="mb-4 flex justify-between items-center">
+              <Label className="text-lg font-medium">Paraphrased Text</Label>
+              {paraphrasedText && (
+                <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                  <Copy className="mr-2 h-4 w-4" /> Copy
+                </Button>
+              )}
+            </div>
+            {loading ? (
+              <div className="flex-grow flex justify-center items-center">
+                <Loader size="large" />
+              </div>
+            ) : (
+              <div 
+                className="flex-grow bg-gray-50 dark:bg-gray-800 rounded-lg p-4 overflow-auto whitespace-pre-wrap min-h-[300px]"
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(paraphrasedText) }}
+              />
+            )}
+          </Card>
+        </div>
+
+        <div className="mt-12 space-y-8">
+          <h2 className="text-2xl font-bold text-navy dark:text-white">When to Use a Paraphrasing Tool</h2>
           
-          <div className="mb-4">
-            <h3 className="text-md font-semibold mb-2 text-navy dark:text-white">Tone</h3>
-            <RadioGroup defaultValue="neutral" className="flex flex-col space-y-1" onValueChange={setTone}>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="neutral" id="neutral" />
-                <Label htmlFor="neutral">Neutral</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="formal" id="formal" />
-                <Label htmlFor="formal">Formal</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="informal" id="informal" />
-                <Label htmlFor="informal">Informal</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="persuasive" id="persuasive" />
-                <Label htmlFor="persuasive">Persuasive</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="humorous" id="humorous" />
-                <Label htmlFor="humorous">Humorous</Label>
-              </div>
-            </RadioGroup>
+          <div className="grid md:grid-cols-3 gap-6">
+            <Card className="p-6 shadow-md">
+              <h3 className="text-xl font-semibold mb-3 text-navy dark:text-white">Academic Writing</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                Paraphrase secondary sources to include in research papers while avoiding plagiarism. Always cite your sources even when paraphrasing.
+              </p>
+            </Card>
+            
+            <Card className="p-6 shadow-md">
+              <h3 className="text-xl font-semibold mb-3 text-navy dark:text-white">Content Creation</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                Rewrite existing content to create fresh variations for different platforms or to update outdated information while maintaining key concepts.
+              </p>
+            </Card>
+            
+            <Card className="p-6 shadow-md">
+              <h3 className="text-xl font-semibold mb-3 text-navy dark:text-white">Improving Clarity</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                Rephrase complex explanations or technical language to make them more accessible to different audiences.
+              </p>
+            </Card>
           </div>
           
-          <Button 
-            onClick={handleParaphrase} 
-            className="w-full bg-teal hover:bg-teal-light text-white"
-            disabled={loading}
-          >
-            {loading ? <Loader size="sm" /> : 'Paraphrase'}
-          </Button>
-        </Card>
-
-        <Card className="p-6 shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-navy dark:text-white">Paraphrased Text</h2>
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold mb-4 text-navy dark:text-white">Tips for Effective Paraphrasing</h2>
+            
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <span className="text-teal font-bold mr-2">•</span>
+                <span className="text-gray-700 dark:text-gray-300">
+                  <strong className="text-navy dark:text-white">Read and understand:</strong> Fully comprehend the original text before attempting to paraphrase it.
+                </span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-teal font-bold mr-2">•</span>
+                <span className="text-gray-700 dark:text-gray-300">
+                  <strong className="text-navy dark:text-white">Use synonyms:</strong> Replace words with appropriate synonyms while ensuring they fit the context.
+                </span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-teal font-bold mr-2">•</span>
+                <span className="text-gray-700 dark:text-gray-300">
+                  <strong className="text-navy dark:text-white">Change sentence structure:</strong> Alter the arrangement of ideas and sentence patterns.
+                </span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-teal font-bold mr-2">•</span>
+                <span className="text-gray-700 dark:text-gray-300">
+                  <strong className="text-navy dark:text-white">Change voice:</strong> Convert active voice to passive or vice versa when appropriate.
+                </span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-teal font-bold mr-2">•</span>
+                <span className="text-gray-700 dark:text-gray-300">
+                  <strong className="text-navy dark:text-white">Review and edit:</strong> Check that your paraphrased text maintains the original meaning but uses different language.
+                </span>
+              </li>
+            </ul>
+          </div>
           
-          {loading ? (
-            <div className="flex justify-center items-center min-h-[250px]">
-              <Loader size="lg" />
-            </div>
-          ) : paraphrasedText ? (
-            <div className="min-h-[250px] p-4 border rounded-md bg-gray-50 dark:bg-navy-light overflow-auto text-base">
-              {paraphrasedText}
-            </div>
-          ) : (
-            <div className="min-h-[250px] flex justify-center items-center text-gray-500 dark:text-gray-400 text-center">
-              <p>Your paraphrased text will appear here after processing</p>
-            </div>
-          )}
-        </Card>
-      </div>
-
-      <div className="prose prose-lg dark:prose-invert max-w-none">
-        <h2>Why Use Our Free Paraphrasing Tool?</h2>
-        <p>In the world of content creation, originality is key. Whether you're a student, blogger, or marketing professional, you need to produce unique content that captures your audience's attention. Our AI-powered paraphrasing tool helps you rewrite sentences, paragraphs, or entire articles while maintaining the original meaning. This is perfect for avoiding plagiarism, enhancing readability, or adjusting the tone of your writing.</p>
-        
-        <h2>Key Features of Our Paraphrasing Tool</h2>
-        <ul>
-          <li><strong>AI-Powered Paraphrasing:</strong> Our tool uses advanced AI algorithms to understand the context of your text and provide accurate paraphrases.</li>
-          <li><strong>Multiple Tones:</strong> Adjust the tone of your paraphrased text to suit your needs, whether you're aiming for formal, informal, or persuasive writing.</li>
-          <li><strong>Plagiarism Prevention:</strong> Ensure your content is original by using our tool to rewrite existing text and avoid unintentional plagiarism.</li>
-          <li><strong>Enhanced Readability:</strong> Improve the clarity and flow of your writing by using our tool to rephrase complex sentences and paragraphs.</li>
-          <li><strong>Time-Saving:</strong> Quickly rewrite large amounts of text without spending hours manually rephrasing each sentence.</li>
-        </ul>
-        
-        <h2>How Our Paraphrasing Tool Improves Your Writing</h2>
-        <p>Good writing is about more than just avoiding errors—it's about expressing your ideas in a clear, engaging, and original way. Our paraphrasing tool serves as a digital writing assistant that helps you:</p>
-        
-        <ul>
-          <li><strong>Avoid Plagiarism:</strong> Ensure your content is unique and original by rewriting existing text with our AI-powered tool.</li>
-          <li><strong>Enhance Clarity:</strong> Simplify complex sentences and paragraphs to improve the readability of your writing.</li>
-          <li><strong>Adjust Tone:</strong> Tailor the tone of your writing to suit your audience and purpose, whether you're writing a formal report or a casual blog post.</li>
-          <li><strong>Save Time:</strong> Quickly rewrite large amounts of text without spending hours manually rephrasing each sentence.</li>
-        </ul>
-        
-        <h2>Ideal for All Types of Writing</h2>
-        <p>Our paraphrasing tool is versatile enough to help with various types of content:</p>
-        
-        <ul>
-          <li><strong>Academic Papers:</strong> Rewrite research papers, essays, and dissertations to avoid plagiarism and improve clarity.</li>
-          <li><strong>Business Communications:</strong> Polish emails, reports, proposals, and presentations for maximum impact.</li>
-          <li><strong>Content Marketing:</strong> Create engaging blog posts, articles, and social media content that resonates with your audience.</li>
-          <li><strong>Creative Writing:</strong> Perfect your stories, poems, and scripts without disrupting your creative flow.</li>
-          <li><strong>Personal Communications:</strong> Make sure your important personal emails and messages convey exactly what you intend.</li>
-        </ul>
-        
-        <h2>How to Get the Most from Our Paraphrasing Tool</h2>
-        <p>To maximize the benefits of our tool, consider these best practices:</p>
-        
-        <ol>
-          <li>Write your first draft without worrying about paraphrasing—focus on getting your ideas down.</li>
-          <li>Use our paraphrasing tool for a comprehensive review once your draft is complete.</li>
-          <li>Review each suggestion carefully—AI tools are powerful but should complement your judgment, not replace it.</li>
-          <li>For lengthy documents, check section by section to ensure thorough analysis.</li>
-          <li>Use the tone options to adjust the style of your writing based on your target audience.</li>
-        </ol>
-        
-        <h2>Privacy and Security</h2>
-        <p>We understand that your writing may contain sensitive information. Our paraphrasing tool prioritizes your privacy:</p>
-        
-        <ul>
-          <li>Text submitted for paraphrasing is processed securely and not stored permanently.</li>
-          <li>We do not use your content for training our AI models without explicit permission.</li>
-          <li>Our service operates with industry-standard encryption to protect data in transit.</li>
-        </ul>
-        
-        <p>Start using our free paraphrasing tool today and transform your writing from good to exceptional. Whether you're a student, professional, or content creator, our tool provides the support you need to communicate with confidence and clarity.</p>
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg">
+            <h3 className="text-xl font-semibold mb-3 text-navy dark:text-white">Important Note on Academic Integrity</h3>
+            <p className="text-gray-700 dark:text-gray-300">
+              When using paraphrased content in academic work, always cite the original source. Paraphrasing without proper attribution is still considered plagiarism. This tool is designed to help you reword content, not to circumvent academic integrity standards.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

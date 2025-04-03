@@ -1,210 +1,223 @@
 
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { Card } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import Loader from "@/components/Loader";
-import { generateOllamaResponse } from "@/utils/ollamaApi";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
+import { Copy, CheckCircle, AlertCircle } from 'lucide-react';
+import { generateOllamaResponse } from '@/utils/ollamaApi';
+import Loader from '@/components/Loader';
+import DOMPurify from 'dompurify';
 
-const GrammarChecker: React.FC = () => {
-  const { t } = useLanguage();
+const GrammarChecker = () => {
   const [text, setText] = useState('');
   const [correctedText, setCorrectedText] = useState('');
+  const [explanations, setExplanations] = useState<string[]>([]);
+  const [includeExplanations, setIncludeExplanations] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [statistics, setStatistics] = useState<{
-    errors: number;
-    suggestions: number;
-    readabilityScore: number;
-  } | null>(null);
+  const { toast } = useToast();
 
-  const handleCheck = async () => {
-    if (!text || text.trim().length < 15) {
-      toast.error('Please enter at least 15 characters to check grammar');
+  const checkGrammar = async () => {
+    if (!text.trim()) {
+      toast({
+        title: "Empty Text",
+        description: "Please enter some text to check for grammar.",
+        variant: "destructive",
+      });
       return;
     }
 
     setLoading(true);
     setCorrectedText('');
-    setStatistics(null);
+    setExplanations([]);
 
     try {
-      const prompt = `Please check and correct the following text for grammar, spelling, and punctuation errors. Return the corrected text, followed by a brief summary of changes made and a readability score from 1-100.
+      const prompt = `
+        Check the following text for grammar, spelling, and punctuation errors. Provide the corrected text.
+        ${includeExplanations ? 'Also provide detailed explanations of each correction made.' : ''}
 
-Original text:
-"${text}"
+        Text to check:
+        "${text}"
 
-Format your response as follows:
-Corrected Text:
-[The corrected text]
+        ${includeExplanations ? 
+          'Format the response as: 1. Corrected text in a single paragraph or with appropriate paragraph breaks. 2. List of explanations with bullet points.' : 
+          'Return only the corrected text, maintaining the original paragraph structure.'
+        }
+      `;
 
-Changes Summary:
-[Brief summary of types of errors fixed]
-
-Statistics:
-Errors found: [number]
-Suggestions made: [number]
-Readability score: [score/100]`;
-
-      const systemPrompt = "You are a professional grammar and writing assistant. You excel at identifying and correcting grammar, spelling, punctuation, and style issues in text. You provide helpful, constructive feedback to improve writing quality.";
+      const systemPrompt = "You are an expert editor and proofreader. Your task is to identify and correct grammar, spelling, punctuation, and syntax errors in the text. Maintain the author's voice and style while making the text correct and clear.";
       
       const response = await generateOllamaResponse(prompt, systemPrompt);
       
-      // Parse the response
-      const correctedTextMatch = response.match(/Corrected Text:([\s\S]*?)(?=Changes Summary:|$)/i);
-      const statisticsMatch = response.match(/Errors found: (\d+)[\s\S]*?Suggestions made: (\d+)[\s\S]*?Readability score: (\d+)/i);
-      
-      if (correctedTextMatch && correctedTextMatch[1]) {
-        setCorrectedText(correctedTextMatch[1].trim());
+      if (includeExplanations) {
+        // Parse the response to separate corrected text and explanations
+        const sections = response.split(/\n\n|Explanations:|Corrections:|Explanation:|Correction:/i);
+        if (sections.length >= 2) {
+          setCorrectedText(sections[0].trim());
+          
+          // Extract explanations list
+          const explanationText = sections.slice(1).join('\n');
+          const explanationList = explanationText
+            .split(/\n[-•*]\s+|\n\d+\.\s+/)
+            .filter(item => item.trim().length > 0);
+          
+          setExplanations(explanationList);
+        } else {
+          // Fallback if the format doesn't match expectations
+          setCorrectedText(response);
+        }
       } else {
-        setCorrectedText(text); // Fallback to original if parsing fails
-        toast.warning('Could not parse corrections properly, showing original text');
+        setCorrectedText(response);
       }
-      
-      if (statisticsMatch) {
-        setStatistics({
-          errors: parseInt(statisticsMatch[1]),
-          suggestions: parseInt(statisticsMatch[2]),
-          readabilityScore: parseInt(statisticsMatch[3])
-        });
-      }
-      
-      toast.success('Grammar check completed');
     } catch (error) {
       console.error('Error checking grammar:', error);
-      toast.error('Failed to check grammar. Please try again later.');
+      toast({
+        title: "Error",
+        description: "Failed to check grammar. Please try again later.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
   };
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(correctedText);
+    toast({
+      title: "Copied!",
+      description: "Corrected text copied to clipboard.",
+    });
+  };
+
   return (
-    <div className="container max-w-6xl mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-12">
       <Helmet>
-        <title>Free Grammar Checker Tool | Improve Your Writing</title>
-        <meta name="description" content="Elevate your writing with our free AI grammar checker. Catch grammar, spelling, and punctuation errors instantly, ensuring your content is polished and error-free." />
+        <title>Free Grammar Checker | Fix Grammar, Spelling and Punctuation</title>
+        <meta name="description" content="Check and fix grammar, spelling, and punctuation errors for free. Our AI-powered grammar checker helps you write error-free content." />
+        <meta name="keywords" content="grammar checker, spell check, punctuation checker, free grammar tool, writing tool" />
       </Helmet>
 
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-display font-bold text-navy dark:text-white mb-4">Free Grammar Checker Tool</h1>
-        <p className="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-          Elevate your writing with our free AI grammar checker. Catch grammar, spelling, and punctuation errors instantly, ensuring your content is polished and error-free.
+      <h1 className="text-3xl md:text-4xl font-bold mb-4 text-center text-navy dark:text-white">Free Grammar Checker</h1>
+      <div className="max-w-4xl mx-auto mb-8">
+        <p className="text-gray-600 dark:text-gray-300 text-center mb-8">
+          Polish your writing with our AI-powered grammar checker. Quickly identify and fix grammar, spelling, and punctuation errors in your text.
         </p>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        <Card className="p-6 shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-navy dark:text-white">Input Text</h2>
+        <Card className="p-6 shadow-lg mb-8">
           <Textarea 
-            placeholder="Paste or type your text here to check for grammar errors..." 
-            className="min-h-[250px] mb-4 text-base"
+            placeholder="Paste your text here to check for grammar, spelling, and punctuation errors..."
             value={text}
             onChange={(e) => setText(e.target.value)}
+            className="min-h-[200px] mb-4"
           />
-          <Button 
-            onClick={handleCheck} 
-            className="w-full bg-teal hover:bg-teal-light text-white"
-            disabled={loading}
-          >
-            {loading ? <Loader size="sm" /> : 'Check Grammar'}
-          </Button>
-        </Card>
-
-        <Card className="p-6 shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-navy dark:text-white">Corrected Text</h2>
           
-          {loading ? (
-            <div className="flex justify-center items-center min-h-[250px]">
-              <Loader size="lg" />
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center space-x-2">
+              <Switch 
+                id="explanations" 
+                checked={includeExplanations}
+                onCheckedChange={setIncludeExplanations}
+              />
+              <Label htmlFor="explanations">Include explanations</Label>
             </div>
-          ) : correctedText ? (
-            <>
-              <div className="min-h-[250px] mb-4 p-4 border rounded-md bg-gray-50 dark:bg-navy-light overflow-auto text-base">
-                {correctedText}
-              </div>
-              
-              {statistics && (
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div className="p-3 rounded-md bg-red-50 dark:bg-red-900/20">
-                    <p className="text-xl font-semibold text-red-600 dark:text-red-400">{statistics.errors}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Errors Fixed</p>
-                  </div>
-                  <div className="p-3 rounded-md bg-blue-50 dark:bg-blue-900/20">
-                    <p className="text-xl font-semibold text-blue-600 dark:text-blue-400">{statistics.suggestions}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Suggestions</p>
-                  </div>
-                  <div className="p-3 rounded-md bg-green-50 dark:bg-green-900/20">
-                    <p className="text-xl font-semibold text-green-600 dark:text-green-400">{statistics.readabilityScore}/100</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Readability</p>
-                  </div>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="min-h-[250px] flex justify-center items-center text-gray-500 dark:text-gray-400 text-center">
-              <p>Your corrected text will appear here after checking</p>
-            </div>
-          )}
+            <Button 
+              onClick={checkGrammar} 
+              className="bg-teal hover:bg-teal-dark text-white"
+              disabled={loading || !text.trim()}
+            >
+              {loading ? <Loader size="medium" className="mr-2" /> : 'Check Grammar'}
+            </Button>
+          </div>
         </Card>
-      </div>
 
-      <div className="prose prose-lg dark:prose-invert max-w-none">
-        <h2>Why Use Our Free Grammar Checker Tool?</h2>
-        <p>In today's fast-paced digital world, clear and error-free communication is essential. Whether you're drafting an important email, working on an academic paper, or creating content for your website, grammatical errors can diminish your credibility and effectiveness. Our AI-powered grammar checker helps ensure your writing is polished and professional.</p>
-        
-        <h2>Key Features of Our Grammar Checker</h2>
-        <ul>
-          <li><strong>Comprehensive Error Detection:</strong> Our tool identifies grammar, spelling, punctuation, and stylistic errors that might escape traditional spell-checkers.</li>
-          <li><strong>Context-Aware Corrections:</strong> Unlike basic grammar tools, our AI understands context and provides appropriate suggestions based on the meaning of your text.</li>
-          <li><strong>Style Improvement Suggestions:</strong> Beyond just fixing errors, we offer suggestions to enhance clarity, conciseness, and overall readability.</li>
-          <li><strong>Readability Scoring:</strong> Get instant feedback on how accessible your writing is with our readability score.</li>
-          <li><strong>Privacy-Focused:</strong> Your text is processed securely and never stored permanently on our servers.</li>
-        </ul>
-        
-        <h2>How Our Grammar Checker Improves Your Writing</h2>
-        <p>Good writing isn't just about avoiding errors—it's about clarity, engagement, and effective communication. Our grammar checker serves as a digital writing assistant that helps you:</p>
-        
-        <ul>
-          <li><strong>Eliminate Embarrassing Mistakes:</strong> Catch those small but significant errors that can undermine your professionalism.</li>
-          <li><strong>Enhance Clarity:</strong> Get suggestions for simpler wording and clearer sentence structures.</li>
-          <li><strong>Improve Consistency:</strong> Maintain consistent tense, voice, and style throughout your document.</li>
-          <li><strong>Learn as You Write:</strong> Understand common mistakes and improve your writing skills over time.</li>
-        </ul>
-        
-        <h2>Ideal for All Types of Writing</h2>
-        <p>Our grammar checker is versatile enough to help with various types of content:</p>
-        
-        <ul>
-          <li><strong>Academic Papers:</strong> Ensure your research papers, essays, and dissertations are error-free and professionally written.</li>
-          <li><strong>Business Communications:</strong> Polish emails, reports, proposals, and presentations for maximum impact.</li>
-          <li><strong>Content Marketing:</strong> Create engaging blog posts, articles, and social media content that resonates with your audience.</li>
-          <li><strong>Creative Writing:</strong> Perfect your stories, poems, and scripts without disrupting your creative flow.</li>
-          <li><strong>Personal Communications:</strong> Make sure your important personal emails and messages convey exactly what you intend.</li>
-        </ul>
-        
-        <h2>How to Get the Most from Our Grammar Checker</h2>
-        <p>To maximize the benefits of our tool, consider these best practices:</p>
-        
-        <ol>
-          <li>Write your first draft without worrying about grammar—focus on getting your ideas down.</li>
-          <li>Use our grammar checker for a comprehensive review once your draft is complete.</li>
-          <li>Review each suggestion carefully—AI tools are powerful but should complement your judgment, not replace it.</li>
-          <li>For lengthy documents, check section by section to ensure thorough analysis.</li>
-          <li>Use the readability score as a guide for adjusting complexity based on your target audience.</li>
-        </ol>
-        
-        <h2>Privacy and Security</h2>
-        <p>We understand that your writing may contain sensitive information. Our grammar checker prioritizes your privacy:</p>
-        
-        <ul>
-          <li>Text submitted for checking is processed securely and not stored permanently.</li>
-          <li>We do not use your content for training our AI models without explicit permission.</li>
-          <li>Our service operates with industry-standard encryption to protect data in transit.</li>
-        </ul>
-        
-        <p>Start using our free grammar checker today and transform your writing from good to exceptional. Whether you're a student, professional, or content creator, our tool provides the support you need to communicate with confidence and clarity.</p>
+        {(loading || correctedText) && (
+          <Card className="p-6 shadow-lg">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-navy dark:text-white">Corrected Text</h2>
+              {correctedText && (
+                <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                  <Copy className="mr-2 h-4 w-4" /> Copy
+                </Button>
+              )}
+            </div>
+
+            {loading ? (
+              <div className="flex justify-center p-8">
+                <Loader size="large" />
+              </div>
+            ) : (
+              <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+                <div 
+                  className="mb-4" 
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(correctedText) }}
+                />
+
+                {explanations.length > 0 && (
+                  <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <h3 className="text-lg font-semibold mb-4 text-navy dark:text-white">Explanations</h3>
+                    <ul className="space-y-3">
+                      {explanations.map((explanation, index) => (
+                        <li key={index} className="flex gap-2">
+                          <CheckCircle className="h-5 w-5 text-teal flex-shrink-0 mt-1" />
+                          <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(explanation) }} />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+          </Card>
+        )}
+
+        <div className="mt-12 space-y-6">
+          <h2 className="text-2xl font-bold text-navy dark:text-white">Why Grammar Matters</h2>
+          <p className="text-gray-700 dark:text-gray-300">
+            Proper grammar, spelling, and punctuation are essential for effective communication. They help ensure your message is clear, professional, and credible. Whether you're writing an important email, academic paper, blog post, or social media update, correct grammar enhances readability and prevents misunderstandings.
+          </p>
+          
+          <h2 className="text-2xl font-bold text-navy dark:text-white">Common Grammar Mistakes</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+              <h3 className="font-semibold text-lg mb-2 text-navy dark:text-white">Subject-Verb Agreement</h3>
+              <p className="text-gray-700 dark:text-gray-300">Subjects and verbs must agree in number (singular or plural).</p>
+              <div className="mt-2">
+                <p className="text-red-500 flex items-center"><AlertCircle className="h-4 w-4 mr-1" /> The group of students were talking. (Incorrect)</p>
+                <p className="text-green-500 flex items-center"><CheckCircle className="h-4 w-4 mr-1" /> The group of students was talking. (Correct)</p>
+              </div>
+            </div>
+            
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+              <h3 className="font-semibold text-lg mb-2 text-navy dark:text-white">Comma Splices</h3>
+              <p className="text-gray-700 dark:text-gray-300">Using only a comma to connect two independent clauses.</p>
+              <div className="mt-2">
+                <p className="text-red-500 flex items-center"><AlertCircle className="h-4 w-4 mr-1" /> It was raining, we stayed inside. (Incorrect)</p>
+                <p className="text-green-500 flex items-center"><CheckCircle className="h-4 w-4 mr-1" /> It was raining, so we stayed inside. (Correct)</p>
+              </div>
+            </div>
+            
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+              <h3 className="font-semibold text-lg mb-2 text-navy dark:text-white">Apostrophe Misuse</h3>
+              <p className="text-gray-700 dark:text-gray-300">Incorrect use of apostrophes for possessives or contractions.</p>
+              <div className="mt-2">
+                <p className="text-red-500 flex items-center"><AlertCircle className="h-4 w-4 mr-1" /> The companys policy is strict. (Incorrect)</p>
+                <p className="text-green-500 flex items-center"><CheckCircle className="h-4 w-4 mr-1" /> The company's policy is strict. (Correct)</p>
+              </div>
+            </div>
+            
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+              <h3 className="font-semibold text-lg mb-2 text-navy dark:text-white">Pronoun-Antecedent Agreement</h3>
+              <p className="text-gray-700 dark:text-gray-300">Pronouns must agree with their antecedents in number and gender.</p>
+              <div className="mt-2">
+                <p className="text-red-500 flex items-center"><AlertCircle className="h-4 w-4 mr-1" /> Each student must submit their paper. (Debated)</p>
+                <p className="text-green-500 flex items-center"><CheckCircle className="h-4 w-4 mr-1" /> All students must submit their papers. (Correct)</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
