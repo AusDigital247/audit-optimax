@@ -34,7 +34,7 @@ const Contact = () => {
       // Send email to admin (contact form submission)
       const { data: adminEmailData, error: adminEmailError } = await supabase.functions.invoke('send-email', {
         body: {
-          to: 'your-email@example.com', // Replace with your actual email address
+          to: 'seoaudittoolofficial@gmail.com', // Updated email address
           subject: `Contact Form: ${formData.subject}`,
           name: formData.name,
           email: formData.email,
