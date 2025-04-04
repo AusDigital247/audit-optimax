@@ -1,78 +1,70 @@
 
-import React, { lazy, Suspense } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import Layout from '@/components/layout/Layout';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import { Toaster } from '@/components/ui/toaster';
-import { LanguageProvider } from '@/contexts/LanguageContext';
+import { LanguageProvider } from './contexts/LanguageContext';
+import Layout from './components/layout/Layout';
 
-// Lazy load pages for better performance
-const Index = lazy(() => import('@/pages/Index'));
-const About = lazy(() => import('@/pages/About'));
-const Services = lazy(() => import('@/pages/Services'));
-const SEOService = lazy(() => import('@/pages/SEOService'));
-const LocalSEO = lazy(() => import('@/pages/LocalSEO')); 
-const Contact = lazy(() => import('@/pages/Contact'));
-const Blog = lazy(() => import('@/pages/Blog'));
-const BlogPost = lazy(() => import('@/pages/BlogPost'));
-const Terms = lazy(() => import('@/pages/Terms'));
-const Privacy = lazy(() => import('@/pages/Privacy'));
-const NotFound = lazy(() => import('@/pages/NotFound'));
-const CityPage = lazy(() => import('@/pages/CityPage'));
-const SeoServices = lazy(() => import('@/pages/SeoServices'));
+// Import pages
+import Index from './pages/Index';
+import About from './pages/About';
+import Services from './pages/Services';
+import Contact from './pages/Contact';
+import BlogIdeasGeneratorToolPage from './pages/tools/BlogIdeasGenerator';
+import RankCheckerPage from './pages/tools/RankChecker';
+import ParagraphRewriter from './pages/tools/ParagraphRewriter';
+import SentenceRewriter from './pages/tools/SentenceRewriter';
+import KeywordGenerator from './pages/tools/KeywordGenerator';
+import ParaphrasingTool from './pages/ParaphrasingTool';
+import Blog from './pages/Blog';
+import NotFound from './pages/NotFound';
 
-// Tool pages
-const RankChecker = lazy(() => import('@/pages/tools/RankChecker'));
-const KeywordGenerator = lazy(() => import('@/pages/tools/KeywordGenerator'));
-const BlogIdeasGenerator = lazy(() => import('@/pages/tools/BlogIdeasGenerator'));
-const ParagraphRewriter = lazy(() => import('@/pages/tools/ParagraphRewriter'));
-const SentenceRewriter = lazy(() => import('@/pages/tools/SentenceRewriter'));
-const ParaphrasingTool = lazy(() => import('@/pages/ParaphrasingTool'));
+// Import SEO pages
+import SeoToronto from './pages/SeoToronto';
+import SeoOttawa from './pages/SeoOttawa';
+import SeoKitchener from './pages/SeoKitchener';
+import SeoLondon from './pages/SeoLondon';
+import SeoVancouver from './pages/SeoVancouver';
+import SeoBuffalo from './pages/SeoBuffalo';
+import LocalSEO from './pages/LocalSEO';
+import SEOService from './pages/SEOService';
+
+// Import SEO tools pages
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsConditions from './pages/TermsConditions';
 
 function App() {
   return (
-    <LanguageProvider>
-      <HelmetProvider>
+    <HelmetProvider>
+      <LanguageProvider>
         <Layout>
-          <Suspense fallback={<LoadingSpinner />}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/services/seo" element={<SEOService />} />
-              <Route path="/services/local-seo" element={<LocalSEO />} />
-              <Route path="/services/seo-services" element={<SeoServices />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/seo-:city" element={<CityPage />} />
-              
-              {/* SEO Tool Routes */}
-              <Route path="/google-rank-checker-tool" element={<RankChecker />} />
-              <Route path="/keyword-generator-tool" element={<KeywordGenerator />} />
-              <Route path="/blog-ideas-generator" element={<BlogIdeasGenerator />} />
-              <Route path="/paragraph-rewriter-tool" element={<ParagraphRewriter />} />
-              <Route path="/sentence-rewriter-tool" element={<SentenceRewriter />} />
-              <Route path="/paraphrasing-tool" element={<ParaphrasingTool />} />
-              
-              {/* Custom aliases for improved URL structure */}
-              <Route path="/rank-checker" element={<RankChecker />} />
-              <Route path="/keyword-generator" element={<KeywordGenerator />} />
-              <Route path="/blog-ideas" element={<BlogIdeasGenerator />} />
-              <Route path="/paragraph-rewriter" element={<ParagraphRewriter />} />
-              <Route path="/sentence-rewriter" element={<SentenceRewriter />} />
-              <Route path="/paraphraser" element={<ParaphrasingTool />} />
-              
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-          <Toaster />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/tools/blog-ideas-generator" element={<BlogIdeasGeneratorToolPage />} />
+            <Route path="/tools/rank-checker" element={<RankCheckerPage />} />
+            <Route path="/tools/paragraph-rewriter" element={<ParagraphRewriter />} />
+            <Route path="/tools/sentence-rewriter" element={<SentenceRewriter />} />
+            <Route path="/tools/keyword-generator" element={<KeywordGenerator />} />
+            <Route path="/tools/paraphrasing-tool" element={<ParaphrasingTool />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/seo-toronto" element={<SeoToronto />} />
+            <Route path="/seo-ottawa" element={<SeoOttawa />} />
+            <Route path="/seo-kitchener" element={<SeoKitchener />} />
+            <Route path="/seo-london" element={<SeoLondon />} />
+            <Route path="/seo-vancouver" element={<SeoVancouver />} />
+            <Route path="/seo-buffalo" element={<SeoBuffalo />} />
+            <Route path="/local-seo" element={<LocalSEO />} />
+            <Route path="/seo-services" element={<SEOService />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-conditions" element={<TermsConditions />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </Layout>
-      </HelmetProvider>
-    </LanguageProvider>
+      </LanguageProvider>
+    </HelmetProvider>
   );
 }
 
