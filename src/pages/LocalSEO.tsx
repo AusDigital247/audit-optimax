@@ -1,6 +1,9 @@
 
 import React from 'react';
 import SEOHead from '@/components/SEOHead';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { MapPin, Search, Building, Users, CheckCircle2 } from 'lucide-react';
 
 const LocalSEO: React.FC = () => {
   return (
@@ -31,6 +34,14 @@ const LocalSEO: React.FC = () => {
             <h2 className="text-xl font-bold mb-3">Local Link Building</h2>
             <p>Develop relationships with local businesses and organizations to build quality local backlinks.</p>
           </div>
+        </div>
+        
+        <div className="mt-10 text-center">
+          <Link to="/contact">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Search className="w-4 h-4 mr-2" /> Get a Free Local SEO Consultation
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

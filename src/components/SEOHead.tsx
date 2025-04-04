@@ -25,9 +25,13 @@ const SEOHead: React.FC<SEOHeadProps> = ({
   ogType = 'website',
   children
 }) => {
-  // Build the canonical URL properly
+  // Build the canonical URL properly - ensure we use the exact path provided
   const baseUrl = 'https://seoaudittool.net';
-  const canonicalUrl = `${baseUrl}${canonicalPath || ''}`;
+  // Make sure canonicalPath starts with a slash if it's not empty
+  const formattedPath = canonicalPath ? 
+    (canonicalPath.startsWith('/') ? canonicalPath : `/${canonicalPath}`) : 
+    '';
+  const canonicalUrl = `${baseUrl}${formattedPath}`;
   
   return (
     <Helmet>

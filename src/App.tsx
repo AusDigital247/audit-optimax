@@ -12,7 +12,7 @@ const Index = lazy(() => import('@/pages/Index'));
 const About = lazy(() => import('@/pages/About'));
 const Services = lazy(() => import('@/pages/Services'));
 const SEOService = lazy(() => import('@/pages/SEOService'));
-const LocalSEO = lazy(() => import('@/pages/LocalSEO')); // Import using the correct case
+const LocalSEO = lazy(() => import('@/pages/LocalSEO')); // Correct casing
 const Contact = lazy(() => import('@/pages/Contact'));
 const Blog = lazy(() => import('@/pages/Blog'));
 const BlogPost = lazy(() => import('@/pages/BlogPost'));

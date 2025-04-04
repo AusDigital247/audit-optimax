@@ -9,6 +9,7 @@ const Privacy: React.FC = () => {
         title="Privacy Policy | SEO Audit Tool"
         description="Privacy policy for the SEO Audit Tool website and services. Learn how we collect, use, and protect your data."
         canonicalPath="/privacy"
+        keywords="privacy policy, data protection, SEO tool privacy, user data, privacy terms"
       />
       <div className="container mx-auto py-10 px-4">
         <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>
