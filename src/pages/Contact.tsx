@@ -1,9 +1,9 @@
-
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/components/ui/use-toast';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import SEOHead from '@/components/SEOHead';
 
 const Contact = () => {
   const { t, language } = useLanguage();
@@ -83,7 +83,13 @@ const Contact = () => {
   
   return (
     <div className="min-h-screen w-full">
-      {/* Hero Section */}
+      <SEOHead
+        title="Contact Us - SEO Audit Tool | Get in Touch"
+        description="Contact the SEO Audit Tool team for inquiries, support, or to learn more about our SEO services. We're here to help improve your website's visibility and performance."
+        canonicalPath="/contact"
+        keywords="contact SEO audit tool, SEO services contact, SEO help, website optimization contact"
+      />
+      
       <section className="bg-gradient-to-b from-navy to-navy-light py-16 md:py-24 w-full">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
@@ -97,7 +103,6 @@ const Contact = () => {
         </div>
       </section>
       
-      {/* Contact Form Section */}
       <section className="content-section-light">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -251,7 +256,6 @@ const Contact = () => {
         </div>
       </section>
       
-      {/* Map Section */}
       <section className="w-full h-96 bg-navy-light flex items-center justify-center">
         <div className="text-center text-white">
           <MapPin className="h-16 w-16 text-teal mx-auto mb-4" />

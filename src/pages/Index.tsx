@@ -46,40 +46,7 @@ const Index = () => {
   };
 
   useEffect(() => {
-    let linkEn = document.querySelector('link[hreflang="en"]');
-    let linkFr = document.querySelector('link[hreflang="fr"]');
-    
-    if (!linkEn) {
-      linkEn = document.createElement('link');
-      linkEn.setAttribute('rel', 'alternate');
-      linkEn.setAttribute('hreflang', 'en');
-      document.head.appendChild(linkEn);
-    }
-    
-    if (!linkFr) {
-      linkFr = document.createElement('link');
-      linkFr.setAttribute('rel', 'alternate');
-      linkFr.setAttribute('hreflang', 'fr');
-      document.head.appendChild(linkFr);
-    }
-    
-    const canonicalURL = 'https://seoaudittool.net' + window.location.pathname;
-    
-    linkEn.setAttribute('href', canonicalURL);
-    linkFr.setAttribute('href', canonicalURL);
-    
-    let canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (!canonicalLink) {
-      canonicalLink = document.createElement('link');
-      canonicalLink.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonicalLink);
-    }
-    canonicalLink.setAttribute('href', canonicalURL);
-    
     return () => {
-      if (linkEn && linkEn.parentNode) document.head.removeChild(linkEn);
-      if (linkFr && linkFr.parentNode) document.head.removeChild(linkFr);
-      if (canonicalLink && canonicalLink.parentNode) document.head.removeChild(canonicalLink);
     };
   }, []);
 
@@ -100,6 +67,8 @@ const Index = () => {
         <meta name="twitter:description" content="Free comprehensive SEO audit tool to analyze websites and get actionable recommendations to improve your search rankings." />
         
         <link rel="canonical" href="https://seoaudittool.net" />
+        <link rel="alternate" hreflang="en" href="https://seoaudittool.net" />
+        <link rel="alternate" hreflang="fr" href="https://seoaudittool.net" />
         
         <script type="application/ld+json">
           {JSON.stringify({
