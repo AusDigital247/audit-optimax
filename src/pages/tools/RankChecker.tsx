@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { RankChecker as RankCheckerComponent } from '@/components/RankChecker';
+import RankChecker from '@/components/RankChecker';
 import SEOHead from '@/components/SEOHead';
 
-const RankChecker: React.FC = () => {
+const RankCheckerPage: React.FC = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
@@ -12,9 +12,9 @@ const RankChecker: React.FC = () => {
         canonicalPath="/google-rank-checker-tool"
         keywords="rank checker, SERP checker, keyword ranking, SEO position tracker, google position checker"
       />
-      <RankCheckerComponent />
+      <RankChecker />
     </div>
   );
 };
 
-export default RankChecker;
+export default RankCheckerPage;

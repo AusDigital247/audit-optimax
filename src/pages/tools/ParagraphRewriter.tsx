@@ -1,14 +1,14 @@
 
 import React from 'react';
 import SEOHead from '@/components/SEOHead';
-import { ParagraphRewriterForm } from '@/components/ParagraphRewriterForm';
+import ParagraphRewriterForm from '@/components/ParagraphRewriterForm';
 
 const ParagraphRewriter: React.FC = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Paragraph Rewriter Tool | Rewrite Content for Better SEO"
-        description="Rewrite paragraphs to improve readability and SEO with our free paragraph rewriter tool. Perfect for content creators and marketers."
+        title="Paragraph Rewriter Tool | Improve Your Content Quality"
+        description="Rewrite paragraphs to enhance readability and SEO with our free paragraph rewriter tool. Perfect for content creators and marketers."
         canonicalPath="/paragraph-rewriter-tool"
         keywords="paragraph rewriter, content rewriter, paraphrasing tool, SEO content, text rewriter"
       />

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import SEOHead from '@/components/SEOHead';
-import { SentenceRewriterForm } from '@/components/SentenceRewriterForm';
+import SentenceRewriterForm from '@/components/SentenceRewriterForm';
 
 const SentenceRewriter: React.FC = () => {
   return (
