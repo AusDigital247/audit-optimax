@@ -1,12 +1,76 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import SEOHead from '@/components/SEOHead';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info, ArrowRight, CheckCircle2, Search } from 'lucide-react';
+import { Info, ArrowRight, CheckCircle2, Search, Copy, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { generateYoutubeDescription } from '@/utils/hashtagGenerator';
+import { toast } from "sonner";
 
 const YoutubeDescriptionGenerator: React.FC = () => {
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    keywords: '',
+    channelInfo: '',
+    type: 'video'
+  });
+  
+  const [description, setDescription] = useState<string>('');
+  const [loading, setLoading] = useState(false);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const generateDescription = async () => {
+    if (!formData.title) {
+      toast.error("Please enter a title for your YouTube content");
+      return;
+    }
+
+    if (!formData.content) {
+      toast.error("Please enter a content summary");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const generatedDescription = await generateYoutubeDescription({
+        title: formData.title,
+        content: formData.content,
+        keywords: formData.keywords,
+        channelInfo: formData.channelInfo,
+        type: formData.type as 'video' | 'channel'
+      });
+      
+      setDescription(generatedDescription);
+      toast.success(`Generated YouTube ${formData.type} description`);
+    } catch (error) {
+      console.error('Error generating description:', error);
+      toast.error("Failed to generate description. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(description);
+    toast.success("Description copied to clipboard");
+  };
+
   return (
     <div className="min-h-screen">
       <SEOHead
@@ -41,67 +105,118 @@ const YoutubeDescriptionGenerator: React.FC = () => {
           </div>
         </div>
         
-        <Alert className="bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800 mb-8">
-          <Info className="h-4 w-4 text-amber-500" />
-          <AlertTitle className="text-amber-800 dark:text-amber-400">About This Tool</AlertTitle>
-          <AlertDescription className="text-amber-700 dark:text-amber-300">
-            This YouTube Description Generator is currently in development. Soon you'll be able to create both video and channel descriptions optimized for search visibility and viewer engagement.
-          </AlertDescription>
-        </Alert>
-        
-        {/* Tool placeholder - would be replaced with actual component */}
         <div className="w-full max-w-4xl mx-auto bg-white dark:bg-navy-light shadow-md rounded-lg p-8 mb-12">
           <h2 className="text-xl font-semibold mb-4">YouTube Description Generator</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">Generate optimized descriptions for your YouTube content.</p>
           
           <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">Description Type</label>
-            <select
-              className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
-              disabled
+            <Label htmlFor="type" className="block text-gray-700 dark:text-gray-300 mb-2">Description Type</Label>
+            <Select 
+              value={formData.type} 
+              onValueChange={(value) => handleSelectChange('type', value)}
             >
-              <option>Video Description</option>
-              <option>Channel Description</option>
-            </select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select description type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="video">Video Description</SelectItem>
+                <SelectItem value="channel">Channel Description</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           
           <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">Video/Channel Title</label>
-            <input
-              type="text"
-              className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
+            <Label htmlFor="title" className="block text-gray-700 dark:text-gray-300 mb-2">Video/Channel Title *</Label>
+            <Input
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleInputChange}
               placeholder="Enter your video or channel title"
-              disabled
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">Main Topics/Keywords</label>
-            <input
-              type="text"
               className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
-              placeholder="E.g., SEO tips, beginner's guide, product review..."
-              disabled
             />
           </div>
           
           <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">Brief Content Summary</label>
-            <textarea
-              className="w-full h-32 p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
+            <Label htmlFor="keywords" className="block text-gray-700 dark:text-gray-300 mb-2">Main Topics/Keywords</Label>
+            <Input
+              id="keywords"
+              name="keywords"
+              value={formData.keywords}
+              onChange={handleInputChange}
+              placeholder="E.g., SEO tips, beginner's guide, product review..."
+              className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
+            />
+          </div>
+          
+          <div className="mb-4">
+            <Label htmlFor="content" className="block text-gray-700 dark:text-gray-300 mb-2">Content Summary *</Label>
+            <Textarea
+              id="content"
+              name="content"
+              value={formData.content}
+              onChange={handleInputChange}
               placeholder="Briefly describe what your video or channel is about..."
-              disabled
-            ></textarea>
+              className="w-full h-32 p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
+            />
           </div>
           
-          <Button disabled className="bg-teal hover:bg-teal-600 text-white w-full py-2 rounded-md">
-            Generate Description
+          {formData.type === 'channel' && (
+            <div className="mb-4">
+              <Label htmlFor="channelInfo" className="block text-gray-700 dark:text-gray-300 mb-2">Channel Information (Optional)</Label>
+              <Textarea
+                id="channelInfo"
+                name="channelInfo"
+                value={formData.channelInfo}
+                onChange={handleInputChange}
+                placeholder="Upload schedule, channel owner info, credentials, etc."
+                className="w-full h-24 p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
+              />
+            </div>
+          )}
+          
+          <Button 
+            onClick={generateDescription} 
+            disabled={loading}
+            className="bg-teal hover:bg-teal-600 text-white w-full py-2 rounded-md"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Generating Description...
+              </>
+            ) : (
+              <>Generate YouTube Description</>
+            )}
           </Button>
-          
-          <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
-            Coming soon! We're working on implementing this feature.
-          </div>
         </div>
+        
+        {description && (
+          <Card className="w-full max-w-4xl mx-auto p-6 mb-12">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Your YouTube Description</h2>
+              <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                <Copy className="mr-2 h-4 w-4" /> Copy All
+              </Button>
+            </div>
+            
+            <div className="bg-gray-50 dark:bg-navy-dark p-4 rounded-lg mb-4">
+              <p className="whitespace-pre-wrap text-gray-700 dark:text-gray-300">
+                {description}
+              </p>
+            </div>
+            
+            <div className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="mb-2 font-medium">Tips for using this description:</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Review and personalize before posting</li>
+                <li>Add any specific links or tags needed</li>
+                <li>Consider adding emojis for visual appeal</li>
+                <li>Ensure all information is accurate</li>
+              </ul>
+            </div>
+          </Card>
+        )}
         
         <div className="prose prose-lg dark:prose-invert max-w-4xl mx-auto mt-16">
           <h2 className="text-2xl font-bold mb-6">Why YouTube Descriptions Matter for Channel Success</h2>
@@ -207,7 +322,6 @@ const YoutubeDescriptionGenerator: React.FC = () => {
           </div>
         </div>
         
-        {/* Call to Action */}
         <section className="py-12 my-10 bg-gradient-to-r from-teal/10 to-navy/10 dark:from-teal/20 dark:to-navy-light/20 rounded-xl text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-navy dark:text-white mb-4">Enhance Your YouTube Strategy</h2>
           <p className="text-navy/70 dark:text-white/70 max-w-2xl mx-auto mb-8">

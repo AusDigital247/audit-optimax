@@ -72,3 +72,65 @@ export const generateHashtags = async (params: HashtagGeneratorParams): Promise<
     return [];
   }
 };
+
+export interface YoutubeDescriptionParams {
+  title: string;
+  content: string;
+  keywords?: string;
+  channelInfo?: string;
+  type: 'video' | 'channel';
+}
+
+/**
+ * Generate YouTube descriptions for videos or channels
+ * @param params Generator parameters including title, content, and type
+ * @returns Generated description text
+ */
+export const generateYoutubeDescription = async (params: YoutubeDescriptionParams): Promise<string> => {
+  try {
+    const { title, content, keywords, channelInfo, type } = params;
+    
+    if (!title) {
+      throw new Error('Title is required to generate a description');
+    }
+    
+    if (!content) {
+      throw new Error('Content summary is required to generate a description');
+    }
+    
+    const typeSpecific = {
+      video: 'Create a detailed YouTube video description with timestamps if applicable. Include relevant keywords naturally.',
+      channel: 'Create a compelling YouTube channel description that showcases the value proposition and encourages subscriptions.'
+    };
+    
+    const prompt = `
+      Generate an SEO-optimized YouTube ${type} description for "${title}".
+      
+      Content summary: ${content}
+      ${keywords ? `Important keywords to include: ${keywords}` : ''}
+      ${channelInfo ? `Channel information: ${channelInfo}` : ''}
+      
+      ${typeSpecific[type]}
+      
+      The description should:
+      - Be approximately 2-3 paragraphs
+      - Naturally incorporate relevant keywords for better search visibility
+      - Include a clear call-to-action (subscribe, like, comment, etc.)
+      ${type === 'video' ? '- Include timestamps if the content has distinct sections' : ''}
+      ${type === 'video' ? '- Include relevant links or resources mentioned in the video' : ''}
+      ${type === 'channel' ? '- Mention what viewers can expect from the channel (content type, posting schedule)' : ''}
+      ${type === 'channel' ? '- Briefly introduce the channel owner/team' : ''}
+      
+      Format the response as a ready-to-use description, without any additional commentary.
+    `;
+
+    const systemPrompt = `You are a YouTube SEO specialist who creates engaging, keyword-rich descriptions that help videos and channels rank better in search results while encouraging viewer engagement.`;
+    
+    const response = await generateOllamaResponse(prompt, systemPrompt);
+    return response;
+  } catch (error) {
+    console.error('Error generating YouTube description:', error);
+    toast.error(error instanceof Error ? error.message : 'Failed to generate description');
+    return '';
+  }
+};
