@@ -1,8 +1,9 @@
-
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import SEOHead from '@/components/SEOHead';
 
 const Contact = () => {
   const { t, language } = useLanguage();
@@ -17,7 +18,7 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   useEffect(() => {
-    document.title = language === 'en' ? 'Contact Us - AUS Digital' : 'Contactez-nous - AUS Digital';
+    document.title = language === 'en' ? 'Contact Us - SEO Audit Tool' : 'Contactez-nous - SEO Audit Tool';
   }, [language]);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -25,16 +26,42 @@ const Contact = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      // Send email to admin (contact form submission)
+      const { data: adminEmailData, error: adminEmailError } = await supabase.functions.invoke('send-email', {
+        body: {
+          to: 'seoaudittoolofficial@gmail.com', // Updated email address
+          subject: `Contact Form: ${formData.subject}`,
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          type: 'contact'
+        }
+      });
+
+      if (adminEmailError) throw adminEmailError;
+      
+      // Send confirmation email to user
+      const { data: userEmailData, error: userEmailError } = await supabase.functions.invoke('send-email', {
+        body: {
+          to: formData.email,
+          subject: 'Thank you for contacting SEO Audit Tool',
+          name: formData.name,
+          type: 'notification'
+        }
+      });
+
+      if (userEmailError) throw userEmailError;
+      
       toast({
         title: "Message sent!",
         description: "We'll get back to you as soon as possible.",
       });
+      
       setFormData({
         name: '',
         email: '',
@@ -42,13 +69,27 @@ const Contact = () => {
         subject: '',
         message: ''
       });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send your message. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
   
   return (
     <div className="min-h-screen w-full">
-      {/* Hero Section */}
+      <SEOHead
+        title="Contact Us - SEO Audit Tool | Get in Touch"
+        description="Contact the SEO Audit Tool team for inquiries, support, or to learn more about our SEO services. We're here to help improve your website's visibility and performance."
+        canonicalPath="/contact"
+        keywords="contact SEO audit tool, SEO services contact, SEO help, website optimization contact"
+      />
+      
       <section className="bg-gradient-to-b from-navy to-navy-light py-16 md:py-24 w-full">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
@@ -62,7 +103,6 @@ const Contact = () => {
         </div>
       </section>
       
-      {/* Contact Form Section */}
       <section className="content-section-light">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -216,7 +256,6 @@ const Contact = () => {
         </div>
       </section>
       
-      {/* Map Section */}
       <section className="w-full h-96 bg-navy-light flex items-center justify-center">
         <div className="text-center text-white">
           <MapPin className="h-16 w-16 text-teal mx-auto mb-4" />

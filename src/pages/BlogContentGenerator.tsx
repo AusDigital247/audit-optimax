@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import BlogContentGeneratorForm, { BlogGeneratorFormValues } from '@/components/BlogContentGeneratorForm';
 import BlogContentResults, { BlogContentResult } from '@/components/BlogContentResults';
-import { generateBlogContent } from '@/utils/blogContentGenerator';
+import { generateBlogContent, BlogGeneratorFormValues as ApiFormValues } from '@/utils/blogContentGenerator';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -22,7 +22,19 @@ const BlogContentGenerator = () => {
     setErrorMessage(null);
 
     try {
-      const response = await generateBlogContent(values);
+      // Convert form values to API form values, ensuring all required fields are present
+      const apiValues: ApiFormValues = {
+        topic: values.topic,
+        contentType: values.contentType,
+        tone: values.tone,
+        wordCount: values.wordCount,
+        keywords: values.keywords,
+        additionalNotes: values.additionalNotes,
+        targetAudience: values.targetAudience,
+        generateIdeasOnly: values.generateIdeasOnly
+      };
+      
+      const response = await generateBlogContent(apiValues);
 
       if (response.success && response.data) {
         setResult(response.data);

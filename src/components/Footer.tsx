@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Facebook, Twitter, Instagram, Linkedin, Globe, Send, MapPin, ArrowRight, Search, CheckCircle, Zap, Lightbulb } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, Globe, Send, MapPin, ArrowRight, Search, CheckCircle, Zap, Lightbulb, Settings } from 'lucide-react';
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -13,7 +14,6 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-bold mb-4 border-b border-teal/30 pb-2">
               <span className="text-teal dark:text-teal-light">SEO Audit Tool</span>
-              <span className="text-white text-sm ml-1">by AUS Digital</span>
             </h3>
             <p className="text-white/80 mb-4">
               We provide comprehensive SEO audit tools and digital marketing solutions to help businesses grow their online presence and increase revenue through proven search engine optimization strategies.
@@ -50,6 +50,11 @@ const Footer = () => {
               <li>
                 <Link to="/contact" className="text-white/80 hover:text-teal transition-colors flex items-center">
                   <ArrowRight size={14} className="mr-2" /> Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/settings" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Settings
                 </Link>
               </li>
             </ul>
@@ -105,6 +110,56 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/grammar-checker-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Grammar Checker
+                </Link>
+              </li>
+              <li>
+                <Link to="/conclusion-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Conclusion Generator
+                </Link>
+              </li>
+              <li>
+                <Link to="/paraphrasing-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Paraphrasing Tool
+                </Link>
+              </li>
+              <li>
+                <Link to="/instagram-bio-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Instagram Bio Generator
+                </Link>
+              </li>
+              <li>
+                <Link to="/instagram-hashtag-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Instagram Hashtag Generator
+                </Link>
+              </li>
+              <li>
+                <Link to="/instagram-name-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Instagram Name Generator
+                </Link>
+              </li>
+              <li>
+                <Link to="/tiktok-hashtag-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> TikTok Hashtag Generator
+                </Link>
+              </li>
+              <li>
+                <Link to="/tiktok-username-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> TikTok Username Generator
+                </Link>
+              </li>
+              <li>
+                <Link to="/youtube-channel-description-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> YouTube Description Generator
+                </Link>
+              </li>
+              <li>
+                <Link to="/youtube-name-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> YouTube Name Generator
+                </Link>
+              </li>
+              <li>
                 <Link to="/about" className="text-white/80 hover:text-teal transition-colors flex items-center">
                   <ArrowRight size={14} className="mr-2" /> About Us
                 </Link>
@@ -133,11 +188,12 @@ const Footer = () => {
         
         <div className="pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center">
           <p className="text-white/60 text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} SEO Audit Tool by AUS Digital. All Rights Reserved.
+            &copy; {new Date().getFullYear()} SEO Audit Tool. All Rights Reserved.
           </p>
           <div className="flex space-x-4 text-sm text-white/60">
             <Link to="/terms" className="hover:text-teal transition-colors">Terms & Conditions</Link>
             <Link to="/privacy" className="hover:text-teal transition-colors">Privacy Policy</Link>
+            <Link to="/settings" className="hover:text-teal transition-colors">Settings</Link>
             <Link to="/sitemap.xml" target="_blank" className="hover:text-teal transition-colors">Sitemap</Link>
           </div>
         </div>
