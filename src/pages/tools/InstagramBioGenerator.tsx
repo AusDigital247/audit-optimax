@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import SEOHead from '@/components/SEOHead';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info, ArrowRight, CheckCircle2, Search, Copy, Loader2 } from 'lucide-react';
+import { Info, ArrowRight, CheckCircle2, Search, Copy, Loader2, Instagram } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +12,7 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { generateInstagramBio } from '@/utils/hashtagGenerator';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const InstagramBioGenerator: React.FC = () => {
   const [formData, setFormData] = useState({
