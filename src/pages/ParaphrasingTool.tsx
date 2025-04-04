@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Helmet } from 'react-helmet-async';
+import SEOHead from '@/components/SEOHead';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
@@ -66,11 +65,11 @@ const ParaphrasingTool = () => {
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <Helmet>
-        <title>Free Paraphrasing Tool | Reword and Rephrase Text Easily</title>
-        <meta name="description" content="Reword and rephrase any text with our free paraphrasing tool. Change the wording while keeping the meaning for essays, articles, and more." />
-        <meta name="keywords" content="paraphrasing tool, text rewriter, rephrase, reword, content rephraser, plagiarism" />
-      </Helmet>
+      <SEOHead
+        title="Free Paraphrasing Tool | Reword and Rephrase Text Easily"
+        description="Reword and rephrase any text with our free paraphrasing tool. Change the wording while keeping the meaning for essays, articles, and more."
+        keywords="paraphrasing tool, text rewriter, rephrase, reword, content rephraser, plagiarism"
+      />
 
       <h1 className="text-3xl md:text-4xl font-bold mb-4 text-center text-navy dark:text-white">Paraphrasing Tool</h1>
       <div className="max-w-4xl mx-auto mb-8">

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import SEOHead from '@/components/SEOHead';
 
@@ -8,7 +7,6 @@ const Terms: React.FC = () => {
       <SEOHead
         title="Terms of Service | SEO Audit Tool"
         description="Terms of service for the SEO Audit Tool website and services. Read our terms and conditions before using our tools."
-        canonicalPath="/terms"
         keywords="terms of service, terms and conditions, SEO tool terms, user agreement, legal terms"
       />
       <div className="container mx-auto py-10 px-4">

@@ -1,17 +1,18 @@
-
 import React from 'react';
 import SEOHead from '@/components/SEOHead';
-import BlogIdeasGeneratorPage from '@/pages/BlogIdeasGenerator';
+import { useLanguage } from '@/contexts/LanguageContext';
 
-const BlogIdeasGenerator: React.FC = () => {
+const BlogIdeasGenerator = () => {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Blog Ideas Generator Tool | Create SEO-Optimized Content Ideas"
-        description="Generate creative and SEO-optimized blog ideas with our free tool. Perfect for content creators looking for topic inspiration."
-        canonicalPath="/blog-ideas-generator"
-        keywords="blog ideas generator, content ideas, blog topics, SEO content, article ideas"
+        title="Blog Ideas Generator Tool | Content Inspiration for Writers"
+        description="Generate creative and engaging blog topic ideas with our free blog ideas generator. Perfect for content creators, marketers, and bloggers needing inspiration."
+        keywords="blog ideas generator, blog topics, content ideas, blogging inspiration, article ideas, blog titles, blog content inspiration"
       />
+      
       <BlogIdeasGeneratorPage />
     </div>
   );

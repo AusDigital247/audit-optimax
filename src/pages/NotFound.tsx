@@ -4,6 +4,7 @@ import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
 import { ArrowLeft, Home, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import SEOHead from '@/components/SEOHead';
 
 const NotFound = () => {
   const location = useLocation();
@@ -17,6 +18,11 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-navy-light px-4">
+      <SEOHead
+        title="Page Not Found | 404 Error | SEO Audit Tool"
+        description="The page you are looking for doesn't exist or has been moved. Return to our homepage or try one of our SEO tools."
+        keywords="404, page not found, error page, missing page"
+      />
       <div className="max-w-md w-full text-center bg-white dark:bg-navy shadow-lg rounded-lg p-8">
         <h1 className="text-6xl font-bold mb-4 text-teal">404</h1>
         <h2 className="text-2xl font-semibold text-navy dark:text-white mb-6">Page Not Found</h2>

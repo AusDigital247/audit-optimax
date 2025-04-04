@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import SEOHead from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { 
   CheckCircle2, 
@@ -18,31 +17,11 @@ import {
 const SeoServices = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-navy to-navy-light">
-      <Helmet>
-        <title>Professional SEO Services | Rank Higher on Google | SEO Audit Tool</title>
-        <meta name="description" content="Comprehensive SEO services to improve your website visibility, increase organic traffic, and boost conversions. Get a customized SEO strategy." />
-        <meta name="keywords" content="SEO services, search engine optimization, SEO strategy, organic traffic, website ranking, SEO consulting" />
-        <link rel="canonical" href={window.location.href} />
-        
-        {/* Service-specific schema markup */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Service",
-            "name": "Professional SEO Services",
-            "description": "Comprehensive SEO services to improve your website visibility, increase organic traffic, and boost conversions.",
-            "provider": {
-              "@type": "Organization",
-              "name": "SEO Audit Tool"
-            },
-            "serviceType": "Search Engine Optimization",
-            "offers": {
-              "@type": "Offer",
-              "price": "Custom quote based on needs"
-            }
-          })}
-        </script>
-      </Helmet>
+      <SEOHead
+        title="Professional SEO Services | Rank Higher on Google | SEO Audit Tool"
+        description="Comprehensive SEO services to improve your website visibility, increase organic traffic, and boost conversions. Get a customized SEO strategy."
+        keywords="SEO services, search engine optimization, SEO strategy, organic traffic, website ranking, SEO consulting"
+      />
 
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">

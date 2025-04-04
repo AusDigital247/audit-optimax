@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useLocation } from 'react-router-dom';
 
 interface SEOHeadProps {
   title: string;
@@ -25,12 +26,19 @@ const SEOHead: React.FC<SEOHeadProps> = ({
   ogType = 'website',
   children
 }) => {
-  // Build the canonical URL properly - ensure we use the exact path provided
+  const location = useLocation();
+  
+  // Build the canonical URL properly - ensure we use the exact path provided or current path
   const baseUrl = 'https://seoaudittool.net';
-  // Make sure canonicalPath starts with a slash if it's not empty
-  const formattedPath = canonicalPath ? 
-    (canonicalPath.startsWith('/') ? canonicalPath : `/${canonicalPath}`) : 
+  
+  // If canonicalPath is provided, use it, otherwise use current path
+  const path = canonicalPath || location.pathname;
+  
+  // Make sure path starts with a slash if it's not empty
+  const formattedPath = path ? 
+    (path.startsWith('/') ? path : `/${path}`) : 
     '';
+    
   const canonicalUrl = `${baseUrl}${formattedPath}`;
   
   return (

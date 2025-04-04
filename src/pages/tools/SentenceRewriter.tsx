@@ -1,20 +1,33 @@
-
 import React from 'react';
 import SEOHead from '@/components/SEOHead';
+import { useLanguage } from '@/contexts/LanguageContext';
 import SentenceRewriterForm from '@/components/SentenceRewriterForm';
+import { Separator } from "@/components/ui/separator";
 
-const SentenceRewriter: React.FC = () => {
+const SentenceRewriter = () => {
+  const { t } = useLanguage();
+
   return (
-    <div className="min-h-screen">
+    <div className="w-full min-h-screen">
       <SEOHead
-        title="Sentence Rewriter Tool | Improve Your Content One Sentence at a Time"
-        description="Rewrite sentences to improve clarity and SEO with our free sentence rewriter tool. Perfect for content creators and marketers."
-        canonicalPath="/sentence-rewriter-tool"
-        keywords="sentence rewriter, content rewriter, paraphrasing tool, SEO content, text rewriter"
+        title="Free AI Sentence Rewriter Tool | SEO Audit Tool"
+        description="Enhance the quality and clarity of any sentence and improve its construction with this powerful free AI sentence rewriter tool."
+        keywords="sentence rewriter, sentence enhancer, rewrite sentences, improve sentences, sentence clarity, sentence structure, AI sentence tool, sentence improvement, clear writing"
       />
-      <div className="container mx-auto py-10 px-4">
-        <h1 className="text-3xl font-bold mb-6 text-center">Sentence Rewriter Tool</h1>
-        <SentenceRewriterForm />
+
+      <div className="container mx-auto px-4 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-3xl md:text-4xl font-bold text-navy dark:text-white mb-4">
+            Free AI Sentence Rewriter Tool
+          </h1>
+          <p className="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+            Enhance the quality and clarity of any sentence and improve its construction with this powerful free tool.
+          </p>
+        </div>
+
+        <div className="mb-12">
+          <SentenceRewriterForm />
+        </div>
       </div>
     </div>
   );

@@ -8,7 +8,6 @@ const SEOService: React.FC = () => {
       <SEOHead
         title="Professional SEO Services | Boost Your Search Rankings"
         description="Expert SEO services to improve your website's search engine rankings. Our comprehensive approach delivers sustainable results for your business."
-        canonicalPath="/services/seo"
         keywords="SEO services, search engine optimization, SEO experts, SEO agency, SEO consulting"
       />
       <div className="container mx-auto py-10 px-4">

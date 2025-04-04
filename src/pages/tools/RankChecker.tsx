@@ -1,6 +1,6 @@
 
 import React from 'react';
-import RankChecker from '@/components/RankChecker';
+import RankCheckerComponent from '@/components/RankChecker';
 import SEOHead from '@/components/SEOHead';
 
 const RankCheckerPage: React.FC = () => {
@@ -9,10 +9,9 @@ const RankCheckerPage: React.FC = () => {
       <SEOHead
         title="Google Rank Checker Tool | Check Your SERP Positions"
         description="Free tool to check your website's ranking positions in Google search results. Track your SEO performance with our easy-to-use rank checker."
-        canonicalPath="/google-rank-checker-tool"
         keywords="rank checker, SERP checker, keyword ranking, SEO position tracker, google position checker"
       />
-      <RankChecker />
+      <RankCheckerComponent />
     </div>
   );
 };

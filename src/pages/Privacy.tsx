@@ -1,4 +1,3 @@
-
 import React from 'react';
 import SEOHead from '@/components/SEOHead';
 
@@ -8,7 +7,6 @@ const Privacy: React.FC = () => {
       <SEOHead
         title="Privacy Policy | SEO Audit Tool"
         description="Privacy policy for the SEO Audit Tool website and services. Learn how we collect, use, and protect your data."
-        canonicalPath="/privacy"
         keywords="privacy policy, data protection, SEO tool privacy, user data, privacy terms"
       />
       <div className="container mx-auto py-10 px-4">
