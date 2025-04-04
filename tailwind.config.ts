@@ -86,8 +86,8 @@ const config = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
-        display: ["Playfair Display", ...fontFamily.sans],
-        body: ["Public Sans", ...fontFamily.sans],
+        display: ["Poppins", ...fontFamily.sans],
+        body: ["Inter", ...fontFamily.sans],
       },
       keyframes: {
         "accordion-down": {

@@ -21,7 +21,7 @@ const Header: React.FC = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
               <BarChart3 size={28} className="text-teal dark:text-teal-light" />
-              <span className="text-navy dark:text-white font-display font-bold text-xl">SEO AUDIT TOOL</span>
+              <span className="text-navy dark:text-white font-display font-bold text-xl">AUS Digital</span>
             </Link>
           </div>
 
@@ -77,84 +77,6 @@ const Header: React.FC = () => {
                 <DropdownMenuItem asChild>
                   <Link to="/sentence-rewriter-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
                     Sentence Rewriter Tool
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/grammar-checker-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    Grammar Checker
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/conclusion-generator-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    Conclusion Generator
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/paraphrasing-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    Paraphrasing Tool
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/instagram-bio-generator-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    Instagram Bio Generator
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/instagram-hashtag-generator-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    Instagram Hashtag Generator
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/instagram-name-generator-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    Instagram Name Generator
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/tiktok-hashtag-generator-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    TikTok Hashtag Generator
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/tiktok-username-generator-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    TikTok Username Generator
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/youtube-channel-description-generator-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    YouTube Description Generator
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/youtube-name-generator-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    YouTube Name Generator
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center text-navy dark:text-gray-200 hover:text-teal dark:hover:text-teal-light transition-colors font-medium">
-                Content Tools <ChevronDown size={16} className="ml-1" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-white dark:bg-navy-light border border-gray-200 dark:border-gray-700">
-                <DropdownMenuItem asChild>
-                  <Link to="/grammar-checker-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    Grammar Checker
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/conclusion-generator-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    Conclusion Generator
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/paraphrasing-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    Paraphrasing Tool
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/instagram-bio-generator-tool" className="hover:bg-gray-100 dark:hover:bg-navy">
-                    Instagram Bio Generator
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -289,110 +211,6 @@ const Header: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Sentence Rewriter Tool
-                  </Link>
-                  <Link 
-                    to="/grammar-checker-tool" 
-                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Grammar Checker
-                  </Link>
-                  <Link 
-                    to="/conclusion-generator-tool" 
-                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Conclusion Generator
-                  </Link>
-                  <Link 
-                    to="/paraphrasing-tool" 
-                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Paraphrasing Tool
-                  </Link>
-                  <Link 
-                    to="/instagram-bio-generator-tool" 
-                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Instagram Bio Generator
-                  </Link>
-                  <Link 
-                    to="/instagram-hashtag-generator-tool" 
-                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Instagram Hashtag Generator
-                  </Link>
-                  <Link 
-                    to="/instagram-name-generator-tool" 
-                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Instagram Name Generator
-                  </Link>
-                  <Link 
-                    to="/tiktok-hashtag-generator-tool" 
-                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    TikTok Hashtag Generator
-                  </Link>
-                  <Link 
-                    to="/tiktok-username-generator-tool" 
-                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    TikTok Username Generator
-                  </Link>
-                  <Link 
-                    to="/youtube-channel-description-generator-tool" 
-                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    YouTube Description Generator
-                  </Link>
-                  <Link 
-                    to="/youtube-name-generator-tool" 
-                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    YouTube Name Generator
-                  </Link>
-                </div>
-              </div>
-              
-              <div className="py-2">
-                <div className="font-medium text-navy dark:text-gray-200 mb-2">Content Tools</div>
-                <div className="pl-4 space-y-2">
-                  <Link 
-                    to="/grammar-checker-tool" 
-                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Grammar Checker
-                  </Link>
-                  <Link 
-                    to="/conclusion-generator-tool" 
-                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Conclusion Generator
-                  </Link>
-                  <Link 
-                    to="/paraphrasing-tool" 
-                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Paraphrasing Tool
-                  </Link>
-                  <Link 
-                    to="/instagram-bio-generator-tool" 
-                    className="block text-navy/80 dark:text-gray-300 hover:text-teal dark:hover:text-teal-light"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Instagram Bio Generator
                   </Link>
                 </div>
               </div>

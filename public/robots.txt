@@ -1,11 +1,3 @@
-
-# SEO Audit Tool Robots.txt
-# Version 1.1
-
-# Preferred domain declaration
-Host: https://seoaudittool.net
-
-# Standard bot rules
 User-agent: Googlebot
 Allow: /
 
@@ -20,16 +12,3 @@ Allow: /
 
 User-agent: *
 Allow: /
-
-# Sitemap location
-Sitemap: https://seoaudittool.net/sitemap.xml
-
-# Disallow duplicate content paths
-Disallow: /*?*
-Disallow: /*&*
-Disallow: /*.php$
-Disallow: /*/undefined
-Disallow: /*/*/undefined
-
-# Crawl delay to manage server load
-Crawl-delay: 1
