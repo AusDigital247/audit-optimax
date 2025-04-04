@@ -20,11 +20,13 @@ const Terms = lazy(() => import('@/pages/Terms'));
 const Privacy = lazy(() => import('@/pages/Privacy'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
 const CityPage = lazy(() => import('@/pages/CityPage'));
-const RankChecker = lazy(() => import('@/pages/tools/RankChecker'));
-const KeywordGenerator = lazy(() => import('@/pages/tools/KeywordGenerator'));
-const BlogIdeasGenerator = lazy(() => import('@/pages/tools/BlogIdeasGenerator'));
-const ParagraphRewriter = lazy(() => import('@/pages/tools/ParagraphRewriter'));
-const SentenceRewriter = lazy(() => import('@/pages/tools/SentenceRewriter'));
+
+// Tool pages
+const RankChecker = lazy(() => import('@/pages/RankChecker'));
+const KeywordGenerator = lazy(() => import('@/pages/KeywordGenerator'));
+const BlogIdeasGenerator = lazy(() => import('@/pages/BlogIdeasGenerator'));
+const ParagraphRewriter = lazy(() => import('@/pages/ParagraphRewriter'));
+const SentenceRewriter = lazy(() => import('@/pages/SentenceRewriter'));
 
 function App() {
   return (
@@ -45,7 +47,7 @@ function App() {
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/seo-:city" element={<CityPage />} />
               
-              {/* SEO Tool Routes with proper routing */}
+              {/* SEO Tool Routes */}
               <Route path="/google-rank-checker-tool" element={<RankChecker />} />
               <Route path="/keyword-generator-tool" element={<KeywordGenerator />} />
               <Route path="/blog-ideas-generator" element={<BlogIdeasGenerator />} />
@@ -55,7 +57,7 @@ function App() {
               {/* Custom aliases for improved URL structure */}
               <Route path="/rank-checker" element={<RankChecker />} />
               <Route path="/keyword-generator" element={<KeywordGenerator />} />
-              <Route path="/blog-ideas-generator" element={<BlogIdeasGenerator />} />
+              <Route path="/blog-ideas" element={<BlogIdeasGenerator />} />
               <Route path="/paragraph-rewriter" element={<ParagraphRewriter />} />
               <Route path="/sentence-rewriter" element={<SentenceRewriter />} />
               

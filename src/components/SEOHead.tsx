@@ -39,8 +39,8 @@ const SEOHead: React.FC<SEOHeadProps> = ({
       <link rel="canonical" href={canonicalUrl} />
       
       {/* Language alternates */}
-      <link rel="alternate" hreflang="en" href={canonicalUrl} />
-      <link rel="alternate" hreflang="fr" href={canonicalUrl} />
+      <link rel="alternate" hrefLang="en" href={canonicalUrl} />
+      <link rel="alternate" hrefLang="fr" href={canonicalUrl} />
       
       {/* OpenGraph tags for social sharing */}
       <meta property="og:title" content={title} />
