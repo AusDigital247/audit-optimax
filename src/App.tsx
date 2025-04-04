@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -15,6 +16,15 @@ import ParagraphRewriter from './pages/tools/ParagraphRewriter';
 import SentenceRewriter from './pages/tools/SentenceRewriter';
 import KeywordGenerator from './pages/tools/KeywordGenerator';
 import ParaphrasingTool from './pages/ParaphrasingTool';
+import GrammarChecker from './pages/tools/GrammarChecker';
+import ConclusionGenerator from './pages/tools/ConclusionGenerator';
+import InstagramBioGenerator from './pages/tools/InstagramBioGenerator';
+import InstagramHashtagGenerator from './pages/tools/InstagramHashtagGenerator';
+import InstagramNameGenerator from './pages/tools/InstagramNameGenerator';
+import TiktokHashtagGenerator from './pages/tools/TiktokHashtagGenerator';
+import TiktokUsernameGenerator from './pages/tools/TiktokUsernameGenerator';
+import YoutubeDescriptionGenerator from './pages/tools/YoutubeDescriptionGenerator';
+import YoutubeNameGenerator from './pages/tools/YoutubeNameGenerator';
 import Blog from './pages/Blog';
 import NotFound from './pages/NotFound';
 
@@ -42,18 +52,41 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/services" element={<Services />} />
             <Route path="/contact" element={<Contact />} />
+            
+            {/* SEO Tool Pages - Original URL structure */}
             <Route path="/blog-ideas-generator-tool" element={<BlogIdeasGeneratorToolPage />} />
             <Route path="/google-rank-checker-tool" element={<RankCheckerPage />} />
             <Route path="/paragraph-rewriter-tool" element={<ParagraphRewriter />} />
             <Route path="/sentence-rewriter-tool" element={<SentenceRewriter />} />
             <Route path="/keyword-generator-tool" element={<KeywordGenerator />} />
             <Route path="/paraphrasing-tool" element={<ParaphrasingTool />} />
+            <Route path="/grammar-checker-tool" element={<GrammarChecker />} />
+            <Route path="/conclusion-generator-tool" element={<ConclusionGenerator />} />
+            <Route path="/instagram-bio-generator-tool" element={<InstagramBioGenerator />} />
+            <Route path="/instagram-hashtag-generator-tool" element={<InstagramHashtagGenerator />} />
+            <Route path="/instagram-name-generator-tool" element={<InstagramNameGenerator />} />
+            <Route path="/tiktok-hashtag-generator-tool" element={<TiktokHashtagGenerator />} />
+            <Route path="/tiktok-username-generator-tool" element={<TiktokUsernameGenerator />} />
+            <Route path="/youtube-channel-description-generator-tool" element={<YoutubeDescriptionGenerator />} />
+            <Route path="/youtube-name-generator-tool" element={<YoutubeNameGenerator />} />
+            
+            {/* Alternative path structure - for compatibility */}
             <Route path="/tools/blog-ideas-generator" element={<BlogIdeasGeneratorToolPage />} />
             <Route path="/tools/rank-checker" element={<RankCheckerPage />} />
             <Route path="/tools/paragraph-rewriter" element={<ParagraphRewriter />} />
             <Route path="/tools/sentence-rewriter" element={<SentenceRewriter />} />
             <Route path="/tools/keyword-generator" element={<KeywordGenerator />} />
             <Route path="/tools/paraphrasing-tool" element={<ParaphrasingTool />} />
+            <Route path="/tools/grammar-checker" element={<GrammarChecker />} />
+            <Route path="/tools/conclusion-generator" element={<ConclusionGenerator />} />
+            <Route path="/tools/instagram-bio-generator" element={<InstagramBioGenerator />} />
+            <Route path="/tools/instagram-hashtag-generator" element={<InstagramHashtagGenerator />} />
+            <Route path="/tools/instagram-name-generator" element={<InstagramNameGenerator />} />
+            <Route path="/tools/tiktok-hashtag-generator" element={<TiktokHashtagGenerator />} />
+            <Route path="/tools/tiktok-username-generator" element={<TiktokUsernameGenerator />} />
+            <Route path="/tools/youtube-channel-description-generator" element={<YoutubeDescriptionGenerator />} />
+            <Route path="/tools/youtube-name-generator" element={<YoutubeNameGenerator />} />
+            
             <Route path="/blog" element={<Blog />} />
             <Route path="/seo-toronto" element={<SeoToronto />} />
             <Route path="/seo-ottawa" element={<SeoOttawa />} />
