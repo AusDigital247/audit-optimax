@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { LanguageProvider } from './contexts/LanguageContext';
 import Layout from './components/layout/Layout';
@@ -27,6 +27,7 @@ import YoutubeDescriptionGenerator from './pages/tools/YoutubeDescriptionGenerat
 import YoutubeNameGenerator from './pages/tools/YoutubeNameGenerator';
 import BulkAnchorLinkGenerator from './pages/tools/BulkAnchorLinkGenerator';
 import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 import NotFound from './pages/NotFound';
 
 // Import SEO pages
@@ -43,10 +44,33 @@ import SEOService from './pages/SEOService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsConditions from './pages/TermsConditions';
 
+// Redirect component to handle www to non-www and other canonical redirects
+const CanonicalRedirect: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    // Check if we're in a browser environment
+    if (typeof window !== 'undefined') {
+      const host = window.location.host;
+      const isWww = host.startsWith('www.');
+      
+      // Redirect www to non-www
+      if (isWww) {
+        const targetUrl = window.location.href.replace('www.', '');
+        window.location.replace(targetUrl);
+      }
+    }
+  }, [location, navigate]);
+  
+  return null;
+};
+
 function App() {
   return (
     <HelmetProvider>
       <LanguageProvider>
+        <CanonicalRedirect />
         <Layout>
           <Routes>
             <Route path="/" element={<Index />} />
@@ -91,6 +115,7 @@ function App() {
             <Route path="/tools/bulk-anchor-link-generator" element={<BulkAnchorLinkGenerator />} />
             
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/seo-toronto" element={<SeoToronto />} />
             <Route path="/seo-ottawa" element={<SeoOttawa />} />
             <Route path="/seo-kitchener" element={<SeoKitchener />} />

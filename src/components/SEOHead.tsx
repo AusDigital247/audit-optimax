@@ -11,6 +11,7 @@ interface SEOHeadProps {
   ogImage?: string;
   ogType?: 'website' | 'article';
   children?: React.ReactNode;
+  isHomePage?: boolean; // New prop to identify home page
 }
 
 /**
@@ -24,7 +25,8 @@ const SEOHead: React.FC<SEOHeadProps> = ({
   keywords,
   ogImage = 'https://seoaudittool.net/seo-tool-preview.jpg',
   ogType = 'website',
-  children
+  children,
+  isHomePage = false
 }) => {
   const location = useLocation();
   
@@ -41,13 +43,16 @@ const SEOHead: React.FC<SEOHeadProps> = ({
     
   const canonicalUrl = `${baseUrl}${formattedPath}`;
   
+  // Only append site name to title on home page or when explicitly requested
+  const fullTitle = isHomePage ? `${title} | SEO Audit Tool` : title;
+  
   return (
     <Helmet>
-      <title>{title}</title>
+      <title>{fullTitle}</title>
       <meta name="description" content={description} />
       {keywords && <meta name="keywords" content={keywords} />}
       
-      {/* Essential canonical tag to prevent duplicate content issues */}
+      {/* Essential canonical tag - SINGLE tag to prevent duplicate content issues */}
       <link rel="canonical" href={canonicalUrl} />
       
       {/* Language alternates */}
@@ -55,14 +60,14 @@ const SEOHead: React.FC<SEOHeadProps> = ({
       <link rel="alternate" hrefLang="fr" href={canonicalUrl} />
       
       {/* OpenGraph tags for social sharing */}
-      <meta property="og:title" content={title} />
+      <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:type" content={ogType} />
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:image" content={ogImage} />
       
       {/* Twitter tags */}
-      <meta name="twitter:title" content={title} />
+      <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       
       {/* Child elements for page-specific SEO elements */}

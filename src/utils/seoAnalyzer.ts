@@ -27,6 +27,9 @@ export const analyzeSEO = async (url: string, keyword?: string): Promise<Analysi
       normalizedUrl = `https://${normalizedUrl}`;
     }
     
+    // Remove www. if present to ensure canonical consistency
+    normalizedUrl = normalizedUrl.replace(/^(https?:\/\/)www\./i, '$1');
+    
     console.log(`Using normalized URL with preserved path: ${normalizedUrl}`);
     
     // Force a unique cache-busting parameter to prevent cached responses

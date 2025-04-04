@@ -95,6 +95,11 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/bulk-anchor-link-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Bulk Anchor Link Generator
+                </Link>
+              </li>
+              <li>
                 <Link to="/blog-ideas-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
                   <ArrowRight size={14} className="mr-2" /> Blog Ideas Generator
                 </Link>

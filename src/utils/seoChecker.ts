@@ -198,6 +198,9 @@ export const extractHeadings = (content: string): Record<string, string[]> => {
 // Check if a URL redirects (HTTP vs HTTPS) with improved reliability
 export const checkRedirect = async (url: string): Promise<boolean> => {
   try {
+    // Normalize the URL first - remove www if present for consistency
+    let normalizedUrl = url.replace(/^(https?:\/\/)www\./i, '$1');
+    
     // Try with multiple proxies
     const corsProxies = [
       'https://cors-anywhere.herokuapp.com/',
@@ -206,7 +209,7 @@ export const checkRedirect = async (url: string): Promise<boolean> => {
     
     for (const proxy of corsProxies) {
       try {
-        const response = await fetch(`${proxy}${url}`, {
+        const response = await fetch(`${proxy}${normalizedUrl}`, {
           method: 'HEAD',
           redirect: 'manual',
           headers: {
@@ -310,12 +313,31 @@ export const hasSchemaMarkup = (content: string): boolean => {
 
 // Check for canonical tag with improved detection
 export const hasCanonicalTag = (content: string): { has: boolean, url: string | null } => {
-  const canonicalMatch = content.match(/<link[^>]*rel\s*=\s*["']canonical["'][^>]*href\s*=\s*["']([^"']*)["'][^>]*>/i) ||
-                        content.match(/<link[^>]*href\s*=\s*["']([^"']*)["'][^>]*rel\s*=\s*["']canonical["'][^>]*>/i);
+  // First we'll extract all canonical tags to check if there are multiple
+  const canonicalRegex = /<link[^>]*rel\s*=\s*["']canonical["'][^>]*href\s*=\s*["']([^"']*)["'][^>]*>/gi;
+  const allCanonicals: string[] = [];
+  let match;
+  
+  while ((match = canonicalRegex.exec(content)) !== null) {
+    allCanonicals.push(match[1]);
+  }
+  
+  // Reset the regex and look for reversed attribute order
+  const reversedRegex = /<link[^>]*href\s*=\s*["']([^"']*)["'][^>]*rel\s*=\s*["']canonical["'][^>]*>/gi;
+  while ((match = reversedRegex.exec(content)) !== null) {
+    allCanonicals.push(match[1]);
+  }
+  
+  // If we found multiple, log them
+  if (allCanonicals.length > 1) {
+    console.log("Warning: Multiple canonical tags found:", allCanonicals);
+  }
   
   const result = {
-    has: !!canonicalMatch,
-    url: canonicalMatch ? canonicalMatch[1] : null
+    has: allCanonicals.length > 0,
+    url: allCanonicals.length > 0 ? allCanonicals[0] : null,
+    multipleCanonicals: allCanonicals.length > 1,
+    allCanonicalUrls: allCanonicals
   };
   
   console.log("Canonical tag detection:", result);
