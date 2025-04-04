@@ -12,7 +12,7 @@ const Index = lazy(() => import('@/pages/Index'));
 const About = lazy(() => import('@/pages/About'));
 const Services = lazy(() => import('@/pages/Services'));
 const SEOService = lazy(() => import('@/pages/SEOService'));
-const LocalSEO = lazy(() => import('@/pages/LocalSeo')); // Fixed casing to match the actual file
+const LocalSEO = lazy(() => import('@/pages/LocalSEO')); // Import using the correct case
 const Contact = lazy(() => import('@/pages/Contact'));
 const Blog = lazy(() => import('@/pages/Blog'));
 const BlogPost = lazy(() => import('@/pages/BlogPost'));
@@ -22,11 +22,11 @@ const NotFound = lazy(() => import('@/pages/NotFound'));
 const CityPage = lazy(() => import('@/pages/CityPage'));
 
 // Tool pages
-const RankChecker = lazy(() => import('@/pages/RankChecker'));
-const KeywordGenerator = lazy(() => import('@/pages/KeywordGenerator'));
-const BlogIdeasGenerator = lazy(() => import('@/pages/BlogIdeasGenerator'));
-const ParagraphRewriter = lazy(() => import('@/pages/ParagraphRewriter'));
-const SentenceRewriter = lazy(() => import('@/pages/SentenceRewriter'));
+const RankChecker = lazy(() => import('@/pages/tools/RankChecker'));
+const KeywordGenerator = lazy(() => import('@/pages/tools/KeywordGenerator'));
+const BlogIdeasGenerator = lazy(() => import('@/pages/tools/BlogIdeasGenerator'));
+const ParagraphRewriter = lazy(() => import('@/pages/tools/ParagraphRewriter'));
+const SentenceRewriter = lazy(() => import('@/pages/tools/SentenceRewriter'));
 
 function App() {
   return (
