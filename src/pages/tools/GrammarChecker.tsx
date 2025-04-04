@@ -1,13 +1,59 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import SEOHead from '@/components/SEOHead';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info, ArrowRight, CheckCircle2, Search, FileText, ExternalLink } from 'lucide-react';
+import { Info, ArrowRight, CheckCircle2, Search, Copy, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { checkGrammar } from '@/utils/hashtagGenerator';
+import DOMPurify from 'dompurify';
 
 const GrammarChecker: React.FC = () => {
+  const [text, setText] = useState('');
+  const [correctedText, setCorrectedText] = useState('');
+  const [explanations, setExplanations] = useState<string[]>([]);
+  const [includeExplanations, setIncludeExplanations] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const handleGrammarCheck = async () => {
+    if (!text.trim()) {
+      toast.error("Please enter some text to check for grammar.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const result = await checkGrammar({
+        text,
+        includeExplanations
+      });
+      
+      setCorrectedText(result.correctedText);
+      setExplanations(result.explanations);
+      
+      if (result.correctedText) {
+        toast.success("Grammar check completed!");
+      } else {
+        toast.error("Failed to check grammar. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error checking grammar:", error);
+      toast.error("An error occurred while checking grammar");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(correctedText);
+    toast.success("Corrected text copied to clipboard");
+  };
+  
   return (
     <div className="min-h-screen">
       <SEOHead
@@ -42,35 +88,77 @@ const GrammarChecker: React.FC = () => {
           </div>
         </div>
         
-        <Alert className="bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800 mb-8">
-          <Info className="h-4 w-4 text-amber-500" />
-          <AlertTitle className="text-amber-800 dark:text-amber-400">About This Tool</AlertTitle>
-          <AlertDescription className="text-amber-700 dark:text-amber-300">
-            This grammar checker is currently in development. Soon you'll be able to paste your text and receive instant feedback on grammar, spelling, punctuation, and style issues.
-          </AlertDescription>
-        </Alert>
-        
-        {/* Tool placeholder - would be replaced with actual component */}
         <div className="w-full max-w-4xl mx-auto bg-white dark:bg-navy-light shadow-md rounded-lg p-8 mb-12">
           <h2 className="text-xl font-semibold mb-4">Grammar Checker</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">Paste your text below to check for grammar errors, spelling mistakes, and suggestions for better writing.</p>
           
           <div className="mb-4">
-            <textarea
+            <Textarea
               className="w-full h-48 p-4 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
               placeholder="Paste your text here to check for grammar, spelling, and punctuation errors..."
-              disabled
-            ></textarea>
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
           </div>
           
-          <Button disabled className="bg-teal hover:bg-teal-600 text-white w-full py-2 rounded-md">
-            Check Grammar
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center space-x-2">
+              <Switch 
+                id="explanations" 
+                checked={includeExplanations}
+                onCheckedChange={setIncludeExplanations}
+              />
+              <Label htmlFor="explanations">Include explanations</Label>
+            </div>
+          </div>
+          
+          <Button 
+            onClick={handleGrammarCheck} 
+            disabled={loading || !text.trim()}
+            className="bg-teal hover:bg-teal-600 text-white w-full py-2 rounded-md"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Checking Grammar...
+              </>
+            ) : (
+              <>Check Grammar</>
+            )}
           </Button>
-          
-          <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
-            Coming soon! We're working on implementing this feature.
-          </div>
         </div>
+        
+        {correctedText && (
+          <Card className="w-full max-w-4xl mx-auto p-6 mb-12">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Corrected Text</h2>
+              <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                <Copy className="mr-2 h-4 w-4" /> Copy All
+              </Button>
+            </div>
+            
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+              <div 
+                className="mb-4" 
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(correctedText) }}
+              />
+
+              {explanations.length > 0 && (
+                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="text-lg font-semibold mb-4 text-navy dark:text-white">Explanations</h3>
+                  <ul className="space-y-3">
+                    {explanations.map((explanation, index) => (
+                      <li key={index} className="flex gap-2">
+                        <CheckCircle className="h-5 w-5 text-teal flex-shrink-0 mt-1" />
+                        <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(explanation) }} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </Card>
+        )}
         
         <div className="prose prose-lg dark:prose-invert max-w-4xl mx-auto mt-16">
           <h2 className="text-2xl font-bold mb-6">Why Good Grammar Matters in Your Content</h2>
@@ -166,7 +254,6 @@ const GrammarChecker: React.FC = () => {
           </div>
         </div>
         
-        {/* FAQ Section */}
         <section className="py-10 max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold text-navy dark:text-white mb-6">Frequently Asked Questions</h2>
           
@@ -231,7 +318,6 @@ const GrammarChecker: React.FC = () => {
           </Accordion>
         </section>
         
-        {/* Additional Resources Section */}
         <section className="py-10 max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold text-navy dark:text-white mb-6">Additional Writing Resources</h2>
           
@@ -276,7 +362,6 @@ const GrammarChecker: React.FC = () => {
           </div>
         </section>
         
-        {/* Call to Action */}
         <section className="py-12 my-10 bg-gradient-to-r from-teal/10 to-navy/10 dark:from-teal/20 dark:to-navy-light/20 rounded-xl text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-navy dark:text-white mb-4">Improve All Aspects of Your Content</h2>
           <p className="text-navy/70 dark:text-white/70 max-w-2xl mx-auto mb-8">

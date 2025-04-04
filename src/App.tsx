@@ -25,6 +25,7 @@ import TiktokHashtagGenerator from './pages/tools/TiktokHashtagGenerator';
 import TiktokUsernameGenerator from './pages/tools/TiktokUsernameGenerator';
 import YoutubeDescriptionGenerator from './pages/tools/YoutubeDescriptionGenerator';
 import YoutubeNameGenerator from './pages/tools/YoutubeNameGenerator';
+import BulkAnchorLinkGenerator from './pages/tools/BulkAnchorLinkGenerator';
 import Blog from './pages/Blog';
 import NotFound from './pages/NotFound';
 
@@ -69,6 +70,7 @@ function App() {
             <Route path="/tiktok-username-generator-tool" element={<TiktokUsernameGenerator />} />
             <Route path="/youtube-channel-description-generator-tool" element={<YoutubeDescriptionGenerator />} />
             <Route path="/youtube-name-generator-tool" element={<YoutubeNameGenerator />} />
+            <Route path="/bulk-anchor-link-generator-tool" element={<BulkAnchorLinkGenerator />} />
             
             {/* Alternative path structure - for compatibility */}
             <Route path="/tools/blog-ideas-generator" element={<BlogIdeasGeneratorToolPage />} />
@@ -86,6 +88,7 @@ function App() {
             <Route path="/tools/tiktok-username-generator" element={<TiktokUsernameGenerator />} />
             <Route path="/tools/youtube-channel-description-generator" element={<YoutubeDescriptionGenerator />} />
             <Route path="/tools/youtube-name-generator" element={<YoutubeNameGenerator />} />
+            <Route path="/tools/bulk-anchor-link-generator" element={<BulkAnchorLinkGenerator />} />
             
             <Route path="/blog" element={<Blog />} />
             <Route path="/seo-toronto" element={<SeoToronto />} />

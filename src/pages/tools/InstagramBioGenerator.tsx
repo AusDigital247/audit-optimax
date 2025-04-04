@@ -1,19 +1,82 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import SEOHead from '@/components/SEOHead';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info, ArrowRight, CheckCircle2, Search, FileText, ExternalLink, Instagram } from 'lucide-react';
+import { Info, ArrowRight, CheckCircle2, Search, Copy, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
+import { generateInstagramBio } from '@/utils/hashtagGenerator';
 
 const InstagramBioGenerator: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    niche: '',
+    interests: '',
+    achievements: '',
+    style: 'creative'
+  });
+  
+  const [bio, setBio] = useState<string>('');
+  const [loading, setLoading] = useState(false);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const generateBio = async () => {
+    if (!formData.name) {
+      toast.error("Please enter your name or brand name");
+      return;
+    }
+
+    if (!formData.niche) {
+      toast.error("Please enter your niche or industry");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const generatedBio = await generateInstagramBio({
+        name: formData.name,
+        niche: formData.niche,
+        interests: formData.interests,
+        achievements: formData.achievements,
+        style: formData.style as 'professional' | 'creative' | 'minimalist'
+      });
+      
+      setBio(generatedBio);
+      toast.success("Instagram bio generated successfully!");
+    } catch (error) {
+      console.error('Error generating bio:', error);
+      toast.error("Failed to generate bio. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(bio);
+    toast.success("Bio copied to clipboard");
+  };
+
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Instagram Bio Generator | Create Catchy, Engaging Profile Bios"
-        description="Create the perfect Instagram bio with our free AI generator tool. Stand out with catchy, engaging bios that reflect your personality or brand identity and attract more followers."
-        keywords="instagram bio generator, instagram profile bio, engaging instagram bio, instagram bio ideas, social media bio creator, catchy instagram bio"
+        title="Instagram Bio Generator | Create Engaging Instagram Bios"
+        description="Create a perfect Instagram bio that captures attention and grows your following. Our free Instagram bio generator creates custom, engaging bios for personal and business accounts."
+        keywords="instagram bio generator, instagram bio ideas, instagram profile bio, social media profile, instagram bio creator"
         canonicalPath="/instagram-bio-generator-tool"
       />
       
@@ -23,7 +86,7 @@ const InstagramBioGenerator: React.FC = () => {
             Instagram Bio Generator Tool
           </h1>
           <p className="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-            Create eye-catching, engaging Instagram bios that perfectly represent your personal brand or business. Stand out from the crowd and make a memorable first impression.
+            Create a perfect Instagram bio that captures attention, showcases your personality, and helps grow your following.
           </p>
           
           <div className="flex flex-wrap justify-center gap-4 mt-6">
@@ -33,7 +96,7 @@ const InstagramBioGenerator: React.FC = () => {
             </div>
             <div className="flex items-center text-sm bg-teal/10 dark:bg-teal/20 text-teal dark:text-teal-light px-4 py-2 rounded-full">
               <CheckCircle2 className="h-4 w-4 mr-2" />
-              <span>AI-Powered Content</span>
+              <span>Customizable</span>
             </div>
             <div className="flex items-center text-sm bg-teal/10 dark:bg-teal/20 text-teal dark:text-teal-light px-4 py-2 rounded-full">
               <CheckCircle2 className="h-4 w-4 mr-2" />
@@ -42,6 +105,119 @@ const InstagramBioGenerator: React.FC = () => {
           </div>
         </div>
         
+        <div className="w-full max-w-4xl mx-auto bg-white dark:bg-navy-light shadow-md rounded-lg p-8 mb-12">
+          <h2 className="text-xl font-semibold mb-4">Instagram Bio Generator</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">Fill out the details below to generate your custom Instagram bio.</p>
+          
+          <div className="mb-4">
+            <Label htmlFor="name" className="block text-gray-700 dark:text-gray-300 mb-2">Your Name or Brand Name *</Label>
+            <Input
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              placeholder="John Smith / Wanderlust Photography"
+              className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
+            />
+          </div>
+          
+          <div className="mb-4">
+            <Label htmlFor="niche" className="block text-gray-700 dark:text-gray-300 mb-2">Your Niche or Industry *</Label>
+            <Input
+              id="niche"
+              name="niche"
+              value={formData.niche}
+              onChange={handleInputChange}
+              placeholder="Travel photography / Fitness coaching / Digital marketing"
+              className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
+            />
+          </div>
+          
+          <div className="mb-4">
+            <Label htmlFor="interests" className="block text-gray-700 dark:text-gray-300 mb-2">Your Interests (Optional)</Label>
+            <Input
+              id="interests"
+              name="interests"
+              value={formData.interests}
+              onChange={handleInputChange}
+              placeholder="Coffee, hiking, sustainable living, etc."
+              className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
+            />
+          </div>
+          
+          <div className="mb-4">
+            <Label htmlFor="achievements" className="block text-gray-700 dark:text-gray-300 mb-2">Achievements or Credentials (Optional)</Label>
+            <Textarea
+              id="achievements"
+              name="achievements"
+              value={formData.achievements}
+              onChange={handleInputChange}
+              placeholder="Award-winning photographer / 10+ years experience / Featured in XYZ magazine"
+              className="w-full h-24 p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
+            />
+          </div>
+          
+          <div className="mb-6">
+            <Label htmlFor="style" className="block text-gray-700 dark:text-gray-300 mb-2">Bio Style</Label>
+            <Select 
+              value={formData.style} 
+              onValueChange={(value) => handleSelectChange('style', value)}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select bio style" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="professional">Professional</SelectItem>
+                <SelectItem value="creative">Creative & Fun</SelectItem>
+                <SelectItem value="minimalist">Minimalist</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <Button 
+            onClick={generateBio} 
+            disabled={loading || !formData.name || !formData.niche}
+            className="bg-teal hover:bg-teal-600 text-white w-full py-2 rounded-md"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Generating Bio...
+              </>
+            ) : (
+              <>Generate Instagram Bio</>
+            )}
+          </Button>
+        </div>
+        
+        {bio && (
+          <Card className="w-full max-w-4xl mx-auto p-6 mb-12">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Your Instagram Bio</h2>
+              <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                <Copy className="mr-2 h-4 w-4" /> Copy
+              </Button>
+            </div>
+            
+            <div className="bg-gray-50 dark:bg-navy-dark p-4 rounded-lg mb-4">
+              <p className="whitespace-pre-wrap text-gray-700 dark:text-gray-300">
+                {bio}
+              </p>
+            </div>
+            
+            <div className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="flex items-center mb-1">
+                <span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded mr-2">Tip</span>
+                Instagram has a 150 character limit for bios. The generated bio is optimized to fit this limit.
+              </p>
+              <p className="flex items-center">
+                <span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded mr-2">Tip</span>
+                Consider adding line breaks or emojis to make your bio more visually appealing.
+              </p>
+            </div>
+          </Card>
+        )}
+        
         <Alert className="bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800 mb-8">
           <Info className="h-4 w-4 text-amber-500" />
           <AlertTitle className="text-amber-800 dark:text-amber-400">About This Tool</AlertTitle>
@@ -49,64 +225,6 @@ const InstagramBioGenerator: React.FC = () => {
             This Instagram Bio Generator is currently in development. Soon you'll be able to create customized, engaging Instagram bios tailored to your personal brand or business.
           </AlertDescription>
         </Alert>
-        
-        {/* Tool placeholder - would be replaced with actual component */}
-        <div className="w-full max-w-4xl mx-auto bg-white dark:bg-navy-light shadow-md rounded-lg p-8 mb-12">
-          <h2 className="text-xl font-semibold mb-4">Instagram Bio Generator</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">Tell us about yourself or your business to create the perfect Instagram bio.</p>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">What's your Instagram account about?</label>
-            <select
-              className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
-              disabled
-            >
-              <option>Personal Account</option>
-              <option>Business/Brand</option>
-              <option>Creator/Influencer</option>
-              <option>Photography</option>
-              <option>Art/Design</option>
-              <option>Food/Cooking</option>
-              <option>Travel</option>
-              <option>Fitness/Health</option>
-              <option>Fashion/Beauty</option>
-              <option>Education</option>
-              <option>Other</option>
-            </select>
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">Describe yourself/your brand (interests, style, etc.)</label>
-            <textarea
-              className="w-full h-32 p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
-              placeholder="E.g., Travel photographer specializing in landscape and architecture, love minimalist style and earth tones..."
-              disabled
-            ></textarea>
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">Preferred Bio Style</label>
-            <select
-              className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
-              disabled
-            >
-              <option>Professional</option>
-              <option>Casual/Friendly</option>
-              <option>Funny/Witty</option>
-              <option>Inspirational</option>
-              <option>Minimalist</option>
-              <option>Creative/Artsy</option>
-            </select>
-          </div>
-          
-          <Button disabled className="bg-teal hover:bg-teal-600 text-white w-full py-2 rounded-md">
-            Generate Instagram Bio
-          </Button>
-          
-          <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
-            Coming soon! We're working on implementing this feature.
-          </div>
-        </div>
         
         <div className="prose prose-lg dark:prose-invert max-w-4xl mx-auto mt-16">
           <h2 className="text-2xl font-bold mb-6">Why Your Instagram Bio Matters</h2>
@@ -221,7 +339,6 @@ const InstagramBioGenerator: React.FC = () => {
           </div>
         </div>
         
-        {/* FAQ Section */}
         <section className="py-10 max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold text-navy dark:text-white mb-6">Frequently Asked Questions</h2>
           
@@ -301,7 +418,6 @@ const InstagramBioGenerator: React.FC = () => {
           </Accordion>
         </section>
         
-        {/* Related Tools Section */}
         <section className="py-10 max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold text-navy dark:text-white mb-6">Related Social Media Tools</h2>
           
@@ -342,7 +458,6 @@ const InstagramBioGenerator: React.FC = () => {
           </div>
         </section>
         
-        {/* Call to Action */}
         <section className="py-12 my-10 bg-gradient-to-r from-teal/10 to-navy/10 dark:from-teal/20 dark:to-navy-light/20 rounded-xl text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-navy dark:text-white mb-4">Build Your Social Media Presence</h2>
           <p className="text-navy/70 dark:text-white/70 max-w-2xl mx-auto mb-8">
