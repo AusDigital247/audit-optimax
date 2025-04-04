@@ -38,7 +38,7 @@ const NotFound = () => {
             </Button>
           </Link>
           
-          <Link to="/google-rank-checker-tool" className="w-full">
+          <Link to="/tools/rank-checker" className="w-full">
             <Button variant="outline" className="w-full">
               <Search className="mr-2 h-4 w-4" />
               Try Our Rank Checker Tool

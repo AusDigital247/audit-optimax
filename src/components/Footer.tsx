@@ -85,93 +85,48 @@ const Footer = () => {
             <h3 className="text-xl font-bold mb-4 border-b border-teal/30 pb-2">Tools</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/google-rank-checker-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                <Link to="/tools/rank-checker" className="text-white/80 hover:text-teal transition-colors flex items-center">
                   <ArrowRight size={14} className="mr-2" /> Google Rank Checker
                 </Link>
               </li>
               <li>
-                <Link to="/keyword-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                <Link to="/tools/keyword-generator" className="text-white/80 hover:text-teal transition-colors flex items-center">
                   <ArrowRight size={14} className="mr-2" /> Keyword Generator
                 </Link>
               </li>
               <li>
-                <Link to="/blog-ideas-generator" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                <Link to="/tools/blog-ideas-generator" className="text-white/80 hover:text-teal transition-colors flex items-center">
                   <ArrowRight size={14} className="mr-2" /> Blog Ideas Generator
                 </Link>
               </li>
               <li>
-                <Link to="/paragraph-rewriter-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                <Link to="/tools/paragraph-rewriter" className="text-white/80 hover:text-teal transition-colors flex items-center">
                   <ArrowRight size={14} className="mr-2" /> Paragraph Rewriter
                 </Link>
               </li>
               <li>
-                <Link to="/sentence-rewriter-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                <Link to="/tools/sentence-rewriter" className="text-white/80 hover:text-teal transition-colors flex items-center">
                   <ArrowRight size={14} className="mr-2" /> Sentence Rewriter
                 </Link>
               </li>
               <li>
-                <Link to="/grammar-checker-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Grammar Checker
-                </Link>
-              </li>
-              <li>
-                <Link to="/conclusion-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Conclusion Generator
-                </Link>
-              </li>
-              <li>
-                <Link to="/paraphrasing-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                <Link to="/tools/paraphrasing-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
                   <ArrowRight size={14} className="mr-2" /> Paraphrasing Tool
                 </Link>
               </li>
               <li>
-                <Link to="/instagram-bio-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Instagram Bio Generator
+                <Link to="/privacy-policy" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link to="/instagram-hashtag-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Instagram Hashtag Generator
-                </Link>
-              </li>
-              <li>
-                <Link to="/instagram-name-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Instagram Name Generator
-                </Link>
-              </li>
-              <li>
-                <Link to="/tiktok-hashtag-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> TikTok Hashtag Generator
-                </Link>
-              </li>
-              <li>
-                <Link to="/tiktok-username-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> TikTok Username Generator
-                </Link>
-              </li>
-              <li>
-                <Link to="/youtube-channel-description-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> YouTube Description Generator
-                </Link>
-              </li>
-              <li>
-                <Link to="/youtube-name-generator-tool" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> YouTube Name Generator
+                <Link to="/terms-conditions" className="text-white/80 hover:text-teal transition-colors flex items-center">
+                  <ArrowRight size={14} className="mr-2" /> Terms & Conditions
                 </Link>
               </li>
               <li>
                 <Link to="/about" className="text-white/80 hover:text-teal transition-colors flex items-center">
                   <ArrowRight size={14} className="mr-2" /> About Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/terms" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Terms & Conditions
-                </Link>
-              </li>
-              <li>
-                <Link to="/privacy" className="text-white/80 hover:text-teal transition-colors flex items-center">
-                  <ArrowRight size={14} className="mr-2" /> Privacy Policy
                 </Link>
               </li>
               <li>
@@ -191,8 +146,8 @@ const Footer = () => {
             &copy; {new Date().getFullYear()} SEO Audit Tool. All Rights Reserved.
           </p>
           <div className="flex space-x-4 text-sm text-white/60">
-            <Link to="/terms" className="hover:text-teal transition-colors">Terms & Conditions</Link>
-            <Link to="/privacy" className="hover:text-teal transition-colors">Privacy Policy</Link>
+            <Link to="/terms-conditions" className="hover:text-teal transition-colors">Terms & Conditions</Link>
+            <Link to="/privacy-policy" className="hover:text-teal transition-colors">Privacy Policy</Link>
             <Link to="/settings" className="hover:text-teal transition-colors">Settings</Link>
             <Link to="/sitemap.xml" target="_blank" className="hover:text-teal transition-colors">Sitemap</Link>
           </div>

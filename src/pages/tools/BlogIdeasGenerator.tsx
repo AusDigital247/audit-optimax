@@ -2,7 +2,7 @@
 import React from 'react';
 import SEOHead from '@/components/SEOHead';
 import { useLanguage } from '@/contexts/LanguageContext';
-import BlogIdeasGeneratorPage from '@/pages/BlogIdeasGenerator';
+import BlogIdeasGenerator from '@/pages/BlogIdeasGenerator';
 
 const BlogIdeasGeneratorToolPage = () => {
   const { t } = useLanguage();
@@ -26,7 +26,7 @@ const BlogIdeasGeneratorToolPage = () => {
           </p>
         </div>
         
-        <BlogIdeasGeneratorPage />
+        <BlogIdeasGenerator />
         
         <div className="prose prose-lg dark:prose-invert max-w-4xl mx-auto mt-16">
           <h2 className="text-2xl font-bold mb-6">Why Use Our Blog Ideas Generator</h2>
