@@ -1,8 +1,10 @@
+
 import React from 'react';
 import SEOHead from '@/components/SEOHead';
 import { useLanguage } from '@/contexts/LanguageContext';
+import BlogIdeasGenerator from '@/pages/BlogIdeasGenerator';
 
-const BlogIdeasGenerator = () => {
+const BlogIdeasGeneratorPage = () => {
   const { t } = useLanguage();
 
   return (
@@ -13,9 +15,9 @@ const BlogIdeasGenerator = () => {
         keywords="blog ideas generator, blog topics, content ideas, blogging inspiration, article ideas, blog titles, blog content inspiration"
       />
       
-      <BlogIdeasGeneratorPage />
+      <BlogIdeasGenerator />
     </div>
   );
 };
 
-export default BlogIdeasGenerator;
+export default BlogIdeasGeneratorPage;
