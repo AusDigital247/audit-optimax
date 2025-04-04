@@ -1,12 +1,103 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import SEOHead from '@/components/SEOHead';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info, ArrowRight, CheckCircle2, Search } from 'lucide-react';
+import { Info, ArrowRight, CheckCircle2, Search, Copy, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { generateOllamaResponse } from '@/utils/ollamaApi';
+import { toast } from "sonner";
 
 const TiktokHashtagGenerator: React.FC = () => {
+  const [formData, setFormData] = useState({
+    topic: '',
+    niche: 'entertainment',
+    audience: 'general',
+    count: '20'
+  });
+  
+  const [hashtags, setHashtags] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const generateHashtags = async () => {
+    if (!formData.topic) {
+      toast.error("Please enter a topic for your TikTok content");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const prompt = `
+        Generate ${formData.count} TikTok hashtags for content about "${formData.topic}" 
+        in the ${formData.niche} niche, targeting a ${formData.audience} audience.
+        
+        Include a mix of:
+        - Popular hashtags with high view counts (for immediate visibility)
+        - Medium-sized hashtags (for better chance of trending)
+        - Niche-specific hashtags (for targeted reach)
+        - A few trending hashtags if relevant
+        
+        Format the response as a simple list of hashtags, each starting with #, without numbering or additional text.
+        Do not repeat hashtags and ensure they are all valid for TikTok (no special characters except #).
+      `;
+
+      const systemPrompt = "You are a TikTok growth specialist who excels at generating strategic hashtag combinations that maximize reach and engagement for TikTok content. Provide only the hashtags without any additional explanation or commentary.";
+      
+      const response = await generateOllamaResponse(prompt, systemPrompt);
+      
+      // Parse the response to extract hashtags
+      const extractedHashtags = response
+        .split(/[\n\r\s,]+/)
+        .map(tag => tag.trim())
+        .filter(tag => tag.startsWith('#') && tag.length > 1)
+        .map(tag => tag.replace(/[^a-zA-Z0-9#]/g, ''));
+      
+      if (extractedHashtags.length > 0) {
+        setHashtags(extractedHashtags);
+      } else {
+        // Fallback parsing if the AI didn't format correctly
+        const fallbackParsing = response
+          .match(/#[a-zA-Z0-9]+/g) || [];
+          
+        setHashtags(fallbackParsing);
+      }
+      
+      toast.success(`Generated ${extractedHashtags.length} hashtags for your TikTok content`);
+    } catch (error) {
+      console.error('Error generating hashtags:', error);
+      toast.error("Failed to generate hashtags. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success("Hashtags copied to clipboard");
+  };
+
+  const copyAllHashtags = () => {
+    const allHashtags = hashtags.join(' ');
+    navigator.clipboard.writeText(allHashtags);
+    toast.success("All hashtags copied to clipboard");
+  };
+
   return (
     <div className="min-h-screen">
       <SEOHead
@@ -41,77 +132,144 @@ const TiktokHashtagGenerator: React.FC = () => {
           </div>
         </div>
         
-        <Alert className="bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800 mb-8">
-          <Info className="h-4 w-4 text-amber-500" />
-          <AlertTitle className="text-amber-800 dark:text-amber-400">About This Tool</AlertTitle>
-          <AlertDescription className="text-amber-700 dark:text-amber-300">
-            This TikTok Hashtag Generator is currently in development. Soon you'll be able to generate trending, niche-specific hashtags to boost your TikTok content's performance.
-          </AlertDescription>
-        </Alert>
-        
-        {/* Tool placeholder - would be replaced with actual component */}
         <div className="w-full max-w-4xl mx-auto bg-white dark:bg-navy-light shadow-md rounded-lg p-8 mb-12">
           <h2 className="text-xl font-semibold mb-4">TikTok Hashtag Generator</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">Generate trending hashtags for your TikTok videos.</p>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">Generate trending hashtags for your TikTok videos to maximize reach and engagement.</p>
           
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">What's your video about?</label>
-            <input
-              type="text"
-              className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
-              placeholder="E.g., dance challenge, cooking tutorial, fitness tips, comedy skit..."
-              disabled
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">Content Niche</label>
-            <select
-              className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
-              disabled
+          <div className="space-y-6">
+            <div>
+              <Label htmlFor="topic" className="block text-gray-700 dark:text-gray-300 mb-2">What's your video about? *</Label>
+              <Input
+                id="topic"
+                name="topic"
+                value={formData.topic}
+                onChange={handleInputChange}
+                placeholder="E.g., dance challenge, cooking tutorial, fitness tips, comedy skit..."
+                className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label htmlFor="niche" className="block text-gray-700 dark:text-gray-300 mb-2">Content Niche</Label>
+                <Select 
+                  value={formData.niche} 
+                  onValueChange={(value) => handleSelectChange('niche', value)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select content niche" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="entertainment">Entertainment</SelectItem>
+                    <SelectItem value="education">Education</SelectItem>
+                    <SelectItem value="fashion">Fashion & Beauty</SelectItem>
+                    <SelectItem value="food">Food & Cooking</SelectItem>
+                    <SelectItem value="fitness">Fitness & Health</SelectItem>
+                    <SelectItem value="travel">Travel</SelectItem>
+                    <SelectItem value="diy">DIY & Crafts</SelectItem>
+                    <SelectItem value="comedy">Comedy</SelectItem>
+                    <SelectItem value="business">Business & Finance</SelectItem>
+                    <SelectItem value="tech">Tech</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label htmlFor="audience" className="block text-gray-700 dark:text-gray-300 mb-2">Target Audience</Label>
+                <Select 
+                  value={formData.audience} 
+                  onValueChange={(value) => handleSelectChange('audience', value)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select target audience" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="teens">Teens (13-17)</SelectItem>
+                    <SelectItem value="young-adults">Young Adults (18-24)</SelectItem>
+                    <SelectItem value="adults">Adults (25-34)</SelectItem>
+                    <SelectItem value="mature-adults">Mature Adults (35-44)</SelectItem>
+                    <SelectItem value="general">Mixed/All Ages</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            <div>
+              <Label htmlFor="count" className="block text-gray-700 dark:text-gray-300 mb-2">Number of Hashtags</Label>
+              <Select 
+                value={formData.count} 
+                onValueChange={(value) => handleSelectChange('count', value)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Number of hashtags" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="10">10 hashtags</SelectItem>
+                  <SelectItem value="15">15 hashtags</SelectItem>
+                  <SelectItem value="20">20 hashtags</SelectItem>
+                  <SelectItem value="30">30 hashtags</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <Button 
+              onClick={generateHashtags} 
+              disabled={loading}
+              className="bg-teal hover:bg-teal-600 text-white w-full py-2 rounded-md"
             >
-              <option>Entertainment</option>
-              <option>Education</option>
-              <option>Fashion & Beauty</option>
-              <option>Food & Cooking</option>
-              <option>Fitness & Health</option>
-              <option>Travel</option>
-              <option>DIY & Crafts</option>
-              <option>Comedy</option>
-              <option>Business & Finance</option>
-              <option>Tech</option>
-              <option>Other</option>
-            </select>
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">Target Audience</label>
-            <select
-              className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-teal dark:bg-navy-dark dark:text-white"
-              disabled
-            >
-              <option>Teens (13-17)</option>
-              <option>Young Adults (18-24)</option>
-              <option>Adults (25-34)</option>
-              <option>Mature Adults (35-44)</option>
-              <option>Mixed/All Ages</option>
-            </select>
-          </div>
-          
-          <Button disabled className="bg-teal hover:bg-teal-600 text-white w-full py-2 rounded-md">
-            Generate TikTok Hashtags
-          </Button>
-          
-          <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
-            Coming soon! We're working on implementing this feature.
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Generating Hashtags...
+                </>
+              ) : (
+                <>Generate TikTok Hashtags</>
+              )}
+            </Button>
           </div>
         </div>
         
+        {hashtags.length > 0 && (
+          <Card className="w-full max-w-4xl mx-auto p-6 mb-12">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Your TikTok Hashtags</h2>
+              <Button variant="outline" size="sm" onClick={copyAllHashtags}>
+                <Copy className="mr-2 h-4 w-4" /> Copy All
+              </Button>
+            </div>
+            
+            <div className="bg-gray-50 dark:bg-navy-dark p-4 rounded-lg mb-4">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                Total hashtags: {hashtags.length} • Click on individual hashtags to copy
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {hashtags.map((hashtag, index) => (
+                  <Badge 
+                    key={index} 
+                    className="px-3 py-1.5 cursor-pointer hover:bg-teal/10"
+                    onClick={() => copyToClipboard(hashtag)}
+                  >
+                    {hashtag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+            
+            <div className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="mb-2 font-medium">Tips for using these hashtags:</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Mix popular and niche hashtags for balanced reach</li>
+                <li>Place the most relevant hashtags first</li>
+                <li>Refresh your hashtags regularly to stay current</li>
+                <li>Avoid using the exact same set for every post</li>
+              </ul>
+            </div>
+          </Card>
+        )}
+        
         <div className="prose prose-lg dark:prose-invert max-w-4xl mx-auto mt-16">
           <h2 className="text-2xl font-bold mb-6">How TikTok Hashtags Boost Your Content's Performance</h2>
-          <p>
-            TikTok hashtags are powerful tools for content discovery and audience growth. Unlike some other platforms where hashtags have diminished in importance, TikTok's algorithm heavily utilizes hashtags to categorize and distribute content to interested viewers.
-          </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
             <div className="bg-white dark:bg-navy-light p-6 rounded-lg shadow">
@@ -190,7 +348,6 @@ const TiktokHashtagGenerator: React.FC = () => {
           </div>
         </div>
         
-        {/* Call to Action */}
         <section className="py-12 my-10 bg-gradient-to-r from-teal/10 to-navy/10 dark:from-teal/20 dark:to-navy-light/20 rounded-xl text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-navy dark:text-white mb-4">Boost Your Social Media Strategy</h2>
           <p className="text-navy/70 dark:text-white/70 max-w-2xl mx-auto mb-8">
