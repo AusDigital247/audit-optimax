@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
+import SEOHead from '@/components/SEOHead';
 import { useLanguage } from '@/contexts/LanguageContext';
 import ParagraphRewriterForm from '@/components/ParagraphRewriterForm';
 import { Separator } from "@/components/ui/separator";
@@ -10,20 +9,20 @@ const ParagraphRewriter = () => {
 
   return (
     <div className="w-full min-h-screen">
-      <Helmet>
-        <title>Free AI Paragraph Rewriter Tool | SEO Audit Tool</title>
-        <meta name="description" content="Improve any paragraph's readability and rewrite it to make it sound more human-like with this powerful free AI paragraph rewriter tool." />
-        <meta name="keywords" content="paragraph rewriter, content rewriting, AI rewriter, paraphrasing tool, article rewriter, text enhancer, content enhancer, readability improver" />
-        <link rel="canonical" href="https://seoaudittool.net/paragraph-rewriter-tool" />
-      </Helmet>
+      <SEOHead
+        title="AI Paragraph Rewriter Tool | Enhance Content Quality"
+        description="Transform any paragraph into human-like, engaging content with our free AI paragraph rewriter tool. Improve readability, eliminate redundancy, and enhance your writing quality."
+        keywords="paragraph rewriter, content rewriting, AI rewriter, paraphrasing tool, article rewriter, text enhancer, content enhancer, readability improver"
+        canonicalPath="/paragraph-rewriter-tool"
+      />
 
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-navy dark:text-white mb-4">
-            Free AI Paragraph Rewriter Tool
+            AI Paragraph Rewriter Tool
           </h1>
           <p className="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-            Improve any paragraph's readability and rewrite it to make it sound more human-like with this powerful free tool.
+            Transform your content with our advanced AI paragraph rewriter. Improve readability, eliminate redundancy, and create more engaging, human-like content.
           </p>
         </div>
 

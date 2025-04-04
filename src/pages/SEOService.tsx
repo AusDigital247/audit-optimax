@@ -7,7 +7,7 @@ const SEOService: React.FC = () => {
     <div className="min-h-screen">
       <SEOHead
         title="Professional SEO Services | Boost Your Search Rankings"
-        description="Expert SEO services to improve your website's search engine rankings. Our comprehensive approach delivers sustainable results for your business."
+        description="Our comprehensive SEO services help businesses improve organic search visibility, increase targeted traffic, and achieve higher conversion rates."
         keywords="SEO services, search engine optimization, SEO experts, SEO agency, SEO consulting"
       />
       <div className="container mx-auto py-10 px-4">

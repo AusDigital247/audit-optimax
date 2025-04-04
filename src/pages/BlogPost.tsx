@@ -21,19 +21,19 @@ const BlogPost: React.FC = () => {
     'youtube-seo': <YoutubeSeo />
   };
   
-  // Map slugs to metadata
+  // Map slugs to metadata with unique descriptions
   const postMetadata: Record<string, BlogPostMetadata> = {
     'seo-strategy-2025': {
       title: "Effective SEO Strategy for 2025",
-      description: "Learn about the most effective SEO strategies for 2025 and beyond to stay ahead of your competition."
+      description: "Discover cutting-edge SEO strategies for 2025 that will help your website outrank competitors and drive more targeted organic traffic."
     },
     'image-seo': {
       title: "Complete Guide to Image SEO",
-      description: "Master image SEO with our comprehensive guide to optimizing images for search engines and users."
+      description: "Learn how to optimize images for better search visibility, faster loading times, and improved user experience with our comprehensive image SEO guide."
     },
     'youtube-seo': {
       title: "YouTube SEO Guide: Rank Your Videos Higher",
-      description: "Learn how to optimize your YouTube videos to rank higher in search results and get more views."
+      description: "Boost your YouTube video rankings with proven optimization techniques for titles, descriptions, tags, and viewer engagement strategies."
     }
   };
   
@@ -42,7 +42,7 @@ const BlogPost: React.FC = () => {
     ? postMetadata[slug] 
     : { 
         title: "Blog Post Not Found", 
-        description: "The blog post you're looking for couldn't be found." 
+        description: "The blog post you're looking for couldn't be found. Browse our other SEO articles and resources." 
       };
   
   // Set the canonical path explicitly

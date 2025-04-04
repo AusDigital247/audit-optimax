@@ -10,7 +10,7 @@ const LocalSEO: React.FC = () => {
     <div className="min-h-screen">
       <SEOHead
         title="Local SEO Services | Dominate Local Search Results"
-        description="Boost your local business visibility with our specialized local SEO services. Target customers in your area and improve your local search rankings."
+        description="Maximize your local business visibility with our specialized local SEO services. Improve Google Business Profile, local citations, and rank higher in local searches."
         keywords="local SEO, local search optimization, Google My Business, local citations, local business SEO"
       />
       <div className="container mx-auto py-10 px-4">

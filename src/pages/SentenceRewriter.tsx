@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
+import SEOHead from '@/components/SEOHead';
 import { useLanguage } from '@/contexts/LanguageContext';
 import SentenceRewriterForm from '@/components/SentenceRewriterForm';
 import { Separator } from "@/components/ui/separator";
@@ -10,12 +9,12 @@ const SentenceRewriter = () => {
 
   return (
     <div className="w-full min-h-screen">
-      <Helmet>
-        <title>Free AI Sentence Rewriter Tool | SEO Audit Tool</title>
-        <meta name="description" content="Enhance the quality and clarity of any sentence and improve its construction with this powerful free AI sentence rewriter tool." />
-        <meta name="keywords" content="sentence rewriter, sentence enhancer, rewrite sentences, improve sentences, sentence clarity, sentence structure, AI sentence tool, sentence improvement, clear writing" />
-        <link rel="canonical" href="https://seoaudittool.net/sentence-rewriter-tool" />
-      </Helmet>
+      <SEOHead
+        title="Free AI Sentence Rewriter Tool | Enhance Your Writing"
+        description="Transform ordinary sentences into clear, engaging content with our AI-powered sentence rewriter tool. Improve clarity, tone, and impact of your writing instantly."
+        keywords="sentence rewriter, sentence enhancer, rewrite sentences, improve sentences, sentence clarity, sentence structure, AI sentence tool, sentence improvement, clear writing"
+        canonicalPath="/sentence-rewriter-tool"
+      />
 
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">

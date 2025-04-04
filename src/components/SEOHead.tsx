@@ -55,9 +55,8 @@ const SEOHead: React.FC<SEOHeadProps> = ({
       {/* Essential canonical tag - SINGLE tag to prevent duplicate content issues */}
       <link rel="canonical" href={canonicalUrl} />
       
-      {/* Language alternates */}
+      {/* Language alternate - English only */}
       <link rel="alternate" hrefLang="en" href={canonicalUrl} />
-      <link rel="alternate" hrefLang="fr" href={canonicalUrl} />
       
       {/* OpenGraph tags for social sharing */}
       <meta property="og:title" content={fullTitle} />

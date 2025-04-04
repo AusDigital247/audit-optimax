@@ -66,9 +66,10 @@ const ParaphrasingTool = () => {
   return (
     <div className="container mx-auto px-4 py-12">
       <SEOHead
-        title="Free Paraphrasing Tool | Reword and Rephrase Text Easily"
-        description="Reword and rephrase any text with our free paraphrasing tool. Change the wording while keeping the meaning for essays, articles, and more."
+        title="Free Paraphrasing Tool | Reword and Rephrase Text"
+        description="Our AI-powered paraphrasing tool helps you reword and rephrase any text while maintaining the original meaning. Perfect for essays, articles, and avoiding plagiarism."
         keywords="paraphrasing tool, text rewriter, rephrase, reword, content rephraser, plagiarism"
+        canonicalPath="/paraphrasing-tool"
       />
 
       <h1 className="text-3xl md:text-4xl font-bold mb-4 text-center text-navy dark:text-white">Paraphrasing Tool</h1>

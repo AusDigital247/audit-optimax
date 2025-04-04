@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -60,6 +59,12 @@ const CanonicalRedirect: React.FC = () => {
         const targetUrl = window.location.href.replace('www.', '');
         window.location.replace(targetUrl);
       }
+      
+      // Redirect /tools/ paths to their canonical versions
+      if (location.pathname.startsWith('/tools/')) {
+        const newPath = location.pathname.replace('/tools/', '/') + '-tool';
+        navigate(newPath, { replace: true });
+      }
     }
   }, [location, navigate]);
   
@@ -78,7 +83,7 @@ function App() {
             <Route path="/services" element={<Services />} />
             <Route path="/contact" element={<Contact />} />
             
-            {/* SEO Tool Pages - Original URL structure */}
+            {/* SEO Tool Pages - Original URL structure only */}
             <Route path="/blog-ideas-generator-tool" element={<BlogIdeasGeneratorToolPage />} />
             <Route path="/google-rank-checker-tool" element={<RankCheckerPage />} />
             <Route path="/paragraph-rewriter-tool" element={<ParagraphRewriter />} />
@@ -95,24 +100,6 @@ function App() {
             <Route path="/youtube-channel-description-generator-tool" element={<YoutubeDescriptionGenerator />} />
             <Route path="/youtube-name-generator-tool" element={<YoutubeNameGenerator />} />
             <Route path="/bulk-anchor-link-generator-tool" element={<BulkAnchorLinkGenerator />} />
-            
-            {/* Alternative path structure - for compatibility */}
-            <Route path="/tools/blog-ideas-generator" element={<BlogIdeasGeneratorToolPage />} />
-            <Route path="/tools/rank-checker" element={<RankCheckerPage />} />
-            <Route path="/tools/paragraph-rewriter" element={<ParagraphRewriter />} />
-            <Route path="/tools/sentence-rewriter" element={<SentenceRewriter />} />
-            <Route path="/tools/keyword-generator" element={<KeywordGenerator />} />
-            <Route path="/tools/paraphrasing-tool" element={<ParaphrasingTool />} />
-            <Route path="/tools/grammar-checker" element={<GrammarChecker />} />
-            <Route path="/tools/conclusion-generator" element={<ConclusionGenerator />} />
-            <Route path="/tools/instagram-bio-generator" element={<InstagramBioGenerator />} />
-            <Route path="/tools/instagram-hashtag-generator" element={<InstagramHashtagGenerator />} />
-            <Route path="/tools/instagram-name-generator" element={<InstagramNameGenerator />} />
-            <Route path="/tools/tiktok-hashtag-generator" element={<TiktokHashtagGenerator />} />
-            <Route path="/tools/tiktok-username-generator" element={<TiktokUsernameGenerator />} />
-            <Route path="/tools/youtube-channel-description-generator" element={<YoutubeDescriptionGenerator />} />
-            <Route path="/tools/youtube-name-generator" element={<YoutubeNameGenerator />} />
-            <Route path="/tools/bulk-anchor-link-generator" element={<BulkAnchorLinkGenerator />} />
             
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />

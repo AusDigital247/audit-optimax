@@ -19,8 +19,8 @@ const NotFound = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-navy-light px-4">
       <SEOHead
-        title="Page Not Found | 404 Error | SEO Audit Tool"
-        description="The page you are looking for doesn't exist or has been moved. Return to our homepage or try one of our SEO tools."
+        title="Page Not Found | 404 Error"
+        description="Sorry, the page you requested could not be found. Navigate to our homepage or try one of our SEO tools to find what you're looking for."
         keywords="404, page not found, error page, missing page"
       />
       <div className="max-w-md w-full text-center bg-white dark:bg-navy shadow-lg rounded-lg p-8">
