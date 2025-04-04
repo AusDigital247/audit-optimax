@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -43,6 +42,12 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/services" element={<Services />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/blog-ideas-generator-tool" element={<BlogIdeasGeneratorToolPage />} />
+            <Route path="/google-rank-checker-tool" element={<RankCheckerPage />} />
+            <Route path="/paragraph-rewriter-tool" element={<ParagraphRewriter />} />
+            <Route path="/sentence-rewriter-tool" element={<SentenceRewriter />} />
+            <Route path="/keyword-generator-tool" element={<KeywordGenerator />} />
+            <Route path="/paraphrasing-tool" element={<ParaphrasingTool />} />
             <Route path="/tools/blog-ideas-generator" element={<BlogIdeasGeneratorToolPage />} />
             <Route path="/tools/rank-checker" element={<RankCheckerPage />} />
             <Route path="/tools/paragraph-rewriter" element={<ParagraphRewriter />} />
