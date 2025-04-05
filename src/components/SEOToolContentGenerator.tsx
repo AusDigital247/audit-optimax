@@ -117,7 +117,10 @@ What sets this tool apart is its focus on practical application. Many tools prov
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <Loader size="medium" text="Generating personalized content insights..." />
+        <div className="flex flex-col items-center">
+          <Loader size="medium" />
+          <p className="mt-4 text-navy dark:text-white/80">Generating personalized content insights...</p>
+        </div>
       </div>
     );
   }
