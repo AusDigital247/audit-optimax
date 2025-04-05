@@ -6,7 +6,7 @@ import SEOContainer from '@/components/SEOContainer';
 import SEOResults from '@/components/SEOResults';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Link } from 'react-router-dom';
-import { Book, MapPin, Award, TrendingUp, CheckCircle, Zap, BarChart } from 'lucide-react';
+import { Book, MapPin, Award, TrendingUp, CheckCircle, Zap, BarChart, ArrowRight, Search, Globe, Lightbulb, Tool, FileText } from 'lucide-react';
 
 const Index = () => {
   const { t } = useLanguage();
@@ -56,7 +56,8 @@ const Index = () => {
         title="SEO Audit Tool | Website SEO Checker | Free SEO Analysis"
         description="Free comprehensive SEO audit tool to analyze websites and get actionable recommendations. Check SEO health score and improve search rankings with our website checker tool."
         canonicalPath="/"
-        keywords="SEO audit tool, website SEO checker, SEO analysis, SEO health score, search engine optimization, free SEO tool, website checker"
+        keywords="SEO audit tool, website SEO checker, SEO analysis, SEO health score, search engine optimization, free SEO tool, website checker, USA SEO tools"
+        isHomePage={true}
       />
 
       {!results && !error && (
@@ -105,6 +106,109 @@ const Index = () => {
       )}
       
       {!results && !error && !isAnalyzing && (
+        <section className="py-16 bg-white dark:bg-navy">
+          <div className="container max-w-7xl px-4 mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-navy dark:text-white mb-4 flex items-center justify-center gap-2">
+                <Tool className="h-7 w-7 text-teal dark:text-teal-light" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-white dark:to-teal-light">
+                  Our SEO Tools Suite
+                </span>
+              </h2>
+              <p className="text-lg text-navy/70 dark:text-white/70 max-w-3xl mx-auto">
+                Explore our complete collection of free SEO tools designed to help improve your website's search visibility
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+              <Link to="/google-rank-checker-tool" className="group">
+                <div className="glass-card-hover h-full flex flex-col p-6 bg-white dark:bg-navy-light rounded-lg shadow-md">
+                  <div className="bg-teal/10 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                    <BarChart className="h-6 w-6 text-teal" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
+                    Google Rank Checker Tool
+                  </h3>
+                  <p className="text-navy/80 dark:text-white/70 mb-4">
+                    Track your website's position in Google search results across different regions and keywords.
+                  </p>
+                  <div className="mt-auto">
+                    <span className="text-teal font-medium group-hover:text-teal-light transition-colors flex items-center gap-1">
+                      Check your rankings <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+              
+              <Link to="/keyword-generator-tool" className="group">
+                <div className="glass-card-hover h-full flex flex-col p-6 bg-white dark:bg-navy-light rounded-lg shadow-md">
+                  <div className="bg-teal/10 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                    <Search className="h-6 w-6 text-teal" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
+                    Keyword Generator Tool
+                  </h3>
+                  <p className="text-navy/80 dark:text-white/70 mb-4">
+                    Discover high-value keywords to target in your content strategy and SEO campaigns.
+                  </p>
+                  <div className="mt-auto">
+                    <span className="text-teal font-medium group-hover:text-teal-light transition-colors flex items-center gap-1">
+                      Generate keywords <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+              
+              <Link to="/bulk-anchor-link-generator-tool" className="group">
+                <div className="glass-card-hover h-full flex flex-col p-6 bg-white dark:bg-navy-light rounded-lg shadow-md">
+                  <div className="bg-teal/10 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                    <Globe className="h-6 w-6 text-teal" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
+                    Bulk Anchor Link Generator
+                  </h3>
+                  <p className="text-navy/80 dark:text-white/70 mb-4">
+                    Create SEO-friendly HTML anchor links in bulk for your content and link building campaigns.
+                  </p>
+                  <div className="mt-auto">
+                    <span className="text-teal font-medium group-hover:text-teal-light transition-colors flex items-center gap-1">
+                      Generate anchor links <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <Link to="/blog-ideas-generator-tool" className="p-4 bg-white dark:bg-navy-light rounded-lg shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group">
+                <Lightbulb className="h-5 w-5 text-teal" />
+                <span className="text-navy dark:text-white group-hover:text-teal transition-colors">Blog Ideas Generator</span>
+              </Link>
+              <Link to="/paragraph-rewriter-tool" className="p-4 bg-white dark:bg-navy-light rounded-lg shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group">
+                <FileText className="h-5 w-5 text-teal" />
+                <span className="text-navy dark:text-white group-hover:text-teal transition-colors">Paragraph Rewriter</span>
+              </Link>
+              <Link to="/sentence-rewriter-tool" className="p-4 bg-white dark:bg-navy-light rounded-lg shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group">
+                <FileText className="h-5 w-5 text-teal" />
+                <span className="text-navy dark:text-white group-hover:text-teal transition-colors">Sentence Rewriter</span>
+              </Link>
+              <Link to="/paraphrasing-tool" className="p-4 bg-white dark:bg-navy-light rounded-lg shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group">
+                <FileText className="h-5 w-5 text-teal" />
+                <span className="text-navy dark:text-white group-hover:text-teal transition-colors">Paraphrasing Tool</span>
+              </Link>
+            </div>
+            
+            <div className="text-center mt-10">
+              <Link to="/seo-services" className="btn-gradient inline-flex items-center gap-2">
+                <Tool className="h-5 w-5" />
+                Explore All SEO Tools
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+      
+      {!results && !error && !isAnalyzing && (
         <section className="py-16 bg-gray-50 dark:bg-navy/90">
           <div className="container max-w-7xl px-4 mx-auto">
             <div className="text-center mb-12">
@@ -121,52 +225,43 @@ const Index = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <Link to="/blog/seo-strategy-2025" className="group">
-                <div className="glass-card-hover h-full flex flex-col">
-                  <div className="p-6 flex-grow">
-                    <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
-                      Advanced SEO Strategies for 2025
-                    </h3>
-                    <p className="text-navy/70 dark:text-white/70 mb-4">
-                      Discover cutting-edge SEO strategies that will dominate in 2025, including AI integration, voice search optimization, and user experience signals.
-                    </p>
-                  </div>
-                  <div className="px-6 pb-6">
-                    <span className="text-teal font-medium group-hover:text-teal-light transition-colors">Read more →</span>
+                <div className="glass-card-hover h-full flex flex-col p-6 bg-white dark:bg-navy-light rounded-lg shadow-md">
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
+                    Advanced SEO Strategies for 2025
+                  </h3>
+                  <p className="text-navy/80 dark:text-white/70 mb-4">
+                    Discover cutting-edge SEO strategies that will dominate in 2025, including AI integration, voice search optimization, and user experience signals.
+                  </p>
+                  <div className="mt-auto">
+                    <span className="text-teal font-medium group-hover:text-teal-light transition-colors flex items-center gap-1">Read more <ArrowRight className="h-4 w-4" /></span>
                   </div>
                 </div>
               </Link>
               
               <Link to="/blog/image-seo" className="group">
-                <div className="glass-card-hover h-full flex flex-col">
-                  <div className="p-6 flex-grow">
-                    <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
-                      Advanced Image SEO Techniques
-                    </h3>
-                    <p className="text-navy/70 dark:text-white/70 mb-4">
-                      Learn how to optimize your images for better search visibility with these advanced techniques and best practices for image SEO.
-                    </p>
-                  </div>
-                  <div className="px-6 pb-6">
-                    <span className="text-teal font-medium group-hover:text-teal-light transition-colors">Read more →</span>
+                <div className="glass-card-hover h-full flex flex-col p-6 bg-white dark:bg-navy-light rounded-lg shadow-md">
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
+                    Advanced Image SEO Techniques
+                  </h3>
+                  <p className="text-navy/80 dark:text-white/70 mb-4">
+                    Learn how to optimize your images for better search visibility with these advanced techniques and best practices for image SEO.
+                  </p>
+                  <div className="mt-auto">
+                    <span className="text-teal font-medium group-hover:text-teal-light transition-colors flex items-center gap-1">Read more <ArrowRight className="h-4 w-4" /></span>
                   </div>
                 </div>
               </Link>
               
-              <Link to="/rank-checker" className="group">
-                <div className="glass-card-hover h-full flex flex-col">
-                  <div className="p-6 flex-grow">
-                    <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
-                      <div className="flex items-center">
-                        <BarChart className="h-5 w-5 text-teal mr-2" />
-                        Google Rank Checker Tool
-                      </div>
-                    </h3>
-                    <p className="text-navy/70 dark:text-white/70 mb-4">
-                      Track your website's position in Google search results across different regions with our free rank checker tool.
-                    </p>
-                  </div>
-                  <div className="px-6 pb-6">
-                    <span className="text-teal font-medium group-hover:text-teal-light transition-colors">Check your rankings →</span>
+              <Link to="/blog/youtube-seo" className="group">
+                <div className="glass-card-hover h-full flex flex-col p-6 bg-white dark:bg-navy-light rounded-lg shadow-md">
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
+                    YouTube SEO: Rank Your Videos Higher
+                  </h3>
+                  <p className="text-navy/80 dark:text-white/70 mb-4">
+                    Boost your YouTube video rankings with proven optimization techniques for titles, descriptions, tags, and viewer engagement strategies.
+                  </p>
+                  <div className="mt-auto">
+                    <span className="text-teal font-medium group-hover:text-teal-light transition-colors flex items-center gap-1">Read more <ArrowRight className="h-4 w-4" /></span>
                   </div>
                 </div>
               </Link>
@@ -189,32 +284,42 @@ const Index = () => {
               <h2 className="text-3xl font-bold text-navy dark:text-white mb-4 flex items-center justify-center gap-2">
                 <MapPin className="h-7 w-7 text-teal dark:text-teal-light" />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-white dark:to-teal-light">
-                  Local SEO Services
+                  Local SEO Services Across the USA
                 </span>
               </h2>
               <p className="text-lg text-navy/70 dark:text-white/70 max-w-3xl mx-auto">
-                We offer specialized local SEO services to help businesses improve their visibility in location-based searches.
+                We offer specialized local SEO services to help businesses improve their visibility in location-based searches across the United States.
               </p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Link to="/seo-toronto" className="group">
+              <Link to="/seo-buffalo" className="group">
                 <div className="p-6 border border-gray-200 dark:border-gray-700 rounded-xl text-center transition-all group-hover:border-teal group-hover:shadow-sm glass-card-hover">
                   <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full w-14 h-14 mx-auto mb-4 flex items-center justify-center">
                     <MapPin className="h-6 w-6 text-teal dark:text-teal-light" />
                   </div>
-                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">Toronto SEO</h3>
-                  <p className="text-navy/70 dark:text-white/70">Expert SEO services for businesses in Toronto and the GTA.</p>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">Buffalo SEO</h3>
+                  <p className="text-navy/70 dark:text-white/70">Expert SEO services for businesses in Buffalo and Western New York.</p>
                 </div>
               </Link>
               
-              <Link to="/seo-ottawa" className="group">
+              <Link to="/local-seo" className="group">
                 <div className="p-6 border border-gray-200 dark:border-gray-700 rounded-xl text-center transition-all group-hover:border-teal group-hover:shadow-sm glass-card-hover">
                   <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full w-14 h-14 mx-auto mb-4 flex items-center justify-center">
-                    <MapPin className="h-6 w-6 text-teal dark:text-teal-light" />
+                    <Globe className="h-6 w-6 text-teal dark:text-teal-light" />
                   </div>
-                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">Ottawa SEO</h3>
-                  <p className="text-navy/70 dark:text-white/70">Specialized SEO strategies for Ottawa businesses and organizations.</p>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">Local SEO Services</h3>
+                  <p className="text-navy/70 dark:text-white/70">Comprehensive local search optimization for businesses across the United States.</p>
+                </div>
+              </Link>
+              
+              <Link to="/seo-services" className="group">
+                <div className="p-6 border border-gray-200 dark:border-gray-700 rounded-xl text-center transition-all group-hover:border-teal group-hover:shadow-sm glass-card-hover">
+                  <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full w-14 h-14 mx-auto mb-4 flex items-center justify-center">
+                    <Search className="h-6 w-6 text-teal dark:text-teal-light" />
+                  </div>
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">SEO Services</h3>
+                  <p className="text-navy/70 dark:text-white/70">Full-service SEO solutions to improve your search engine rankings nationwide.</p>
                 </div>
               </Link>
               
@@ -247,20 +352,10 @@ const Index = () => {
                   <p className="text-navy/70 dark:text-white/70">Strategic SEO solutions for Vancouver businesses and startups.</p>
                 </div>
               </Link>
-              
-              <Link to="/seo-buffalo" className="group">
-                <div className="p-6 border border-gray-200 dark:border-gray-700 rounded-xl text-center transition-all group-hover:border-teal group-hover:shadow-sm glass-card-hover">
-                  <div className="bg-teal/10 dark:bg-teal/20 p-3 rounded-full w-14 h-14 mx-auto mb-4 flex items-center justify-center">
-                    <MapPin className="h-6 w-6 text-teal dark:text-teal-light" />
-                  </div>
-                  <h3 className="text-xl font-bold text-navy dark:text-white mb-2 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">Buffalo SEO</h3>
-                  <p className="text-navy/70 dark:text-white/70">Results-driven SEO services for Buffalo, NY businesses.</p>
-                </div>
-              </Link>
             </div>
             
             <div className="text-center mt-10">
-              <Link to="/services/local-seo" className="btn-gradient inline-flex items-center gap-2">
+              <Link to="/local-seo" className="btn-gradient inline-flex items-center gap-2">
                 <Award className="h-5 w-5" />
                 Learn More About Local SEO
               </Link>

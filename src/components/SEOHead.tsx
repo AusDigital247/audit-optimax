@@ -11,7 +11,7 @@ interface SEOHeadProps {
   ogImage?: string;
   ogType?: 'website' | 'article';
   children?: React.ReactNode;
-  isHomePage?: boolean; // New prop to identify home page
+  isHomePage?: boolean; // Prop to identify home page
 }
 
 /**
@@ -43,7 +43,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
     
   const canonicalUrl = `${baseUrl}${formattedPath}`;
   
-  // Only append site name to title on home page or when explicitly requested
+  // Only append site name to title on home page
   const fullTitle = isHomePage ? `${title} | SEO Audit Tool` : title;
   
   return (

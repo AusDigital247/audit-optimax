@@ -1,9 +1,11 @@
+
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/components/ui/use-toast';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, ArrowRight, Search, Book } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import SEOHead from '@/components/SEOHead';
+import { Link } from 'react-router-dom';
 
 const Contact = () => {
   const { t, language } = useLanguage();
@@ -18,7 +20,7 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   useEffect(() => {
-    document.title = language === 'en' ? 'Contact Us - SEO Audit Tool' : 'Contactez-nous - SEO Audit Tool';
+    document.title = language === 'en' ? 'Contact Us - SEO Audit Tool' : 'Contact Us - SEO Audit Tool';
   }, [language]);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -34,7 +36,7 @@ const Contact = () => {
       // Send email to admin (contact form submission)
       const { data: adminEmailData, error: adminEmailError } = await supabase.functions.invoke('send-email', {
         body: {
-          to: 'seoaudittoolofficial@gmail.com', // Updated email address
+          to: 'seoaudittoolofficial@gmail.com',
           subject: `Contact Form: ${formData.subject}`,
           name: formData.name,
           email: formData.email,
@@ -85,9 +87,9 @@ const Contact = () => {
     <div className="min-h-screen w-full">
       <SEOHead
         title="Contact Us - SEO Audit Tool | Get in Touch"
-        description="Contact the SEO Audit Tool team for inquiries, support, or to learn more about our SEO services. We're here to help improve your website's visibility and performance."
+        description="Contact the SEO Audit Tool team for inquiries, support, or to learn more about our SEO services. We're here to help improve your website's visibility and performance across the United States."
         canonicalPath="/contact"
-        keywords="contact SEO audit tool, SEO services contact, SEO help, website optimization contact"
+        keywords="contact SEO audit tool, SEO services contact, SEO help, website optimization contact, US SEO services"
       />
       
       <section className="bg-gradient-to-b from-navy to-navy-light py-16 md:py-24 w-full">
@@ -97,7 +99,7 @@ const Contact = () => {
               {t('contact_title')}
             </h1>
             <h2 className="text-xl md:text-2xl text-white/80 mb-8">
-              {t('contact_subtitle')}
+              We provide SEO services nationwide across the United States
             </h2>
           </div>
         </div>
@@ -109,7 +111,7 @@ const Contact = () => {
             <div>
               <h2 className="text-3xl font-bold mb-6 text-navy">Get In Touch</h2>
               <p className="text-navy/80 mb-8">
-                Have questions about our services or want to discuss your project? Fill out the form below or contact us directly.
+                Have questions about our services or want to discuss your project? Fill out the form below or contact us directly. Our team serves clients across the United States with specialized SEO solutions.
               </p>
               
               <div className="space-y-6 mb-8">
@@ -128,8 +130,8 @@ const Contact = () => {
                     <MapPin className="h-6 w-6 text-teal" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-navy">Visit Us</h3>
-                    <p className="text-navy/70">Toronto, ON, Canada</p>
+                    <h3 className="text-lg font-semibold text-navy">Our Location</h3>
+                    <p className="text-navy/70">Buffalo, NY, United States</p>
                   </div>
                 </div>
               </div>
@@ -139,17 +141,39 @@ const Contact = () => {
                 <ul className="space-y-2">
                   <li className="flex justify-between">
                     <span>Monday - Friday:</span>
-                    <span>9:00 AM - 6:00 PM</span>
+                    <span>9:00 AM - 6:00 PM ET</span>
                   </li>
                   <li className="flex justify-between">
                     <span>Saturday:</span>
-                    <span>10:00 AM - 3:00 PM</span>
+                    <span>10:00 AM - 3:00 PM ET</span>
                   </li>
                   <li className="flex justify-between">
                     <span>Sunday:</span>
                     <span>Closed</span>
                   </li>
                 </ul>
+              </div>
+              
+              <div className="mt-8">
+                <h3 className="text-xl font-bold mb-4 text-navy">Our Services</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Link to="/google-rank-checker-tool" className="flex items-center gap-2 text-navy/80 hover:text-teal transition-colors">
+                    <ArrowRight className="h-4 w-4 text-teal" />
+                    <span>Google Rank Checker</span>
+                  </Link>
+                  <Link to="/seo-buffalo" className="flex items-center gap-2 text-navy/80 hover:text-teal transition-colors">
+                    <ArrowRight className="h-4 w-4 text-teal" />
+                    <span>Buffalo SEO Services</span>
+                  </Link>
+                  <Link to="/local-seo" className="flex items-center gap-2 text-navy/80 hover:text-teal transition-colors">
+                    <ArrowRight className="h-4 w-4 text-teal" />
+                    <span>Local SEO Services</span>
+                  </Link>
+                  <Link to="/seo-services" className="flex items-center gap-2 text-navy/80 hover:text-teal transition-colors">
+                    <ArrowRight className="h-4 w-4 text-teal" />
+                    <span>Professional SEO Services</span>
+                  </Link>
+                </div>
               </div>
             </div>
             
@@ -215,6 +239,7 @@ const Contact = () => {
                       <option value="General Inquiry">General Inquiry</option>
                       <option value="SEO Services">SEO Services</option>
                       <option value="Local SEO">Local SEO</option>
+                      <option value="Buffalo SEO">Buffalo SEO</option>
                       <option value="Quote Request">Quote Request</option>
                       <option value="Technical Support">Technical Support</option>
                       <option value="Other">Other</option>
@@ -258,9 +283,18 @@ const Contact = () => {
       
       <section className="w-full h-96 bg-navy-light flex items-center justify-center">
         <div className="text-center text-white">
-          <MapPin className="h-16 w-16 text-teal mx-auto mb-4" />
-          <h3 className="text-2xl font-bold">Interactive Map Coming Soon</h3>
-          <p className="text-white/70">We're working on integrating a map view of our location.</p>
+          <h3 className="text-2xl font-bold mb-4">Serving Clients Nationwide</h3>
+          <p className="text-white/70 max-w-2xl mx-auto px-4">
+            From <Link to="/seo-buffalo" className="text-teal hover:underline">Buffalo</Link> to the West Coast, our SEO services help businesses across the United States improve their online visibility and attract more customers. Check out our <Link to="/google-rank-checker-tool" className="text-teal hover:underline">rank checker tool</Link> to see where your website stands in search results.
+          </p>
+          <div className="mt-8 flex justify-center gap-4">
+            <Link to="/" className="bg-teal/20 hover:bg-teal/30 text-white py-2 px-4 rounded-lg inline-flex items-center">
+              <Search className="mr-2 h-5 w-5" /> Try Our SEO Audit Tool
+            </Link>
+            <Link to="/blog" className="bg-teal/20 hover:bg-teal/30 text-white py-2 px-4 rounded-lg inline-flex items-center">
+              <Book className="mr-2 h-5 w-5" /> Read SEO Resources
+            </Link>
+          </div>
         </div>
       </section>
     </div>
