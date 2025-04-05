@@ -6,7 +6,7 @@ import SEOContainer from '@/components/SEOContainer';
 import SEOResults from '@/components/SEOResults';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Link } from 'react-router-dom';
-import { Book, MapPin, Award, TrendingUp, CheckCircle, Zap, BarChart, ArrowRight, Search, Globe, Lightbulb, Tool, FileText } from 'lucide-react';
+import { Book, MapPin, Award, TrendingUp, CheckCircle, Zap, BarChart, ArrowRight, Search, Globe, Lightbulb, Wrench, FileText } from 'lucide-react';
 
 const Index = () => {
   const { t } = useLanguage();
@@ -110,7 +110,7 @@ const Index = () => {
           <div className="container max-w-7xl px-4 mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-navy dark:text-white mb-4 flex items-center justify-center gap-2">
-                <Tool className="h-7 w-7 text-teal dark:text-teal-light" />
+                <Wrench className="h-7 w-7 text-teal dark:text-teal-light" />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-white dark:to-teal-light">
                   Our SEO Tools Suite
                 </span>
