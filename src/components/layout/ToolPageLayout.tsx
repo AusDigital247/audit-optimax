@@ -52,24 +52,24 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
         </div>
       </div>
       
-      {/* Content section with light/dark theme support */}
+      {/* Content section with improved contrast for both light/dark themes */}
       <div className="bg-light-bg dark:bg-navy-light py-10 lg:py-16 w-full">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-5xl mx-auto">
-            <div className="glass-card dark:bg-navy-light/50 p-6 md:p-8 rounded-xl shadow-lg border border-white/20 dark:border-white/5">
+            <div className="bg-white/80 dark:bg-navy/60 p-6 md:p-8 rounded-xl shadow-lg border border-gray-200 dark:border-white/10">
               {children}
             </div>
             
-            {/* Related tools section - limited to max 2 internal links */}
+            {/* Related tools section - limited to max 2 internal links with improved visibility */}
             {relatedTools && relatedTools.length > 0 && (
               <div className="mt-12 md:mt-16">
                 <h2 className="text-2xl font-bold mb-6 text-navy dark:text-white font-display">Related SEO Tools</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {relatedTools.slice(0, 2).map((tool, index) => (
-                    <div key={index} className="glass-card dark:bg-navy/30 p-5 rounded-lg border border-white/20 dark:border-white/5 hover:shadow-md transition-all">
+                    <div key={index} className="bg-white/80 dark:bg-navy/50 p-5 rounded-lg border border-gray-200 dark:border-white/10 hover:shadow-md transition-all">
                       <h3 className="text-lg font-semibold text-navy dark:text-white mb-2 font-display">{tool.name}</h3>
                       {tool.description && (
-                        <p className="text-navy/70 dark:text-white font-body text-sm mb-3">{tool.description}</p>
+                        <p className="text-navy/80 dark:text-white/80 font-body text-sm mb-3">{tool.description}</p>
                       )}
                       <Link 
                         to={tool.path} 
@@ -83,16 +83,16 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
               </div>
             )}
             
-            {/* CTA section */}
+            {/* CTA section with improved visibility */}
             <div className="mt-12 text-center">
-              <div className="glass-card dark:bg-navy/30 p-6 rounded-lg border border-white/20 dark:border-white/5">
+              <div className="bg-white/80 dark:bg-navy/50 p-6 rounded-lg border border-gray-200 dark:border-white/10">
                 <h3 className="text-xl font-bold mb-3 text-navy dark:text-white font-display">Need More Comprehensive SEO Analysis?</h3>
-                <p className="text-navy/70 dark:text-white font-body mb-4">
+                <p className="text-navy/80 dark:text-white/80 font-body mb-4">
                   Run a full website SEO audit to identify all optimization opportunities at once.
                 </p>
                 <Link 
                   to="/"
-                  className="btn-primary inline-flex items-center gap-2"
+                  className="btn-primary inline-flex items-center gap-2 bg-teal hover:bg-teal-dark text-white py-2 px-4 rounded-md transition-colors"
                 >
                   <Search className="h-4 w-4" />
                   Start Free SEO Audit
