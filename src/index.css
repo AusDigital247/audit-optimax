@@ -61,7 +61,7 @@
   }
   
   body {
-    @apply bg-light-bg dark:bg-navy text-light-text dark:text-white antialiased;
+    @apply bg-light-bg dark:bg-navy text-navy dark:text-white antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
     width: 100%;
     max-width: 100%;
@@ -150,15 +150,15 @@
   
   /* Section Styles */
   .content-section-light {
-    @apply bg-gradient-light dark:bg-gradient-to-b dark:from-navy dark:to-navy-light text-light-text dark:text-white py-12 md:py-16 w-full;
+    @apply bg-gradient-light dark:bg-gradient-to-b dark:from-navy dark:to-navy-light text-navy dark:text-white py-12 md:py-16 w-full;
   }
   
   .content-section-dark {
-    @apply bg-gradient-to-b from-light-bg to-light-accent dark:from-navy dark:to-navy-light text-light-text dark:text-white py-12 md:py-16 w-full;
+    @apply bg-gradient-to-b from-light-bg to-light-accent dark:from-navy dark:to-navy-light text-navy dark:text-white py-12 md:py-16 w-full;
   }
   
   .content-section-alt {
-    @apply bg-gradient-to-b from-light-accent to-light-bg dark:from-navy-light dark:to-navy text-light-text dark:text-white py-12 md:py-16 w-full;
+    @apply bg-gradient-to-b from-light-accent to-light-bg dark:from-navy-light dark:to-navy text-navy dark:text-white py-12 md:py-16 w-full;
   }
   
   /* Button Styles */
@@ -171,7 +171,7 @@
   }
   
   .btn-glass {
-    @apply glass-button-secondary text-light-text dark:text-white font-medium rounded-md px-4 py-2;
+    @apply glass-button-secondary text-navy dark:text-white font-medium rounded-md px-4 py-2;
   }
   
   .nav-link {
@@ -183,11 +183,11 @@
   }
   
   .section-title {
-    @apply text-2xl md:text-3xl font-bold mb-6 text-center text-light-text dark:text-white;
+    @apply text-2xl md:text-3xl font-bold mb-6 text-center text-navy dark:text-white;
   }
   
   .section-subtitle {
-    @apply text-lg text-center max-w-3xl mx-auto mb-10 text-light-muted dark:text-white/70;
+    @apply text-lg text-center max-w-3xl mx-auto mb-10 text-navy dark:text-white/70;
   }
   
   /* Fix for horizontal tabs */
@@ -259,11 +259,49 @@
   }
   
   .light-section {
-    @apply bg-light-bg text-light-text;
+    @apply bg-light-bg text-navy;
   }
   
   .dark-section {
     @apply bg-navy text-white;
+  }
+  
+  /* Apply the requested color changes */
+  .text-white {
+    --tw-text-opacity: 1;
+    color: rgb(41 70 143);
+  }
+
+  .text-white\/80 {
+    color: #5f7abcb3;
+  }
+
+  .text-navy\/70 {
+    color: #5f7abcb3;
+  }
+  
+  .text-navy {
+    --tw-text-opacity: 1;
+    color: rgb(41 70 143);
+  }
+  
+  /* Override for dark mode to ensure visibility */
+  .dark .text-white {
+    --tw-text-opacity: 1;
+    color: rgba(255, 255, 255, var(--tw-text-opacity));
+  }
+  
+  .dark .text-white\/80 {
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .dark .text-navy\/70 {
+    color: #5f7abcb3;
+  }
+  
+  .dark .text-navy {
+    --tw-text-opacity: 1;
+    color: rgb(41 70 143);
   }
 }
 
