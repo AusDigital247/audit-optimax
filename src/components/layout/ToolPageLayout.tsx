@@ -37,15 +37,15 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center max-w-3xl mx-auto">
             <div className="inline-flex items-center py-1 px-4 bg-teal/20 backdrop-blur-sm rounded-full mb-4">
-              <Zap className="h-4 w-4 text-teal-light mr-2" />
+              <Zap className="h-4 w-4 text-white mr-2" />
               <span className="text-white text-sm font-medium">SEO Tools</span>
             </div>
             
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white font-display">
               {title}
             </h1>
             
-            <p className="text-white/90 text-lg mb-8">
+            <p className="text-white text-lg mb-8 font-body">
               {description}
             </p>
           </div>
@@ -63,17 +63,17 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
             {/* Related tools section - limited to max 2 internal links */}
             {relatedTools && relatedTools.length > 0 && (
               <div className="mt-12 md:mt-16">
-                <h2 className="text-2xl font-bold mb-6 text-navy dark:text-white">Related SEO Tools</h2>
+                <h2 className="text-2xl font-bold mb-6 text-navy dark:text-white font-display">Related SEO Tools</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {relatedTools.slice(0, 2).map((tool, index) => (
                     <div key={index} className="glass-card dark:bg-navy/30 p-5 rounded-lg border border-white/20 dark:border-white/5 hover:shadow-md transition-all">
-                      <h3 className="text-lg font-semibold text-navy dark:text-white mb-2">{tool.name}</h3>
+                      <h3 className="text-lg font-semibold text-navy dark:text-white mb-2 font-display">{tool.name}</h3>
                       {tool.description && (
-                        <p className="text-navy/70 dark:text-white/70 text-sm mb-3">{tool.description}</p>
+                        <p className="text-navy/70 dark:text-white font-body text-sm mb-3">{tool.description}</p>
                       )}
                       <Link 
                         to={tool.path} 
-                        className="inline-flex items-center text-teal dark:text-teal-light text-sm hover:underline"
+                        className="inline-flex items-center text-teal dark:text-teal-light text-sm hover:underline font-body"
                       >
                         Try this tool <ArrowRight size={14} className="ml-1" />
                       </Link>
@@ -86,8 +86,8 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
             {/* CTA section */}
             <div className="mt-12 text-center">
               <div className="glass-card dark:bg-navy/30 p-6 rounded-lg border border-white/20 dark:border-white/5">
-                <h3 className="text-xl font-bold mb-3 text-navy dark:text-white">Need More Comprehensive SEO Analysis?</h3>
-                <p className="text-navy/70 dark:text-white/70 mb-4">
+                <h3 className="text-xl font-bold mb-3 text-navy dark:text-white font-display">Need More Comprehensive SEO Analysis?</h3>
+                <p className="text-navy/70 dark:text-white font-body mb-4">
                   Run a full website SEO audit to identify all optimization opportunities at once.
                 </p>
                 <Link 

@@ -8,7 +8,7 @@ const TikTokHashtagGeneratorPage = () => {
   const relatedTools = [
     {
       name: "TikTok Username Generator",
-      path: "/tiktok-username-generator",
+      path: "/tiktok-username-generator-tool",
       description: "Create a memorable handle for your TikTok account"
     },
     {

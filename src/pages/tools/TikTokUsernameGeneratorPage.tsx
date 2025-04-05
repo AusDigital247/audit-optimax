@@ -8,12 +8,12 @@ const TikTokUsernameGeneratorPage = () => {
   const relatedTools = [
     {
       name: "TikTok Hashtag Generator",
-      path: "/tiktok-hashtag-generator",
+      path: "/tiktok-hashtag-generator-tool",
       description: "Find trending hashtags for your TikTok content"
     },
     {
       name: "YouTube Name Generator",
-      path: "/youtube-name-generator",
+      path: "/youtube-name-generator-tool",
       description: "Create the perfect name for your YouTube channel"
     }
   ];

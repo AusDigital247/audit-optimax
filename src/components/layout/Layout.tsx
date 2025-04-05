@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 interface LayoutProps {
   children: React.ReactNode;
   className?: string;
-  fullWidth?: boolean; // Add option for full width layout
+  fullWidth?: boolean;
 }
 
 const Layout: React.FC<LayoutProps> = ({ 
@@ -15,7 +15,7 @@ const Layout: React.FC<LayoutProps> = ({
   fullWidth = false 
 }) => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen w-full">
       <Header />
       <main className={`flex-grow w-full ${fullWidth ? "" : "container mx-auto px-4 md:px-6"} ${className}`}>
         {children}

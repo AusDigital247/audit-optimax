@@ -110,13 +110,13 @@ const Index = () => {
         <section className="py-16 bg-white dark:bg-navy">
           <div className="container max-w-7xl px-4 mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-navy dark:text-white mb-4 flex items-center justify-center gap-2">
+              <h2 className="text-3xl font-bold text-navy dark:text-white mb-4 flex items-center justify-center gap-2 font-display">
                 <Wrench className="h-7 w-7 text-teal dark:text-teal-light" />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-white dark:to-teal-light">
                   Our SEO Tools Suite
                 </span>
               </h2>
-              <p className="text-lg text-navy/70 dark:text-white/70 max-w-3xl mx-auto">
+              <p className="text-lg text-navy-light dark:text-white/80 max-w-3xl mx-auto font-body">
                 Explore our complete collection of free SEO tools designed to help improve your website's search visibility
               </p>
             </div>
@@ -127,10 +127,10 @@ const Index = () => {
                   <div className="bg-teal/10 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
                     <BarChart className="h-6 w-6 text-teal" />
                   </div>
-                  <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors font-display">
                     Google Rank Checker Tool
                   </h3>
-                  <p className="text-navy/80 dark:text-white/70 mb-4">
+                  <p className="text-navy-light dark:text-white/80 mb-4 font-body">
                     Track your website's position in Google search results across different regions and keywords.
                   </p>
                   <div className="mt-auto">
@@ -146,10 +146,10 @@ const Index = () => {
                   <div className="bg-teal/10 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
                     <Search className="h-6 w-6 text-teal" />
                   </div>
-                  <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors font-display">
                     Keyword Generator Tool
                   </h3>
-                  <p className="text-navy/80 dark:text-white/70 mb-4">
+                  <p className="text-navy-light dark:text-white/80 mb-4 font-body">
                     Discover high-value keywords to target in your content strategy and SEO campaigns.
                   </p>
                   <div className="mt-auto">
@@ -165,10 +165,10 @@ const Index = () => {
                   <div className="bg-teal/10 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
                     <Globe className="h-6 w-6 text-teal" />
                   </div>
-                  <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors">
+                  <h3 className="text-xl font-bold text-navy dark:text-white mb-3 group-hover:text-teal dark:group-hover:text-teal-light transition-colors font-display">
                     Bulk Anchor Link Generator
                   </h3>
-                  <p className="text-navy/80 dark:text-white/70 mb-4">
+                  <p className="text-navy-light dark:text-white/80 mb-4 font-body">
                     Create SEO-friendly HTML anchor links in bulk for your content and link building campaigns.
                   </p>
                   <div className="mt-auto">
@@ -183,19 +183,19 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               <Link to="/blog-ideas-generator-tool" className="p-4 bg-white dark:bg-navy-light rounded-lg shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group">
                 <Lightbulb className="h-5 w-5 text-teal" />
-                <span className="text-navy dark:text-white group-hover:text-teal transition-colors">Blog Ideas Generator</span>
+                <span className="text-navy dark:text-white group-hover:text-teal transition-colors font-body">Blog Ideas Generator</span>
               </Link>
               <Link to="/paragraph-rewriter-tool" className="p-4 bg-white dark:bg-navy-light rounded-lg shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group">
                 <FileText className="h-5 w-5 text-teal" />
-                <span className="text-navy dark:text-white group-hover:text-teal transition-colors">Paragraph Rewriter</span>
+                <span className="text-navy dark:text-white group-hover:text-teal transition-colors font-body">Paragraph Rewriter</span>
               </Link>
               <Link to="/sentence-rewriter-tool" className="p-4 bg-white dark:bg-navy-light rounded-lg shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group">
                 <FileText className="h-5 w-5 text-teal" />
-                <span className="text-navy dark:text-white group-hover:text-teal transition-colors">Sentence Rewriter</span>
+                <span className="text-navy dark:text-white group-hover:text-teal transition-colors font-body">Sentence Rewriter</span>
               </Link>
               <Link to="/paraphrasing-tool" className="p-4 bg-white dark:bg-navy-light rounded-lg shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 group">
                 <FileText className="h-5 w-5 text-teal" />
-                <span className="text-navy dark:text-white group-hover:text-teal transition-colors">Paraphrasing Tool</span>
+                <span className="text-navy dark:text-white group-hover:text-teal transition-colors font-body">Paraphrasing Tool</span>
               </Link>
             </div>
             

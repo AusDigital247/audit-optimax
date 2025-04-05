@@ -266,23 +266,23 @@
     @apply bg-navy text-white;
   }
   
-  /* Apply the requested color changes */
+  /* Text color fixes for visibility */
   .text-white {
     --tw-text-opacity: 1;
-    color: rgb(41 70 143);
+    color: rgba(255, 255, 255, var(--tw-text-opacity));
   }
 
   .text-white\/80 {
-    color: #5f7abcb3;
-  }
-
-  .text-navy\/70 {
-    color: #5f7abcb3;
+    color: rgba(255, 255, 255, 0.8);
   }
   
   .text-navy {
     --tw-text-opacity: 1;
     color: rgb(41 70 143);
+  }
+  
+  .text-navy-light {
+    color: rgba(41, 70, 143, 0.8);
   }
   
   /* Override for dark mode to ensure visibility */
@@ -296,12 +296,16 @@
   }
   
   .dark .text-navy\/70 {
-    color: #5f7abcb3;
+    color: rgba(255, 255, 255, 0.7);
   }
   
   .dark .text-navy {
     --tw-text-opacity: 1;
-    color: rgb(41 70 143);
+    color: rgba(255, 255, 255, var(--tw-text-opacity));
+  }
+  
+  .dark .text-navy-light {
+    color: rgba(255, 255, 255, 0.8);
   }
 }
 
