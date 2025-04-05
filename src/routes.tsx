@@ -2,20 +2,20 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import Layout from './components/layout/Layout';
-import HomePage from './pages/HomePage';
+import Index from './pages/Index';
 import SeoServices from './pages/SeoServices';
 import TikTokUsernameGeneratorPage from './pages/tools/TikTokUsernameGeneratorPage';
 import TikTokHashtagGeneratorPage from './pages/tools/TikTokHashtagGeneratorPage';
 import YouTubeNameGeneratorPage from './pages/tools/YouTubeNameGeneratorPage';
 import YouTubeChannelDescriptionGeneratorPage from './pages/tools/YouTubeChannelDescriptionGeneratorPage';
-import ContactPage from './pages/ContactPage';
-import AboutPage from './pages/AboutPage';
-import BlogPage from './pages/BlogPage';
+import Contact from './pages/Contact';
+import About from './pages/About';
+import Blog from './pages/Blog';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
+    element: <Index />,
   },
   {
     path: "/services",
@@ -23,15 +23,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/about",
-    element: <AboutPage />,
+    element: <About />,
   },
   {
     path: "/blog",
-    element: <BlogPage />,
+    element: <Blog />,
   },
   {
     path: "/contact",
-    element: <ContactPage />,
+    element: <Contact />,
   },
   {
     path: "/tiktok-username-generator",
