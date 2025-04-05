@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import SEOHead from '@/components/SEOHead';
 import { analyzeSEO, AnalysisResult } from '@/utils/seoAnalyzer';

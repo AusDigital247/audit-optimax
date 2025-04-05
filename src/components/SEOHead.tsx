@@ -57,6 +57,12 @@ const SEOHead: React.FC<SEOHeadProps> = ({
       
       {/* Language alternate - English only */}
       <link rel="alternate" hrefLang="en" href={canonicalUrl} />
+      <link rel="alternate" hrefLang="x-default" href={baseUrl} />
+      
+      {/* GEO meta tags for USA targeting */}
+      <meta name="geo.region" content="US" />
+      <meta name="geo.position" content="37.09024;-95.712891" /> {/* USA geographic center */}
+      <meta name="ICBM" content="37.09024, -95.712891" />
       
       {/* OpenGraph tags for social sharing */}
       <meta property="og:title" content={fullTitle} />
@@ -64,10 +70,12 @@ const SEOHead: React.FC<SEOHeadProps> = ({
       <meta property="og:type" content={ogType} />
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:image" content={ogImage} />
+      <meta property="og:locale" content="en_US" />
       
       {/* Twitter tags */}
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
+      <meta name="twitter:card" content="summary_large_image" />
       
       {/* Child elements for page-specific SEO elements */}
       {children}
