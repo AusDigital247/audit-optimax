@@ -19,12 +19,11 @@ const Contact = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [emailMethod, setEmailMethod] = useState<'supabase' | 'emailjs'>('supabase');
   const [emailJSConfig, setEmailJSConfig] = useState({
-    serviceId: '',
-    templateId: '',
-    userId: '',
-    isConfigured: false
+    serviceId: process.env.NODE_ENV === 'production' ? 'your_service_id' : '',
+    templateId: process.env.NODE_ENV === 'production' ? 'your_template_id' : '',
+    userId: process.env.NODE_ENV === 'production' ? 'your_user_id' : '',
+    isConfigured: process.env.NODE_ENV === 'production'
   });
   
   useEffect(() => {
@@ -42,7 +41,6 @@ const Contact = () => {
         userId: storedUserId,
         isConfigured: true
       });
-      setEmailMethod('emailjs');
     }
   }, [language]);
   
@@ -51,61 +49,12 @@ const Contact = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
   
-  const handleEmailJSConfigChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setEmailJSConfig(prev => ({ ...prev, [name]: value }));
-  };
-  
-  const saveEmailJSConfig = () => {
-    const { serviceId, templateId, userId } = emailJSConfig;
-    
-    if (serviceId && templateId && userId) {
-      localStorage.setItem('emailjs_service_id', serviceId);
-      localStorage.setItem('emailjs_template_id', templateId);
-      localStorage.setItem('emailjs_user_id', userId);
-      
-      setEmailJSConfig(prev => ({ ...prev, isConfigured: true }));
-      setEmailMethod('emailjs');
-      
-      toast({
-        title: "EmailJS Configured",
-        description: "Your EmailJS configuration has been saved.",
-      });
-    } else {
-      toast({
-        title: "Configuration Error",
-        description: "Please fill in all EmailJS fields.",
-        variant: "destructive",
-      });
-    }
-  };
-  
-  const clearEmailJSConfig = () => {
-    localStorage.removeItem('emailjs_service_id');
-    localStorage.removeItem('emailjs_template_id');
-    localStorage.removeItem('emailjs_user_id');
-    
-    setEmailJSConfig({
-      serviceId: '',
-      templateId: '',
-      userId: '',
-      isConfigured: false
-    });
-    
-    setEmailMethod('supabase');
-    
-    toast({
-      title: "EmailJS Configuration Cleared",
-      description: "Your EmailJS configuration has been removed.",
-    });
-  };
-  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     try {
-      if (emailMethod === 'emailjs' && emailJSConfig.isConfigured) {
+      if (emailJSConfig.isConfigured) {
         // Send email using EmailJS
         const templateParams = {
           from_name: formData.name,
@@ -127,7 +76,7 @@ const Contact = () => {
           description: "We've received your message and will respond soon.",
         });
       } else {
-        // Send email using Supabase function
+        // Fallback to Supabase function if EmailJS not configured
         const { data: adminEmailData, error: adminEmailError } = await supabase.functions.invoke('send-email', {
           body: {
             to: 'seoaudittoolofficial@gmail.com',
@@ -194,7 +143,7 @@ const Contact = () => {
             <h1 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
               {t('contact_title')}
             </h1>
-            <h2 className="text-xl md:text-2xl text-white/80 mb-8">
+            <h2 className="text-xl md:text-2xl text-navy/70 mb-8">
               We provide SEO services nationwide across the United States
             </h2>
           </div>
@@ -207,7 +156,7 @@ const Contact = () => {
             <div>
               <h2 className="text-3xl font-bold mb-6 text-navy">Get In Touch</h2>
               <p className="text-navy/70 mb-8">
-                Have questions about our services or want to discuss your project? Fill out the form below or contact us directly. Our team serves clients across the United States with specialized SEO solutions.
+                Have questions about our <Link to="/seo-services" className="text-teal hover:underline">SEO services</Link> or want to discuss your <Link to="/local-seo" className="text-teal hover:underline">local SEO strategy</Link>? Fill out the form below or contact us directly. Our team serves clients across the United States with <Link to="/keyword-generator-tool" className="text-teal hover:underline">specialized SEO solutions</Link>.
               </p>
               
               <div className="space-y-6 mb-8">
@@ -232,8 +181,8 @@ const Contact = () => {
                 </div>
               </div>
               
-              <div className="bg-navy p-6 rounded-xl text-white">
-                <h3 className="text-xl font-bold mb-4">Office Hours</h3>
+              <div className="bg-navy p-6 rounded-xl text-navy">
+                <h3 className="text-xl font-bold mb-4 text-navy">Office Hours</h3>
                 <ul className="space-y-2">
                   <li className="flex justify-between">
                     <span>Monday - Friday:</span>
@@ -255,98 +204,28 @@ const Contact = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Link to="/google-rank-checker-tool" className="flex items-center gap-2 text-navy/80 hover:text-teal transition-colors">
                     <ArrowRight className="h-4 w-4 text-teal" />
-                    <span>Google Rank Checker</span>
+                    <span>Google Position Tracker</span>
                   </Link>
                   <Link to="/seo-buffalo" className="flex items-center gap-2 text-navy/80 hover:text-teal transition-colors">
                     <ArrowRight className="h-4 w-4 text-teal" />
-                    <span>Buffalo SEO Services</span>
+                    <span>Buffalo Search Engine Optimization</span>
                   </Link>
                   <Link to="/local-seo" className="flex items-center gap-2 text-navy/80 hover:text-teal transition-colors">
                     <ArrowRight className="h-4 w-4 text-teal" />
-                    <span>Local SEO Services</span>
+                    <span>Local SEO Strategy</span>
                   </Link>
                   <Link to="/seo-services" className="flex items-center gap-2 text-navy/80 hover:text-teal transition-colors">
                     <ArrowRight className="h-4 w-4 text-teal" />
-                    <span>Professional SEO Services</span>
+                    <span>Enterprise SEO Solutions</span>
                   </Link>
-                </div>
-              </div>
-              
-              {/* EmailJS Configuration Section */}
-              <div className="mt-8 p-6 border border-gray-200 rounded-xl">
-                <h3 className="text-xl font-bold mb-4 text-navy">Email Method</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-4">
-                    <button 
-                      onClick={() => setEmailMethod('supabase')}
-                      className={`px-4 py-2 rounded-md ${emailMethod === 'supabase' ? 'bg-teal text-white' : 'bg-gray-100 text-navy'}`}
-                    >
-                      Supabase
-                    </button>
-                    <button 
-                      onClick={() => setEmailMethod('emailjs')}
-                      className={`px-4 py-2 rounded-md ${emailMethod === 'emailjs' ? 'bg-teal text-white' : 'bg-gray-100 text-navy'}`}
-                    >
-                      EmailJS
-                    </button>
-                  </div>
-                  
-                  {emailMethod === 'emailjs' && !emailJSConfig.isConfigured ? (
-                    <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
-                      <div>
-                        <label htmlFor="serviceId" className="block text-navy font-medium mb-1">Service ID</label>
-                        <input
-                          type="text"
-                          id="serviceId"
-                          name="serviceId"
-                          value={emailJSConfig.serviceId}
-                          onChange={handleEmailJSConfigChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                          placeholder="EmailJS Service ID"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="templateId" className="block text-navy font-medium mb-1">Template ID</label>
-                        <input
-                          type="text"
-                          id="templateId"
-                          name="templateId"
-                          value={emailJSConfig.templateId}
-                          onChange={handleEmailJSConfigChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                          placeholder="EmailJS Template ID"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="userId" className="block text-navy font-medium mb-1">User ID (Public Key)</label>
-                        <input
-                          type="text"
-                          id="userId"
-                          name="userId"
-                          value={emailJSConfig.userId}
-                          onChange={handleEmailJSConfigChange}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                          placeholder="EmailJS User ID"
-                        />
-                      </div>
-                      <button
-                        onClick={saveEmailJSConfig}
-                        className="bg-teal text-white px-4 py-2 rounded-md"
-                      >
-                        Save EmailJS Configuration
-                      </button>
-                    </div>
-                  ) : emailMethod === 'emailjs' && emailJSConfig.isConfigured ? (
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                      <p className="text-navy mb-2">EmailJS is configured and will be used to send contact form messages.</p>
-                      <button
-                        onClick={clearEmailJSConfig}
-                        className="text-red-500 underline text-sm"
-                      >
-                        Clear EmailJS configuration
-                      </button>
-                    </div>
-                  ) : null}
+                  <Link to="/blog-ideas-generator-tool" className="flex items-center gap-2 text-navy/80 hover:text-teal transition-colors">
+                    <ArrowRight className="h-4 w-4 text-teal" />
+                    <span>Content Ideation Tools</span>
+                  </Link>
+                  <Link to="/sentence-rewriter-tool" className="flex items-center gap-2 text-navy/80 hover:text-teal transition-colors">
+                    <ArrowRight className="h-4 w-4 text-teal" />
+                    <span>Content Optimization</span>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -456,17 +335,17 @@ const Contact = () => {
       </section>
       
       <section className="w-full h-96 bg-navy-light flex items-center justify-center">
-        <div className="text-center text-white">
+        <div className="text-center text-navy">
           <h3 className="text-2xl font-bold mb-4">Serving Clients Nationwide</h3>
-          <p className="text-white/70 max-w-2xl mx-auto px-4">
-            From <Link to="/seo-buffalo" className="text-teal hover:underline">Buffalo</Link> to the West Coast, our SEO services help businesses across the United States improve their online visibility and attract more customers. Check out our <Link to="/google-rank-checker-tool" className="text-teal hover:underline">rank checker tool</Link> to see where your website stands in search results.
+          <p className="text-navy/70 max-w-2xl mx-auto px-4">
+            From <Link to="/seo-buffalo" className="text-teal hover:underline">Buffalo SEO services</Link> to the West Coast, our <Link to="/seo-services" className="text-teal hover:underline">comprehensive SEO solutions</Link> help businesses across the United States improve their online visibility. Check out our <Link to="/keyword-generator-tool" className="text-teal hover:underline">keyword research tools</Link> and <Link to="/google-rank-checker-tool" className="text-teal hover:underline">SERP position tracker</Link> to boost your website's search engine performance.
           </p>
           <div className="mt-8 flex justify-center gap-4">
-            <Link to="/" className="bg-teal/20 hover:bg-teal/30 text-white py-2 px-4 rounded-lg inline-flex items-center">
-              <Search className="mr-2 h-5 w-5" /> Try Our SEO Audit Tool
+            <Link to="/" className="bg-teal/20 hover:bg-teal/30 text-navy py-2 px-4 rounded-lg inline-flex items-center">
+              <Search className="mr-2 h-5 w-5" /> Try Our Free Website Analyzer
             </Link>
-            <Link to="/blog" className="bg-teal/20 hover:bg-teal/30 text-white py-2 px-4 rounded-lg inline-flex items-center">
-              <Book className="mr-2 h-5 w-5" /> Read SEO Resources
+            <Link to="/blog" className="bg-teal/20 hover:bg-teal/30 text-navy py-2 px-4 rounded-lg inline-flex items-center">
+              <Book className="mr-2 h-5 w-5" /> Explore SEO Resources
             </Link>
           </div>
         </div>

@@ -17,6 +17,7 @@ interface SEOHeadProps {
 /**
  * SEOHead - Provides consistent SEO metadata across the site
  * This component handles canonical URLs properly to avoid duplicate content issues
+ * and implements proper semantic SEO structure for improved search engine visibility
  */
 const SEOHead: React.FC<SEOHeadProps> = ({
   title,
@@ -43,14 +44,24 @@ const SEOHead: React.FC<SEOHeadProps> = ({
     
   const canonicalUrl = `${baseUrl}${formattedPath}`;
   
-  // Only append site name to title on home page
-  const fullTitle = isHomePage ? `${title} | SEO Audit Tool` : title;
+  // Enhanced page title with LSI keywords for better relevance signals
+  const enhancedTitle = isHomePage 
+    ? `${title} | SEO Audit Tool - Website Analysis & Search Rankings` 
+    : title;
+  
+  // Enhanced description with LSI keywords
+  const enhancedDescription = description.length > 20 ? description : 
+    "Improve your website's search engine visibility with our comprehensive SEO tools. Free website analysis, keyword research, and content optimization tools.";
+    
+  // Enhanced keywords with LSI and long-tail variations
+  const enhancedKeywords = keywords || 
+    "seo tool, website analyzer, keyword research, content optimization, search engine rankings, google position checker, website audit";
   
   return (
     <Helmet>
-      <title>{fullTitle}</title>
-      <meta name="description" content={description} />
-      {keywords && <meta name="keywords" content={keywords} />}
+      <title>{enhancedTitle}</title>
+      <meta name="description" content={enhancedDescription} />
+      <meta name="keywords" content={enhancedKeywords} />
       
       {/* Essential canonical tag - SINGLE tag to prevent duplicate content issues */}
       <link rel="canonical" href={canonicalUrl} />
@@ -65,17 +76,34 @@ const SEOHead: React.FC<SEOHeadProps> = ({
       <meta name="ICBM" content="37.09024, -95.712891" />
       
       {/* OpenGraph tags for social sharing */}
-      <meta property="og:title" content={fullTitle} />
-      <meta property="og:description" content={description} />
+      <meta property="og:title" content={enhancedTitle} />
+      <meta property="og:description" content={enhancedDescription} />
       <meta property="og:type" content={ogType} />
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:image" content={ogImage} />
       <meta property="og:locale" content="en_US" />
       
       {/* Twitter tags */}
-      <meta name="twitter:title" content={fullTitle} />
-      <meta name="twitter:description" content={description} />
+      <meta name="twitter:title" content={enhancedTitle} />
+      <meta name="twitter:description" content={enhancedDescription} />
       <meta name="twitter:card" content="summary_large_image" />
+      
+      {/* Enhanced schema.org structured data */}
+      <script type="application/ld+json">{`
+        {
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "SEO Audit Tool",
+          "description": "${enhancedDescription}",
+          "url": "${baseUrl}",
+          "applicationCategory": "SEO Tool",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          }
+        }
+      `}</script>
       
       {/* Child elements for page-specific SEO elements */}
       {children}
