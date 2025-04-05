@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { generateHumanContent, generateHumanUseCases, generatePersonalizedTips } from '@/utils/humanContentGenerator';
 import HumanSEOContent from './HumanSEOContent';
-import { Loader } from './Loader';
+import Loader from './Loader';
 
 interface SEOToolContentGeneratorProps {
   toolName: string;
@@ -117,7 +117,7 @@ What sets this tool apart is its focus on practical application. Many tools prov
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <Loader text="Generating personalized content insights..." />
+        <Loader size="medium" text="Generating personalized content insights..." />
       </div>
     );
   }
