@@ -200,7 +200,7 @@ const Index = () => {
             
             <div className="text-center mt-10">
               <Link to="/seo-services" className="btn-gradient inline-flex items-center gap-2">
-                <Tool className="h-5 w-5" />
+                <Wrench className="h-5 w-5" />
                 Explore All SEO Tools
               </Link>
             </div>

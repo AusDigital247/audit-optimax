@@ -1,8 +1,18 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" fill="none">
+  <!-- Background with SEO blue color -->
   <rect width="60" height="60" rx="12" fill="#1E3A8A"/>
-  <circle cx="30" cy="30" r="20" fill="#38BDF8" opacity="0.8"/>
-  <path d="M20 28L30 38L40 28" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M30 20V38" stroke="white" stroke-width="4" stroke-linecap="round"/>
-  <path d="M15 45H45" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Magnifying glass - SEO symbol -->
+  <circle cx="24" cy="24" r="14" stroke="white" stroke-width="4" fill="none"/>
+  <line x1="34" y1="34" x2="46" y2="46" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- Search ranking bars -->
+  <rect x="12" y="36" width="4" height="12" rx="1" fill="#38BDF8"/>
+  <rect x="20" y="32" width="4" height="16" rx="1" fill="#38BDF8"/>
+  <rect x="28" y="28" width="4" height="20" rx="1" fill="#38BDF8"/>
+  
+  <!-- Up arrow for ranking -->
+  <path d="M42 24L48 30L54 24" stroke="#38BDF8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M48 30V16" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"/>
 </svg>
