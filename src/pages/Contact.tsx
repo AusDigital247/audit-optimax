@@ -6,6 +6,7 @@ import { Mail, Phone, MapPin, Send, ArrowRight, Search, Book } from 'lucide-reac
 import { supabase } from '@/integrations/supabase/client';
 import SEOHead from '@/components/SEOHead';
 import { Link } from 'react-router-dom';
+import emailjs from 'emailjs-com';
 
 const Contact = () => {
   const { t, language } = useLanguage();
@@ -18,9 +19,31 @@ const Contact = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [emailMethod, setEmailMethod] = useState<'supabase' | 'emailjs'>('supabase');
+  const [emailJSConfig, setEmailJSConfig] = useState({
+    serviceId: '',
+    templateId: '',
+    userId: '',
+    isConfigured: false
+  });
   
   useEffect(() => {
     document.title = language === 'en' ? 'Contact Us - SEO Audit Tool' : 'Contact Us - SEO Audit Tool';
+    
+    // Check if EmailJS configuration is stored in localStorage
+    const storedServiceId = localStorage.getItem('emailjs_service_id');
+    const storedTemplateId = localStorage.getItem('emailjs_template_id');
+    const storedUserId = localStorage.getItem('emailjs_user_id');
+    
+    if (storedServiceId && storedTemplateId && storedUserId) {
+      setEmailJSConfig({
+        serviceId: storedServiceId,
+        templateId: storedTemplateId,
+        userId: storedUserId,
+        isConfigured: true
+      });
+      setEmailMethod('emailjs');
+    }
   }, [language]);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -28,42 +51,115 @@ const Contact = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
   
+  const handleEmailJSConfigChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setEmailJSConfig(prev => ({ ...prev, [name]: value }));
+  };
+  
+  const saveEmailJSConfig = () => {
+    const { serviceId, templateId, userId } = emailJSConfig;
+    
+    if (serviceId && templateId && userId) {
+      localStorage.setItem('emailjs_service_id', serviceId);
+      localStorage.setItem('emailjs_template_id', templateId);
+      localStorage.setItem('emailjs_user_id', userId);
+      
+      setEmailJSConfig(prev => ({ ...prev, isConfigured: true }));
+      setEmailMethod('emailjs');
+      
+      toast({
+        title: "EmailJS Configured",
+        description: "Your EmailJS configuration has been saved.",
+      });
+    } else {
+      toast({
+        title: "Configuration Error",
+        description: "Please fill in all EmailJS fields.",
+        variant: "destructive",
+      });
+    }
+  };
+  
+  const clearEmailJSConfig = () => {
+    localStorage.removeItem('emailjs_service_id');
+    localStorage.removeItem('emailjs_template_id');
+    localStorage.removeItem('emailjs_user_id');
+    
+    setEmailJSConfig({
+      serviceId: '',
+      templateId: '',
+      userId: '',
+      isConfigured: false
+    });
+    
+    setEmailMethod('supabase');
+    
+    toast({
+      title: "EmailJS Configuration Cleared",
+      description: "Your EmailJS configuration has been removed.",
+    });
+  };
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     try {
-      // Send email to admin (contact form submission)
-      const { data: adminEmailData, error: adminEmailError } = await supabase.functions.invoke('send-email', {
-        body: {
-          to: 'seoaudittoolofficial@gmail.com',
-          subject: `Contact Form: ${formData.subject}`,
-          name: formData.name,
-          email: formData.email,
+      if (emailMethod === 'emailjs' && emailJSConfig.isConfigured) {
+        // Send email using EmailJS
+        const templateParams = {
+          from_name: formData.name,
+          from_email: formData.email,
+          from_phone: formData.phone,
+          subject: formData.subject,
           message: formData.message,
-          type: 'contact'
-        }
-      });
+        };
+        
+        await emailjs.send(
+          emailJSConfig.serviceId,
+          emailJSConfig.templateId,
+          templateParams,
+          emailJSConfig.userId
+        );
+        
+        toast({
+          title: "Message sent!",
+          description: "We've received your message and will respond soon.",
+        });
+      } else {
+        // Send email using Supabase function
+        const { data: adminEmailData, error: adminEmailError } = await supabase.functions.invoke('send-email', {
+          body: {
+            to: 'seoaudittoolofficial@gmail.com',
+            subject: `Contact Form: ${formData.subject}`,
+            name: formData.name,
+            email: formData.email,
+            message: formData.message,
+            type: 'contact'
+          }
+        });
 
-      if (adminEmailError) throw adminEmailError;
-      
-      // Send confirmation email to user
-      const { data: userEmailData, error: userEmailError } = await supabase.functions.invoke('send-email', {
-        body: {
-          to: formData.email,
-          subject: 'Thank you for contacting SEO Audit Tool',
-          name: formData.name,
-          type: 'notification'
-        }
-      });
+        if (adminEmailError) throw adminEmailError;
+        
+        // Send confirmation email to user
+        const { data: userEmailData, error: userEmailError } = await supabase.functions.invoke('send-email', {
+          body: {
+            to: formData.email,
+            subject: 'Thank you for contacting SEO Audit Tool',
+            name: formData.name,
+            type: 'notification'
+          }
+        });
 
-      if (userEmailError) throw userEmailError;
+        if (userEmailError) throw userEmailError;
+        
+        toast({
+          title: "Message sent!",
+          description: "We'll get back to you as soon as possible.",
+        });
+      }
       
-      toast({
-        title: "Message sent!",
-        description: "We'll get back to you as soon as possible.",
-      });
-      
+      // Reset form data
       setFormData({
         name: '',
         email: '',
@@ -110,7 +206,7 @@ const Contact = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
               <h2 className="text-3xl font-bold mb-6 text-navy">Get In Touch</h2>
-              <p className="text-navy/80 mb-8">
+              <p className="text-navy/70 mb-8">
                 Have questions about our services or want to discuss your project? Fill out the form below or contact us directly. Our team serves clients across the United States with specialized SEO solutions.
               </p>
               
@@ -173,6 +269,84 @@ const Contact = () => {
                     <ArrowRight className="h-4 w-4 text-teal" />
                     <span>Professional SEO Services</span>
                   </Link>
+                </div>
+              </div>
+              
+              {/* EmailJS Configuration Section */}
+              <div className="mt-8 p-6 border border-gray-200 rounded-xl">
+                <h3 className="text-xl font-bold mb-4 text-navy">Email Method</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-4">
+                    <button 
+                      onClick={() => setEmailMethod('supabase')}
+                      className={`px-4 py-2 rounded-md ${emailMethod === 'supabase' ? 'bg-teal text-white' : 'bg-gray-100 text-navy'}`}
+                    >
+                      Supabase
+                    </button>
+                    <button 
+                      onClick={() => setEmailMethod('emailjs')}
+                      className={`px-4 py-2 rounded-md ${emailMethod === 'emailjs' ? 'bg-teal text-white' : 'bg-gray-100 text-navy'}`}
+                    >
+                      EmailJS
+                    </button>
+                  </div>
+                  
+                  {emailMethod === 'emailjs' && !emailJSConfig.isConfigured ? (
+                    <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
+                      <div>
+                        <label htmlFor="serviceId" className="block text-navy font-medium mb-1">Service ID</label>
+                        <input
+                          type="text"
+                          id="serviceId"
+                          name="serviceId"
+                          value={emailJSConfig.serviceId}
+                          onChange={handleEmailJSConfigChange}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                          placeholder="EmailJS Service ID"
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="templateId" className="block text-navy font-medium mb-1">Template ID</label>
+                        <input
+                          type="text"
+                          id="templateId"
+                          name="templateId"
+                          value={emailJSConfig.templateId}
+                          onChange={handleEmailJSConfigChange}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                          placeholder="EmailJS Template ID"
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="userId" className="block text-navy font-medium mb-1">User ID (Public Key)</label>
+                        <input
+                          type="text"
+                          id="userId"
+                          name="userId"
+                          value={emailJSConfig.userId}
+                          onChange={handleEmailJSConfigChange}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                          placeholder="EmailJS User ID"
+                        />
+                      </div>
+                      <button
+                        onClick={saveEmailJSConfig}
+                        className="bg-teal text-white px-4 py-2 rounded-md"
+                      >
+                        Save EmailJS Configuration
+                      </button>
+                    </div>
+                  ) : emailMethod === 'emailjs' && emailJSConfig.isConfigured ? (
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <p className="text-navy mb-2">EmailJS is configured and will be used to send contact form messages.</p>
+                      <button
+                        onClick={clearEmailJSConfig}
+                        className="text-red-500 underline text-sm"
+                      >
+                        Clear EmailJS configuration
+                      </button>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
