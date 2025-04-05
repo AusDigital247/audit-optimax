@@ -4,16 +4,12 @@ import ToolPageLayout from '@/components/layout/ToolPageLayout';
 import TikTokHashtagGenerator from '../TikTokHashtagGenerator';
 
 const TikTokHashtagGeneratorPage = () => {
+  // Limit to just 2 related tools for balanced internal linking
   const relatedTools = [
     {
       name: "TikTok Username Generator",
       path: "/tiktok-username-generator",
       description: "Create a memorable handle for your TikTok account"
-    },
-    {
-      name: "Blog Ideas Generator",
-      path: "/blog-ideas-generator-tool",
-      description: "Generate engaging content ideas for social media"
     },
     {
       name: "Keyword Generator Tool",

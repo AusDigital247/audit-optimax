@@ -4,6 +4,7 @@ import ToolPageLayout from '@/components/layout/ToolPageLayout';
 import YouTubeNameGenerator from '../YouTubeNameGenerator';
 
 const YouTubeNameGeneratorPage = () => {
+  // Limit to just 2 related tools for balanced internal linking
   const relatedTools = [
     {
       name: "YouTube Channel Description Generator",
@@ -14,11 +15,6 @@ const YouTubeNameGeneratorPage = () => {
       name: "TikTok Username Generator",
       path: "/tiktok-username-generator",
       description: "Generate catchy usernames for TikTok"
-    },
-    {
-      name: "Keyword Generator Tool",
-      path: "/keyword-generator-tool",
-      description: "Find keywords to optimize your videos"
     }
   ];
   

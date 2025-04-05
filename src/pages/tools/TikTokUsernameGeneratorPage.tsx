@@ -4,6 +4,7 @@ import ToolPageLayout from '@/components/layout/ToolPageLayout';
 import TikTokUsernameGenerator from '../TikTokUsernameGenerator';
 
 const TikTokUsernameGeneratorPage = () => {
+  // Limit to just 2 related tools for balanced internal linking
   const relatedTools = [
     {
       name: "TikTok Hashtag Generator",
@@ -14,11 +15,6 @@ const TikTokUsernameGeneratorPage = () => {
       name: "YouTube Name Generator",
       path: "/youtube-name-generator",
       description: "Create the perfect name for your YouTube channel"
-    },
-    {
-      name: "Blog Ideas Generator",
-      path: "/blog-ideas-generator-tool",
-      description: "Generate engaging blog topics for your audience"
     }
   ];
   

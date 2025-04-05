@@ -25,13 +25,14 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
   relatedTools = []
 }) => {
   return (
-    <Layout>
+    <Layout fullWidth>
       <SEOHead 
         title={title}
         description={description}
         keywords={keywords}
       />
       
+      {/* Hero section with dark theme */}
       <div className="bg-gradient-to-b from-navy to-navy-light pt-12 pb-16 w-full">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center max-w-3xl mx-auto">
@@ -40,17 +41,18 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
               <span className="text-white text-sm font-medium">SEO Tools</span>
             </div>
             
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-teal-light to-white/90">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white">
               {title}
             </h1>
             
-            <p className="text-white/80 text-lg mb-8">
+            <p className="text-white/90 text-lg mb-8">
               {description}
             </p>
           </div>
         </div>
       </div>
       
+      {/* Content section with light/dark theme support */}
       <div className="bg-light-bg dark:bg-navy-light py-10 lg:py-16 w-full">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-5xl mx-auto">
@@ -58,11 +60,12 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
               {children}
             </div>
             
+            {/* Related tools section - limited to max 2 internal links */}
             {relatedTools && relatedTools.length > 0 && (
               <div className="mt-12 md:mt-16">
                 <h2 className="text-2xl font-bold mb-6 text-navy dark:text-white">Related SEO Tools</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {relatedTools.map((tool, index) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {relatedTools.slice(0, 2).map((tool, index) => (
                     <div key={index} className="glass-card dark:bg-navy/30 p-5 rounded-lg border border-white/20 dark:border-white/5 hover:shadow-md transition-all">
                       <h3 className="text-lg font-semibold text-navy dark:text-white mb-2">{tool.name}</h3>
                       {tool.description && (
@@ -80,6 +83,7 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
               </div>
             )}
             
+            {/* CTA section */}
             <div className="mt-12 text-center">
               <div className="glass-card dark:bg-navy/30 p-6 rounded-lg border border-white/20 dark:border-white/5">
                 <h3 className="text-xl font-bold mb-3 text-navy dark:text-white">Need More Comprehensive SEO Analysis?</h3>
