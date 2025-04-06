@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import ToolPageLayout from '@/components/layout/ToolPageLayout';
 import { Button } from "@/components/ui/button";
@@ -111,7 +110,7 @@ const GrammarChecker: React.FC = () => {
               <Textarea 
                 id="text"
                 value={text}
-                onChange={handleTextChange}
+                onChange={(e) => setText(e.target.value)}
                 placeholder="Paste your text here to check for grammar, spelling, and punctuation errors..."
                 className="min-h-[200px] resize-y"
               />
@@ -122,7 +121,7 @@ const GrammarChecker: React.FC = () => {
                 <Switch 
                   id="explanations" 
                   checked={includeExplanations}
-                  onCheckedChange={handleSwitchChange}
+                  onCheckedChange={setIncludeExplanations}
                 />
                 <Label htmlFor="explanations" className="text-slate-700 dark:text-slate-300">
                   Include detailed explanations
@@ -134,7 +133,7 @@ const GrammarChecker: React.FC = () => {
                 className="bg-teal hover:bg-teal-dark text-white"
                 disabled={loading || !text.trim()}
               >
-                {loading ? <Loader size="small" className="mr-2" /> : null}
+                {loading ? <Loader size="medium" className="mr-2" /> : null}
                 {loading ? "Checking..." : "Check Grammar"}
               </Button>
             </div>

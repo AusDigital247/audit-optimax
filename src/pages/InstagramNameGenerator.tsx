@@ -248,7 +248,7 @@ const InstagramNameGenerator = () => {
               className="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white"
               disabled={loading}
             >
-              {loading ? <Loader size="small" className="mr-2" /> : <Instagram className="mr-2 h-5 w-5" />}
+              {loading ? <Loader size="medium" className="mr-2" /> : <Instagram className="mr-2 h-5 w-5" />}
               {loading ? "Generating..." : "Generate Usernames"}
             </Button>
           </div>

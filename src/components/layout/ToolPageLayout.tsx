@@ -55,7 +55,7 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
       <div className="bg-light-bg dark:bg-navy-light py-10 lg:py-16 w-full">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-5xl mx-auto">
-            <div className="bg-white/80 dark:bg-navy/60 p-6 md:p-8 rounded-xl shadow-lg border border-gray-200 dark:border-white/10">
+            <div className="bg-white/80 dark:bg-navy/60 p-6 md:p-8 rounded-xl shadow-lg border border-gray-200 dark:border-white/10 backdrop-blur-sm">
               {children}
             </div>
             
@@ -65,7 +65,7 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
                 <h2 className="text-2xl font-bold mb-6 text-navy dark:text-white font-display">Related SEO Tools</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {relatedTools.slice(0, 2).map((tool, index) => (
-                    <div key={index} className="bg-white/80 dark:bg-navy/50 p-5 rounded-lg border border-gray-200 dark:border-white/10 hover:shadow-md transition-all">
+                    <div key={index} className="bg-white/80 dark:bg-navy/50 p-5 rounded-lg border border-gray-200 dark:border-white/10 hover:shadow-md transition-all backdrop-blur-sm">
                       <h3 className="text-lg font-semibold text-navy dark:text-white mb-2 font-display">{tool.name}</h3>
                       {tool.description && (
                         <p className="text-navy/80 dark:text-white/80 font-body text-sm mb-3">{tool.description}</p>
@@ -84,7 +84,7 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
             
             {/* CTA section with improved visibility */}
             <div className="mt-12 text-center">
-              <div className="bg-white/80 dark:bg-navy/50 p-6 rounded-lg border border-gray-200 dark:border-white/10">
+              <div className="bg-gradient-to-r from-teal/10 to-teal/20 dark:from-navy/70 dark:to-navy-light/90 p-6 rounded-lg border border-teal/30 dark:border-white/10 backdrop-blur-sm">
                 <h3 className="text-xl font-bold mb-3 text-navy dark:text-white font-display">Need More Comprehensive SEO Analysis?</h3>
                 <p className="text-navy/80 dark:text-white/80 font-body mb-4">
                   Run a full website SEO audit to identify all optimization opportunities at once.
