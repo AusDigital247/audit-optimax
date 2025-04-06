@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { generateHumanContent, generateHumanUseCases, generatePersonalizedTips } from '@/utils/humanContentGenerator';
 import HumanSEOContent from './HumanSEOContent';
-import Loader from './Loader';
 
 interface SEOToolContentGeneratorProps {
   toolName: string;
@@ -86,6 +85,7 @@ Modern search results are incredibly personalized and localized. The rankings yo
     setMainContent(fallbackContent);
     setCaseStudies(fallbackCaseStudies);
     setExpertTips(fallbackExpertTips);
+    setIsLoading(false); // Set loading to false immediately to show fallback content
     
     // Now try to generate more dynamic content, but don't wait for it if it takes too long
     const loadHumanContent = async () => {
@@ -128,27 +128,17 @@ What really separates successful SEO strategies from ineffective ones is the abi
       } catch (error) {
         console.error('Error generating human content:', error);
         // We already have fallback content in place, so just log the error
-      } finally {
-        // Ensure loading state is turned off regardless of success or failure
-        setIsLoading(false);
       }
     };
     
-    // Set a timeout to ensure we show content within a reasonable time
-    const timeoutId = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000); // Show fallback content after 3 seconds if API is slow
-    
     loadHumanContent();
-    
-    return () => clearTimeout(timeoutId);
   }, [toolName, toolDescription]);
   
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-10">
         <div className="flex flex-col items-center">
-          <Loader />
+          <div className="w-10 h-10 border-4 border-teal border-t-transparent rounded-full animate-spin"></div>
           <p className="mt-4 text-navy dark:text-white/80">Generating personalized content insights...</p>
         </div>
       </div>
