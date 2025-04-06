@@ -25,7 +25,7 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
   relatedTools = []
 }) => {
   return (
-    <Layout fullWidth>
+    <>
       <SEOHead 
         title={title}
         description={description}
@@ -102,7 +102,7 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 
