@@ -1,6 +1,5 @@
 
 import React from 'react';
-import Layout from './Layout';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Zap, Search } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';

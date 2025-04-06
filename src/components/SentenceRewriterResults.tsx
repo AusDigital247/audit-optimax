@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Copy, Check, RefreshCw, Download, FileText, FileEdit } from 'lucide-react';
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import DOMPurify from 'dompurify';
 
 interface SentenceRewriterResultsProps {
@@ -17,7 +17,6 @@ const SentenceRewriterResults: React.FC<SentenceRewriterResultsProps> = ({
   rewrittenText,
   onReset
 }) => {
-  const { toast } = useToast();
   const [copied, setCopied] = useState(false);
   const [sanitizedOriginal, setSanitizedOriginal] = useState('');
   const [sanitizedRewritten, setSanitizedRewritten] = useState('');
@@ -31,10 +30,7 @@ const SentenceRewriterResults: React.FC<SentenceRewriterResultsProps> = ({
   const handleCopy = () => {
     navigator.clipboard.writeText(sanitizedRewritten);
     setCopied(true);
-    toast({
-      title: "Copied!",
-      description: "Rewritten text copied to clipboard",
-    });
+    toast.success("Rewritten text copied to clipboard");
     
     setTimeout(() => {
       setCopied(false);
@@ -50,10 +46,7 @@ const SentenceRewriterResults: React.FC<SentenceRewriterResultsProps> = ({
     element.click();
     document.body.removeChild(element);
     
-    toast({
-      title: "Downloaded!",
-      description: "Rewritten text downloaded as TXT file",
-    });
+    toast.success("Rewritten text downloaded as TXT file");
   };
 
   return (

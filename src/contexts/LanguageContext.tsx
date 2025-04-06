@@ -1,12 +1,10 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import { getMetaDescription } from '@/utils/metaDescriptions';
 
-type Language = 'en' | 'fr';
-
 interface LanguageContextType {
-  language: Language;
-  setLanguage: (lang: Language) => void;
+  language: 'en';
   t: (key: string) => string;
 }
 
@@ -18,13 +16,8 @@ interface LanguageProviderProps {
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
   const location = useLocation();
+  const language = 'en'; // Always use English
   
-  // Try to get language from localStorage, default to 'en'
-  const [language, setLanguage] = useState<Language>(() => {
-    const savedLanguage = localStorage.getItem('preferred-language');
-    return (savedLanguage === 'fr' ? 'fr' : 'en') as Language;
-  });
-
   // Determine the page type based on the current route
   const getPageTypeFromPath = (path: string) => {
     if (path === '/') return 'home';
@@ -41,15 +34,14 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     return 'home';
   };
 
-  // Store language preference in localStorage when it changes
+  // Update meta tags when location changes
   useEffect(() => {
-    localStorage.setItem('preferred-language', language);
     // Update HTML lang attribute for SEO
     document.documentElement.lang = language;
     
     // Get the appropriate meta description for the current page
     const pageType = getPageTypeFromPath(location.pathname);
-    const metaDescription = getMetaDescription(pageType as any, language);
+    const metaDescription = getMetaDescription(pageType as any);
     
     // Update meta tags for the current language and page
     const metaDescriptionTag = document.querySelector('meta[name="description"]');
@@ -58,46 +50,22 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     }
     
     // Update page title based on the current page
-    let pageTitle = language === 'en' ? 'SEO Audit Tool' : 'Outil d\'Audit SEO';
+    let pageTitle = 'SEO Audit Tool';
     
     if (pageType !== 'home') {
-      const pageTitleMap: Record<string, { en: string, fr: string }> = {
-        'seo-toronto': { 
-          en: 'Toronto SEO Services | SEO Audit Tool', 
-          fr: 'Services SEO Toronto | Outil d\'Audit SEO' 
-        },
-        'seo-ottawa': { 
-          en: 'Ottawa SEO Services | SEO Audit Tool', 
-          fr: 'Services SEO Ottawa | Outil d\'Audit SEO' 
-        },
-        'seo-kitchener': { 
-          en: 'Kitchener SEO Services | SEO Audit Tool', 
-          fr: 'Services SEO Kitchener | Outil d\'Audit SEO' 
-        },
-        'seo-london': { 
-          en: 'London SEO Services | SEO Audit Tool', 
-          fr: 'Services SEO London | Outil d\'Audit SEO' 
-        },
-        'seo-vancouver': { 
-          en: 'Vancouver SEO Services | SEO Audit Tool', 
-          fr: 'Services SEO Vancouver | Outil d\'Audit SEO' 
-        },
-        'seo-buffalo': { 
-          en: 'Buffalo SEO Services | SEO Audit Tool', 
-          fr: 'Services SEO Buffalo | Outil d\'Audit SEO' 
-        },
-        'blog': { 
-          en: 'SEO Blog | SEO Audit Tool', 
-          fr: 'Blog SEO | Outil d\'Audit SEO' 
-        },
-        'blog-post': { 
-          en: 'SEO Guide | SEO Audit Tool', 
-          fr: 'Guide SEO | Outil d\'Audit SEO' 
-        }
+      const pageTitleMap: Record<string, string> = {
+        'seo-toronto': 'Toronto SEO Services | SEO Audit Tool',
+        'seo-ottawa': 'Ottawa SEO Services | SEO Audit Tool',
+        'seo-kitchener': 'Kitchener SEO Services | SEO Audit Tool',
+        'seo-london': 'London SEO Services | SEO Audit Tool',
+        'seo-vancouver': 'Vancouver SEO Services | SEO Audit Tool',
+        'seo-buffalo': 'Buffalo SEO Services | SEO Audit Tool',
+        'blog': 'SEO Blog | SEO Audit Tool',
+        'blog-post': 'SEO Guide | SEO Audit Tool'
       };
       
       if (pageTitleMap[pageType]) {
-        pageTitle = pageTitleMap[pageType][language];
+        pageTitle = pageTitleMap[pageType];
       }
     }
     
@@ -126,19 +94,13 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     if (twitterDescription) {
       twitterDescription.setAttribute('content', metaDescription);
     }
-  }, [language, location.pathname]);
+  }, [location.pathname]);
 
-  // Simple translation function with improved error handling and fallback
+  // Simple translation function that just returns the key for English
   const t = (key: string): string => {
     try {
       if (!key) return '';
-      
-      if (language === 'en') {
-        return translations.en[key] || key;
-      } else {
-        // Check if the French translation exists, if not fall back to English
-        return translations.fr[key] || translations.en[key] || key;
-      }
+      return translations.en[key] || key;
     } catch (error) {
       console.error(`Translation error for key "${key}"`, error);
       return key; // Return the key as fallback
@@ -146,7 +108,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, t }}>
       {children}
     </LanguageContext.Provider>
   );

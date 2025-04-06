@@ -8,6 +8,8 @@ import TikTokUsernameGeneratorPage from './pages/tools/TikTokUsernameGeneratorPa
 import TikTokHashtagGeneratorPage from './pages/tools/TikTokHashtagGeneratorPage';
 import YouTubeNameGeneratorPage from './pages/tools/YouTubeNameGeneratorPage';
 import YouTubeChannelDescriptionGeneratorPage from './pages/tools/YouTubeChannelDescriptionGeneratorPage';
+import InstagramNameGeneratorPage from './pages/InstagramNameGenerator';
+import GrammarChecker from './pages/tools/GrammarChecker';
 import Contact from './pages/Contact';
 import About from './pages/About';
 import Blog from './pages/Blog';
@@ -48,6 +50,14 @@ const router = createBrowserRouter([
   {
     path: "/youtube-channel-description-generator",
     element: <YouTubeChannelDescriptionGeneratorPage />,
+  },
+  {
+    path: "/instagram-name-generator-tool",
+    element: <InstagramNameGeneratorPage />,
+  },
+  {
+    path: "/grammar-checker-tool",
+    element: <GrammarChecker />,
   },
 ]);
 
