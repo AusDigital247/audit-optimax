@@ -16,6 +16,10 @@ interface ToolPageLayoutProps {
   }>;
 }
 
+/**
+ * Specialized layout for SEO tool pages
+ * Includes proper H1 tag with primary keyword and SEO-optimized structure
+ */
 const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
   children,
   title,
@@ -46,6 +50,12 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
             
             <p className="text-white text-lg mb-8 font-body">
               {description}
+            </p>
+            
+            {/* Internal linking to home for SEO benefit */}
+            <p className="text-sm text-white/80">
+              Part of our complete <Link to="/" className="text-teal-light hover:underline">SEO Audit Tools</Link> suite for 
+              website optimization and <Link to="/" className="text-teal-light hover:underline">SEO analysis</Link>
             </p>
           </div>
         </div>
@@ -82,12 +92,12 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
               </div>
             )}
             
-            {/* CTA section with improved visibility */}
+            {/* CTA section with improved visibility and SEO links back to home */}
             <div className="mt-12 text-center">
               <div className="bg-gradient-to-r from-teal/10 to-teal/20 dark:from-navy/70 dark:to-navy-light/90 p-6 rounded-lg border border-teal/30 dark:border-white/10 backdrop-blur-sm">
                 <h3 className="text-xl font-bold mb-3 text-navy dark:text-white font-display">Need More Comprehensive SEO Analysis?</h3>
                 <p className="text-navy/80 dark:text-white/80 font-body mb-4">
-                  Run a full website SEO audit to identify all optimization opportunities at once.
+                  Run a full <Link to="/" className="text-teal hover:underline">website SEO audit</Link> to identify all optimization opportunities at once.
                 </p>
                 <Link 
                   to="/"
@@ -96,6 +106,9 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
                   <Search className="h-4 w-4" />
                   Start Free SEO Audit
                 </Link>
+                <p className="text-navy/60 dark:text-white/60 text-sm mt-3">
+                  Our <Link to="/" className="text-teal/80 hover:underline">SEO site checkup</Link> provides actionable insights to improve your search rankings
+                </p>
               </div>
             </div>
           </div>

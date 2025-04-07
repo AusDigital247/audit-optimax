@@ -9,10 +9,14 @@ interface LayoutProps {
   fullWidth?: boolean;
 }
 
+/**
+ * Main layout component with configurable width settings
+ * Always defaults to full width to maintain consistent design across the site
+ */
 const Layout: React.FC<LayoutProps> = ({ 
   children, 
   className = "", 
-  fullWidth = true  // Keep default as true for full width layout
+  fullWidth = true  // Default is true for full width layout
 }) => {
   return (
     <div className="flex flex-col min-h-screen w-full">
