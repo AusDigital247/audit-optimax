@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Copy, RefreshCw, Check, Copy2 } from 'lucide-react';
+import { Copy, RefreshCw, Check } from 'lucide-react';
 import { toast } from "sonner";
 import Loader from '@/components/Loader';
 
