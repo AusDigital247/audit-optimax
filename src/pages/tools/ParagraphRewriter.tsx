@@ -13,9 +13,9 @@ const ParagraphRewriterPage = () => {
       description: "Rewrite individual sentences for clarity and impact"
     },
     {
-      name: "Blog Content Generator",
-      path: "/blog-content-generator-tool",
-      description: "Create full blog posts with optimized content"
+      name: "Paraphrasing Tool",
+      path: "/paraphrasing-tool",
+      description: "Rephrase content while maintaining original meaning"
     }
   ];
   

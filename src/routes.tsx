@@ -15,13 +15,13 @@ import About from './pages/About';
 import Blog from './pages/Blog';
 import InstagramBioGenerator from './pages/InstagramBioGenerator';
 import InstagramHashtagGenerator from './pages/InstagramHashtagGenerator';
-import ParaphrasingTool from './pages/ParaphrasingTool';
+import ParaphrasingTool from './pages/tools/ParaphrasingTool';
 import BulkAnchorLinkGenerator from './pages/tools/BulkAnchorLinkGenerator';
 import BlogIdeasGenerator from './pages/BlogIdeasGenerator';
-import SentenceRewriter from './pages/SentenceRewriter';
-import ParagraphRewriter from './pages/ParagraphRewriter';
+import SentenceRewriter from './pages/tools/SentenceRewriter';
+import ParagraphRewriter from './pages/tools/ParagraphRewriter';
 import RankChecker from './pages/RankChecker';
-import KeywordGenerator from './pages/KeywordGenerator';
+import KeywordGenerator from './pages/tools/KeywordGenerator';
 
 const router = createBrowserRouter([
   {

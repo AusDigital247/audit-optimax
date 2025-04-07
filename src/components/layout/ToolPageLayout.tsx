@@ -31,7 +31,7 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
         keywords={keywords}
       />
       
-      {/* Hero section with dark theme */}
+      {/* Hero section with dark theme - Ensuring H1 tag is present with primary keyword */}
       <div className="bg-gradient-to-b from-navy to-navy-light pt-12 pb-16 w-full">
         <div className="container mx-auto px-4 md:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
