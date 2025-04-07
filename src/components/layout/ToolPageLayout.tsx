@@ -33,7 +33,7 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
       
       {/* Hero section with dark theme */}
       <div className="bg-gradient-to-b from-navy to-navy-light pt-12 pb-16 w-full">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
             <div className="inline-flex items-center py-1 px-4 bg-teal/20 backdrop-blur-sm rounded-full mb-4">
               <Zap className="h-4 w-4 text-white mr-2" />
@@ -53,7 +53,7 @@ const ToolPageLayout: React.FC<ToolPageLayoutProps> = ({
       
       {/* Content section with improved contrast for both light/dark themes */}
       <div className="bg-light-bg dark:bg-navy-light py-10 lg:py-16 w-full">
-        <div className="container mx-auto px-4 md:px-6">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8">
           <div className="max-w-5xl mx-auto">
             <div className="bg-white/80 dark:bg-navy/60 p-6 md:p-8 rounded-xl shadow-lg border border-gray-200 dark:border-white/10 backdrop-blur-sm">
               {children}

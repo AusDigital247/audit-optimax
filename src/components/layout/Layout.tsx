@@ -12,7 +12,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ 
   children, 
   className = "", 
-  fullWidth = false 
+  fullWidth = true  // Set default to true for full width layout
 }) => {
   return (
     <div className="flex flex-col min-h-screen w-full">

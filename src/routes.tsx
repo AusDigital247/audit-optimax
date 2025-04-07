@@ -13,6 +13,15 @@ import GrammarChecker from './pages/tools/GrammarChecker';
 import Contact from './pages/Contact';
 import About from './pages/About';
 import Blog from './pages/Blog';
+import InstagramBioGenerator from './pages/InstagramBioGenerator';
+import InstagramHashtagGenerator from './pages/InstagramHashtagGenerator';
+import ParaphrasingTool from './pages/ParaphrasingTool';
+import BulkAnchorLinkGenerator from './pages/tools/BulkAnchorLinkGenerator';
+import BlogIdeasGenerator from './pages/BlogIdeasGenerator';
+import SentenceRewriter from './pages/SentenceRewriter';
+import ParagraphRewriter from './pages/ParagraphRewriter';
+import RankChecker from './pages/RankChecker';
+import KeywordGenerator from './pages/KeywordGenerator';
 
 const router = createBrowserRouter([
   {
@@ -58,6 +67,42 @@ const router = createBrowserRouter([
   {
     path: "/grammar-checker-tool",
     element: <GrammarChecker />,
+  },
+  {
+    path: "/instagram-bio-generator-tool",
+    element: <InstagramBioGenerator />,
+  },
+  {
+    path: "/instagram-hashtag-generator-tool",
+    element: <InstagramHashtagGenerator />,
+  },
+  {
+    path: "/paraphrasing-tool",
+    element: <ParaphrasingTool />,
+  },
+  {
+    path: "/bulk-anchor-link-generator-tool",
+    element: <BulkAnchorLinkGenerator />,
+  },
+  {
+    path: "/blog-ideas-generator",
+    element: <BlogIdeasGenerator />,
+  },
+  {
+    path: "/sentence-rewriter-tool",
+    element: <SentenceRewriter />,
+  },
+  {
+    path: "/paragraph-rewriter-tool",
+    element: <ParagraphRewriter />,
+  },
+  {
+    path: "/google-rank-checker-tool",
+    element: <RankChecker />,
+  },
+  {
+    path: "/keyword-generator-tool",
+    element: <KeywordGenerator />,
   },
 ]);
 
