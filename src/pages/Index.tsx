@@ -109,10 +109,10 @@ const Index = () => {
       {!results && !error && !isAnalyzing && (
         <section className="py-16 bg-white dark:bg-navy">
           <div className="container max-w-7xl px-4 mx-auto">
-            {/* New 100-word unique content section with keywords */}
+            {/* Improved 100-word unique content section with keywords in a more natural flow */}
             <div className="mb-12 text-center">
               <p className="text-navy dark:text-teal-light mb-6 font-body text-lg max-w-3xl mx-auto">
-                Welcome to our comprehensive <strong>SEO Audit Tool</strong> and <strong>Website SEO Checker</strong>. Our suite of <strong>SEO Tools</strong> helps website owners identify critical optimization opportunities that directly impact search rankings. Unlike basic <strong>SEO Checkers</strong>, our <strong>SEO Optimizer</strong> conducts a thorough <strong>SEO Site Checkup</strong> examining over 200 ranking factors including technical issues, content quality, and user experience signals. In 2024, businesses using our <strong>SEO Audit Tools</strong> have seen an average 37% increase in organic traffic within 60 days of implementing our recommendations. Start your free website analysis today and discover exactly what's preventing your site from ranking higher.
+                Welcome to our comprehensive <strong>Website SEO Checker</strong> and <strong>SEO Audit Tool</strong>. Our suite of <strong>SEO Tools</strong> helps website owners identify critical optimization opportunities that directly impact search rankings. Unlike basic <strong>SEO Checkers</strong>, our <strong>SEO Optimizer</strong> conducts a thorough <strong>SEO Site Checkup</strong> examining over 200 ranking factors including technical issues, content quality, and user experience signals. In 2024, businesses using our <strong>Free SEO Tools</strong> have seen an average 37% increase in organic traffic within 60 days of implementing our recommendations. Start your free website analysis today and discover exactly what's preventing your site from ranking higher.
               </p>
             </div>
             
@@ -120,7 +120,7 @@ const Index = () => {
               <h2 className="text-3xl font-bold text-navy dark:text-white mb-4 flex items-center justify-center gap-2 font-display">
                 <Wrench className="h-7 w-7 text-teal dark:text-teal-light" />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-white dark:to-teal-light">
-                  Professional SEO Tools & SEO Audit Solutions
+                  Professional SEO Tools & Audit Solutions
                 </span>
               </h2>
               <p className="text-lg text-navy-light dark:text-white/80 max-w-3xl mx-auto font-body">
@@ -187,11 +187,11 @@ const Index = () => {
               </Link>
             </div>
             
-            {/* Complete list of all SEO tools */}
+            {/* Complete list of all SEO tools with updated heading */}
             <div className="mb-12">
               <h2 className="text-2xl font-bold text-navy dark:text-white mb-6 text-center font-display">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-white dark:to-teal-light">
-                  Complete SEO Tools & Website Audit Solutions
+                  Free SEO Tools & Website Analysis Solutions
                 </span>
               </h2>
               
@@ -275,7 +275,7 @@ const Index = () => {
               <h2 className="text-3xl font-bold text-navy dark:text-white mb-4 flex items-center justify-center gap-2">
                 <Book className="h-7 w-7 text-teal dark:text-teal-light" />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-white dark:to-teal-light">
-                  Expert SEO Resources & Website Analysis Guides
+                  Expert SEO Resources & Website Analysis
                 </span>
               </h2>
               <p className="text-lg text-navy/70 dark:text-white/70 max-w-3xl mx-auto">
@@ -343,7 +343,7 @@ const Index = () => {
             <div className="max-w-3xl mx-auto mb-12">
               <h2 className="text-3xl font-bold text-navy dark:text-white mb-6 text-center font-display">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-white dark:to-teal-light">
-                  Why Our Free SEO Audit Tool & Site Checkup Makes a Difference
+                  Why Our SEO Site Checkup Makes a Difference
                 </span>
               </h2>
               
@@ -426,7 +426,7 @@ const Index = () => {
               <h2 className="text-3xl font-bold text-navy dark:text-white mb-4 flex items-center justify-center gap-2">
                 <TrendingUp className="h-7 w-7 text-teal dark:text-teal-light" />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-white dark:to-teal-light">
-                  How Our SEO Audit Tools & Website SEO Checker Works
+                  How Our Website SEO Checker Works
                 </span>
               </h2>
               <p className="text-lg text-navy/70 dark:text-white/70 max-w-3xl mx-auto">
