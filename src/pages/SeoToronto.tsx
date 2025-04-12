@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import ContactForm from '@/components/ContactForm';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckCircle2, ArrowRight, Building2, MapPin, Phone } from 'lucide-react';
