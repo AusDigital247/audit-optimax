@@ -1,3 +1,4 @@
+
 # Welcome to your Lovable project
 
 ## Project info
@@ -34,6 +35,43 @@ npm i
 
 # Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
+```
+
+**Using Docker**
+
+This project is fully dockerized for both development and production environments:
+
+```sh
+# For development environment
+docker-compose up app-dev
+
+# For production environment
+docker-compose up app-prod
+
+# Build the Docker images
+docker-compose build
+
+# Stop all containers
+docker-compose down
+```
+
+Alternatively, you can use the helper script:
+
+```sh
+# Make the script executable
+chmod +x docker-helper.sh
+
+# Start development environment
+./docker-helper.sh dev
+
+# Start production environment
+./docker-helper.sh prod
+
+# Build Docker images
+./docker-helper.sh build
+
+# Stop all containers
+./docker-helper.sh down
 ```
 
 **Edit a file directly in GitHub**
