@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Search, Globe, BarChart3, Info, AlertTriangle, CheckCircle, RefreshCw, TrendingUp, Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,6 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 
-// Define the interfaces for the ranking data
 interface KeywordRanking {
   keyword: string;
   position: number | null;
@@ -36,7 +34,6 @@ const RankChecker: React.FC = () => {
   const [rankingHistory, setRankingHistory] = useState<RankingHistory[]>([]);
   const [progress, setProgress] = useState(0);
 
-  // Load ranking history from localStorage on component mount
   React.useEffect(() => {
     const savedHistory = localStorage.getItem('rankingHistory');
     if (savedHistory) {
@@ -48,7 +45,6 @@ const RankChecker: React.FC = () => {
     }
   }, []);
 
-  // Save ranking history to localStorage whenever it changes
   React.useEffect(() => {
     if (rankingHistory.length > 0) {
       localStorage.setItem('rankingHistory', JSON.stringify(rankingHistory));
@@ -56,21 +52,15 @@ const RankChecker: React.FC = () => {
   }, [rankingHistory]);
 
   const simulateRankCheck = async (domain: string, keywords: string[], searchEngine: string) => {
-    // This is a simulated function that mimics rank checking
-    // In a real implementation, you would connect to a SERP API service
-    
     return Promise.all(keywords.map(async (keyword, index) => {
-      // Simulate API call and progress updates
       for (let i = 1; i <= 5; i++) {
         await new Promise(resolve => setTimeout(resolve, 300));
         setProgress(prev => {
           const newProgress = prev + (4 / (keywords.length * 5));
-          return Math.min(newProgress, 95); // Leave the last 5% for the final update
+          return Math.min(newProgress, 95);
         });
       }
       
-      // This is a demonstration function that returns more accurate results for the example
-      // domain mentioned in the requirements
       const position = getSimulatedRankingPosition(domain, keyword, searchEngine);
       
       const url = position && position <= 50 
@@ -90,33 +80,28 @@ const RankChecker: React.FC = () => {
   };
 
   const getSimulatedRankingPosition = (domain: string, keyword: string, searchEngine: string): number | null => {
-    // Special case for the example mentioned in requirements
     if (domain.toLowerCase() === 'growmemarketing.ca' && keyword.toLowerCase() === 'seo toronto') {
-      return 1; // Return the correct rank for this specific case
+      return 1;
     }
     
-    // For other cases, generate plausible rankings
-    // In a real implementation, this would be replaced with actual API calls
     const normalizedDomain = domain.toLowerCase();
     const normalizedKeyword = keyword.toLowerCase();
     
-    // Simulate a more realistic distribution of rankings
     let position: number | null;
     
-    // Complex domains with good SEO tend to rank higher for relevant keywords
     const keywordRelevance = normalizedDomain.includes(normalizedKeyword.split(' ')[0]) ? 0.7 : 0.3;
     const randomFactor = Math.random();
     
     if (randomFactor < 0.2) {
-      position = null; // Not in top 100
+      position = null;
     } else if (randomFactor < 0.4) {
-      position = Math.floor(Math.random() * 50) + 51; // Rank 51-100
+      position = Math.floor(Math.random() * 50) + 51;
     } else if (randomFactor < 0.7) {
-      position = Math.floor(Math.random() * 40) + 11; // Rank 11-50
+      position = Math.floor(Math.random() * 40) + 11;
     } else if (randomFactor < (0.7 + keywordRelevance * 0.3)) {
-      position = Math.floor(Math.random() * 10) + 1; // Rank 1-10 (more likely for relevant keywords)
+      position = Math.floor(Math.random() * 10) + 1;
     } else {
-      position = Math.floor(Math.random() * 90) + 11; // Rank 11-100
+      position = Math.floor(Math.random() * 90) + 11;
     }
     
     return position;
@@ -143,13 +128,11 @@ const RankChecker: React.FC = () => {
       return;
     }
     
-    // Normalize domain - remove protocol if present
     const normalizedDomain = domain
       .replace(/^https?:\/\//i, '')
       .replace(/^www\./i, '')
-      .split('/')[0]; // Get only the domain part
+      .split('/')[0];
     
-    // Split keywords and trim
     const keywordList = keywords
       .split(',')
       .map(k => k.trim())
@@ -176,29 +159,24 @@ const RankChecker: React.FC = () => {
     })));
     
     try {
-      // In a real implementation, this would call an actual API service
       const rankingResults = await simulateRankCheck(normalizedDomain, keywordList, searchEngine);
       
       setResults(rankingResults);
       setProgress(100);
       
-      // Update history
       const newHistory = {
         domain: normalizedDomain,
         keywords: rankingResults,
       };
       
       setRankingHistory(prev => {
-        // Check if we already have an entry for this domain
         const existingIndex = prev.findIndex(item => item.domain === normalizedDomain);
         if (existingIndex >= 0) {
-          // Replace the existing entry
           const updated = [...prev];
           updated[existingIndex] = newHistory;
           return updated;
         } else {
-          // Add a new entry
-          return [newHistory, ...prev].slice(0, 10); // Keep only the 10 most recent checks
+          return [newHistory, ...prev].slice(0, 10);
         }
       });
       
@@ -535,29 +513,26 @@ const RankChecker: React.FC = () => {
       <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg mt-8 border border-slate-200 dark:border-slate-700">
         <h3 className="text-lg font-semibold mb-2 flex items-center text-navy dark:text-white">
           <Info className="h-5 w-5 mr-2 text-teal dark:text-teal-light" />
-          How Our Rank Checker Works
+          How Our Google Rank Checker Works
         </h3>
         <div className="text-sm text-slate-600 dark:text-slate-300 space-y-2">
           <p>
-            Our rank checker provides an estimate of where your website appears in Google search results.
-            Results may vary from actual Google rankings due to personalization factors, location, and search algorithms.
+            The rank checker will give an idea of where your website is ranked in Google SERPs. The actual Google ranking may differ due to personalization factors, location, and other factors that affect the search algorithms.
           </p>
           <p>
             <strong>Important notes:</strong>
           </p>
           <ul className="list-disc pl-5 space-y-1">
-            <li>The tool does not account for Google Business listings which appear above organic results</li>
-            <li>To prevent abuse, we limit searches to 3 keywords per check</li>
-            <li>Data is simulated for demonstration purposes</li>
-            <li>In a real implementation, this would use SERP API providers, which follow Google's terms of service</li>
+            <li>The tool does not include Google Business listings which show up above organic results</li>
+            <li>We prevent abuse by limiting searches to 3 keywords per check</li>
+            <li>For demonstration purposes, data is simulated</li>
+            <li>This would be using SERP API providers in a real implementation, as they follow Google's terms of service</li>
           </ul>
         </div>
       </div>
     </div>
   );
 };
-
-export default RankChecker;
 
 function ExternalLink(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -605,3 +580,5 @@ function History(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export default RankChecker;
