@@ -117,11 +117,18 @@ const GrammarChecker = () => {
       keywords="grammar checker, spell check, punctuation checker, free grammar tool, writing tool"
       relatedTools={relatedTools}
     >
-      <div className="max-w-4xl mx-auto mb-8">
-        <p className="text-gray-600 dark:text-gray-300 text-center mb-8">
-          Polish your writing with our AI-powered grammar checker. Quickly identify and fix grammar, spelling, and punctuation errors in your text.
-        </p>
-
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl md:text-4xl font-bold mb-6 text-navy dark:text-white text-center">Grammar Checker Tool Free</h1>
+        
+        <div className="prose prose-lg dark:prose-invert max-w-none mb-8">
+          <p>
+            Our free Grammar Checker Tool serves as an advanced linguistic analysis platform that provides professional communication enhancement capabilities at no cost to users. Today's digital space filled with excessive content has made precise grammar essential for business success because it shapes how customers view brands and affects user experience and conversion rates.
+          </p>
+          <p>
+            Our advanced natural language processing (NLP) engine employs computational linguistics algorithms developed specifically for business communications. Our thorough solution conducts thorough structural evaluations of your text to detect subtle grammatical errors which could damage your professional image and produce user experience problems.
+          </p>
+        </div>
+      
         <Card className="p-6 shadow-lg mb-8">
           <Textarea 
             placeholder="Paste your text here to check for grammar, spelling, and punctuation errors..."
@@ -188,6 +195,40 @@ const GrammarChecker = () => {
             )}
           </Card>
         )}
+
+        <div className="mt-12 space-y-6">
+          <h2 className="text-2xl font-bold text-navy dark:text-white">Advanced Features</h2>
+          <p className="text-navy-light dark:text-white/90">
+            Our grammar checker is powered by a technical framework that integrates linguistic rules with business communication data-driven machine learning models. This hybrid system identifies multiple context-dependent errors which standard tools normally overlook including:
+          </p>
+          
+          <ul className="grid md:grid-cols-2 gap-4">
+            <li className="flex items-start gap-2 bg-white/80 dark:bg-navy/50 p-4 rounded-lg">
+              <CheckCircle className="h-5 w-5 text-teal flex-shrink-0 mt-1" />
+              <span className="text-navy-light dark:text-white/90">Complex sentence structures display subject-verb agreement errors which the system detects.</span>
+            </li>
+            <li className="flex items-start gap-2 bg-white/80 dark:bg-navy/50 p-4 rounded-lg">
+              <CheckCircle className="h-5 w-5 text-teal flex-shrink-0 mt-1" />
+              <span className="text-navy-light dark:text-white/90">Proper noun capitalization errors occur within industry-specific terminology.</span>
+            </li>
+            <li className="flex items-start gap-2 bg-white/80 dark:bg-navy/50 p-4 rounded-lg">
+              <CheckCircle className="h-5 w-5 text-teal flex-shrink-0 mt-1" />
+              <span className="text-navy-light dark:text-white/90">The software detects dangling modifiers which produce unintended meaning changes.</span>
+            </li>
+            <li className="flex items-start gap-2 bg-white/80 dark:bg-navy/50 p-4 rounded-lg">
+              <CheckCircle className="h-5 w-5 text-teal flex-shrink-0 mt-1" />
+              <span className="text-navy-light dark:text-white/90">The tool checks for continuous tense consistency across entire documents.</span>
+            </li>
+            <li className="flex items-start gap-2 bg-white/80 dark:bg-navy/50 p-4 rounded-lg">
+              <CheckCircle className="h-5 w-5 text-teal flex-shrink-0 mt-1" />
+              <span className="text-navy-light dark:text-white/90">The tool detects minimal word repetition which weakens message clarity.</span>
+            </li>
+            <li className="flex items-start gap-2 bg-white/80 dark:bg-navy/50 p-4 rounded-lg">
+              <CheckCircle className="h-5 w-5 text-teal flex-shrink-0 mt-1" />
+              <span className="text-navy-light dark:text-white/90">The tool addresses homophone errors which go beyond the basic your/you're mistake.</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </ToolPageLayout>
   );
