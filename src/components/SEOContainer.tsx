@@ -1,8 +1,7 @@
 import React from 'react';
 import SEOForm from './SEOForm';
-import SEOContentSection from './SEOContentSection';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Zap, BarChart3, LineChart, LightbulbIcon, FileCheck, Rocket, Gauge, Target } from 'lucide-react';
+import { Zap, BarChart3, LineChart, LightbulbIcon, FileCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface SEOContainerProps {
@@ -91,64 +90,6 @@ const SEOContainer: React.FC<SEOContainerProps> = ({ onSubmit, isLoading }) => {
           </div>
         </div>
       </section>
-
-      {/* Light + Dark Mixed Theme Sections */}
-      <section className="bg-light-bg dark:bg-navy-light py-16 w-full">
-        <div className="w-full max-w-full mx-auto px-4 md:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-navy dark:text-[#33C3F0] font-display">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy to-teal dark:from-[#33C3F0] dark:to-white">
-                Why Choose Our SEO Optimizer
-              </span>
-            </h2>
-            <p className="text-lg text-navy-light dark:text-[#1EAEDB] max-w-3xl mx-auto font-body">
-              Our platform enables website owners to unlock their full potential by providing robust keyword research and content generation and search position tracking features.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 md:px-6">
-            <div className="glass-card-hover p-6 rounded-xl">
-              <div className="bg-teal/10 dark:bg-teal/20 p-4 rounded-full w-fit mb-5">
-                <Gauge className="h-8 w-8 text-teal dark:text-[#33C3F0]" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-navy dark:text-[#33C3F0] font-display">Website Performance</h3>
-              <p className="text-navy-light dark:text-[#1EAEDB] font-body">
-                Our full analysis tools help businesses evaluate their website performance regarding search engine visibility and content optimization.
-              </p>
-            </div>
-            
-            <div className="glass-card-hover p-6 rounded-xl">
-              <div className="bg-teal/10 dark:bg-teal/20 p-4 rounded-full w-fit mb-5">
-                <Target className="h-8 w-8 text-teal dark:text-[#33C3F0]" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-navy dark:text-[#33C3F0] font-display">Keyword Strategy</h3>
-              <p className="text-navy-light dark:text-[#1EAEDB] font-body">
-                Discover the specific search terms and content optimization techniques which will best reach your business audience.
-              </p>
-            </div>
-            
-            <div className="glass-card-hover p-6 rounded-xl">
-              <div className="bg-teal/10 dark:bg-teal/20 p-4 rounded-full w-fit mb-5">
-                <Rocket className="h-8 w-8 text-teal dark:text-[#33C3F0]" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-navy dark:text-[#33C3F0] font-display">Competitor Analysis</h3>
-              <p className="text-navy-light dark:text-[#1EAEDB] font-body">
-                Our SERP position tracker alongside local search optimization tools help users determine their position relative to market competitors.
-              </p>
-            </div>
-          </div>
-          
-          <div className="mt-12 text-center">
-            <a href="#seo-tool" className="cta-button inline-flex items-center gap-2">
-              <Zap className="h-5 w-5" />
-              Start Your Free SEO Audit Now
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Content Sections - Mixed Theme */}
-      <SEOContentSection />
     </div>
   );
 };
