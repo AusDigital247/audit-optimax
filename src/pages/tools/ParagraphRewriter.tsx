@@ -2,8 +2,12 @@
 import React from 'react';
 import ToolPageLayout from '@/components/layout/ToolPageLayout';
 import ParagraphRewriterForm from '@/components/ParagraphRewriterForm';
+import { getMetaContent } from '@/utils/metaDescriptions';
 
 const ParagraphRewriterPage = () => {
+  // Get unique meta content for this page
+  const metaContent = getMetaContent('paragraph-rewriter');
+  
   // Limit to just 2 related tools for balanced internal linking
   const relatedTools = [
     {
@@ -20,8 +24,8 @@ const ParagraphRewriterPage = () => {
   
   return (
     <ToolPageLayout
-      title="AI Paragraph Rewriter Tool"
-      description="Transform any paragraph into human-like, engaging content with our free AI paragraph rewriter tool. Improve readability, eliminate redundancy, and enhance your writing quality."
+      title={metaContent.title}
+      description={metaContent.description}
       keywords="paragraph rewriter, content rewriting, AI rewriter, paraphrasing tool, article rewriter, text enhancer, content enhancer, readability improver"
       relatedTools={relatedTools}
     >

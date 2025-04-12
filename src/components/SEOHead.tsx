@@ -44,10 +44,8 @@ const SEOHead: React.FC<SEOHeadProps> = ({
     
   const canonicalUrl = `${baseUrl}${formattedPath}`;
   
-  // Enhanced page title with LSI keywords for better relevance signals
-  const enhancedTitle = isHomePage 
-    ? `${title} | SEO Audit Tool - Website Analysis & Search Rankings` 
-    : title;
+  // Set page title - no longer adding "SEO Audit Tool" to non-homepage titles
+  const pageTitle = title;
   
   // Enhanced description with LSI keywords
   const enhancedDescription = description.length > 20 ? description : 
@@ -59,7 +57,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
   
   return (
     <Helmet>
-      <title>{enhancedTitle}</title>
+      <title>{pageTitle}</title>
       <meta name="description" content={enhancedDescription} />
       <meta name="keywords" content={enhancedKeywords} />
       
@@ -76,7 +74,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
       <meta name="ICBM" content="37.09024, -95.712891" />
       
       {/* OpenGraph tags for social sharing */}
-      <meta property="og:title" content={enhancedTitle} />
+      <meta property="og:title" content={pageTitle} />
       <meta property="og:description" content={enhancedDescription} />
       <meta property="og:type" content={ogType} />
       <meta property="og:url" content={canonicalUrl} />
@@ -84,7 +82,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
       <meta property="og:locale" content="en_US" />
       
       {/* Twitter tags */}
-      <meta name="twitter:title" content={enhancedTitle} />
+      <meta name="twitter:title" content={pageTitle} />
       <meta name="twitter:description" content={enhancedDescription} />
       <meta name="twitter:card" content="summary_large_image" />
       
@@ -93,7 +91,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
         {
           "@context": "https://schema.org",
           "@type": "WebApplication",
-          "name": "SEO Audit Tool",
+          "name": "${title}",
           "description": "${enhancedDescription}",
           "url": "${baseUrl}",
           "applicationCategory": "SEO Tool",

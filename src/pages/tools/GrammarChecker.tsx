@@ -11,6 +11,7 @@ import { Copy, CheckCircle } from 'lucide-react';
 import { generateOllamaResponse } from '@/utils/ollamaApi';
 import Loader from '@/components/Loader';
 import DOMPurify from 'dompurify';
+import { getMetaContent } from '@/utils/metaDescriptions';
 
 const GrammarChecker = () => {
   const [text, setText] = useState('');
@@ -19,6 +20,9 @@ const GrammarChecker = () => {
   const [includeExplanations, setIncludeExplanations] = useState(true);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+
+  // Get unique meta content for this page
+  const metaContent = getMetaContent('grammar-checker');
 
   const checkGrammar = async () => {
     if (!text.trim()) {
@@ -112,8 +116,8 @@ const GrammarChecker = () => {
 
   return (
     <ToolPageLayout
-      title="Free Grammar Checker | Fix Grammar, Spelling and Punctuation"
-      description="Check and fix grammar, spelling, and punctuation errors for free. Our AI-powered grammar checker helps you write error-free content."
+      title={metaContent.title}
+      description={metaContent.description}
       keywords="grammar checker, spell check, punctuation checker, free grammar tool, writing tool"
       relatedTools={relatedTools}
     >
@@ -174,7 +178,7 @@ const GrammarChecker = () => {
             ) : (
               <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
                 <div 
-                  className="mb-4" 
+                  className="mb-4 text-navy dark:text-white" 
                   dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(correctedText) }}
                 />
 
@@ -185,7 +189,7 @@ const GrammarChecker = () => {
                       {explanations.map((explanation, index) => (
                         <li key={index} className="flex gap-2">
                           <CheckCircle className="h-5 w-5 text-teal flex-shrink-0 mt-1" />
-                          <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(explanation) }} />
+                          <span className="text-navy-light dark:text-gray-200" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(explanation) }} />
                         </li>
                       ))}
                     </ul>
