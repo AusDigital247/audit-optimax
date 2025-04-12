@@ -1,6 +1,6 @@
 
 import { analyzePageSEO } from './analyzePageSEO';
-import { SEOCategory } from '@/components/SEOResults';
+import { SEOCategory, SEOItem } from '@/components/SEOResults';
 
 // Define and export the analysis result interface
 export interface AnalysisResult {
@@ -39,10 +39,19 @@ export const analyzeSEO = async (url: string, keyword?: string): Promise<Analysi
     // Use our analyzer with the preserved URL path and cache buster
     const result = await analyzePageSEO(urlWithCacheBuster, keyword);
     
+    // Ensure the items have the required 'points' property for SEOItem
+    const categories: SEOCategory[] = result.categories.map(category => ({
+      title: category.title,
+      items: category.items.map(item => ({
+        ...item,
+        points: item.points ?? 0 // Ensure points property exists, default to 0 if not present
+      })) as SEOItem[]
+    }));
+    
     // Create the result, ensuring we include metadata if available
     return {
       score: result.score,
-      categories: result.categories,
+      categories,
       contentFetched: result.contentFetched,
       relevanceTier: result.relevanceTier,
       // We need to check if the result has metaData before trying to use it

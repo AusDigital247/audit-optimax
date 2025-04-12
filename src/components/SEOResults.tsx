@@ -1,59 +1,12 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  CheckCircle, XCircle, ExclamationTriangle, QuestionMarkCircle,
-  ArrowRight, ExternalLink, FileText, Code, Search,
-  BarChart, LineChart, PieChart, Gauge, ShieldAlert,
-  Users, ScrollText, LayoutDashboard, Zap, Terminal,
-  Globe, BookOpen, FileCheck, Cpu, RefreshCcw, Activity,
-  MonitorSmartphone, Target, Sparkles, BrainCircuit, MoveUpRight,
-  ChevronRight, Workflow, Database, BookOpenCheck, FileSearch,
-  Code2, Laptop, Rocket, Layout, ScrollText as Scroll,
-  MonitorCheck, Network, ListChecks, Lightbulb, TrendingUp,
-  MessageSquare, Share2, Heart, CloudCog, Settings,
-  AlertTriangle, Info, HelpCircle, AlertOctagon, CheckSquare,
-  Square, Circle, Triangle, Star, Plus, Minus, Divide,
-  Equal, Hash, Percent, AtSign, DollarSign, EuroSign,
-  PoundSign, YenSign, Bitcoin, Ethereum, File, Folder,
-  Calendar, Clock, MapPin, Phone, Mail, Camera, Video,
-  Image, Music, Volume1, Volume2, VolumeX, Mic, Mic2,
-  Headphones, Bluetooth, Wifi, BatteryFull, BatteryCharging,
-  CreditCard, Banknote, ShoppingCart, Package, Truck, Home,
-  Building, School, University, Hospital, Church, Flag,
-  Award, Trophy, Gift, Gem, Diamond, Compass, Map,
-  Anchor, Umbrella, Cloud, Sun, Moon, Thermometer,
-  Droplet, Fire, Leaf, Tree, Cactus, Flower, Seedling,
-  PawPrint, Bone, Fish, Bug, Spider, Ant, Bee,
-  Ladybug, Snail, Worm, Cat, Dog, Horse, Cow,
-  Pig, Chicken, Duck, Turkey, Dove, Bird, Owl,
-  Eagle, Hawk, Swan, Flamingo, Parrot, Penguin,
-  Kiwi, Peacock, Toucan, Hummingbird, Ostrich, Vulture,
-  Crow, Raven, Seagull, Swallow, Sparrow, Robin,
-  Bluejay, Cardinal, Goldfinch, Finch, Wren, Mockingbird,
-  Thrush, Nightingale, Canary, Parrot2, Macaw, Cockatoo,
-  Lovebird, Budgie, Finch2, Canary2, Goldfinch2, Robin2,
-  Sparrow2, Swallow2, Seagull2, Raven2, Crow2, Vulture2,
-  Ostrich2, Hummingbird2, Toucan2, Peacock2, Kiwi2, Penguin2,
-  Parrot3, Flamingo2, Swan2, Hawk2, Eagle2, Owl2, Bird2,
-  Dove2, Turkey2, Duck2, Chicken2, Pig2, Cow2, Horse2,
-  Dog2, Cat2, Worm2, Snail2, Ladybug2, Bee2, Ant2,
-  Spider2, Bug2, Fish2, Bone2, PawPrint2, Seedling2, Flower2,
-  Cactus2, Tree2, Leaf2, Fire2, Droplet2, Thermometer2, Moon2,
-  Sun2, Cloud2, Umbrella2, Anchor2, Map2, Compass2, Diamond2,
-  Gem2, Gift2, Trophy2, Award2, Flag2, Church2, Hospital2,
-  University2, School2, Building2, Home2, Truck2, Package2,
-  ShoppingCart2, Banknote2, CreditCard2, BatteryCharging2, Wifi2,
-  Bluetooth2, Headphones2, Mic22, Mic2, VolumeX2, Volume22, Volume12,
-  Music2, Image2, Video2, Camera2, Mail2, Phone2, MapPin2,
-  Clock2, Calendar2, Folder2, File2, Ethereum2, Bitcoin2, YenSign2,
-  PoundSign2, EuroSign2, DollarSign2, AtSign2, Percent2, Hash2,
-  Equal2, Divide2, Minus2, Plus2, Star2, Triangle2, Circle2,
-  Square2, CheckSquare2, AlertOctagon2, HelpCircle2, Info2, AlertTriangle2,
-  Settings2, CloudCog2, Heart2, Share22, MessageSquare2, TrendingUp2,
-  Lightbulb2, ListChecks2, Network2, MonitorCheck2, Scroll2, Layout2,
-  Rocket2, Users2, ShieldAlert2, Gauge2, PieChart2, LineChart2,
-  BarChart2, Search2, Code22, FileText2, ExternalLink2, ArrowRight2,
-  QuestionMarkCircle2, ExclamationTriangle2, XCircle2, CheckCircle2
+  CheckCircle, 
+  XCircle, 
+  AlertTriangle, 
+  HelpCircle,
+  ExternalLink
 } from 'lucide-react';
 
 export interface SEOItem {
@@ -86,10 +39,10 @@ const SEOResults: React.FC<SEOResultsProps> = ({ url, keyword, score, categories
       case 'fail':
         return <XCircle className="h-5 w-5 text-red-500" />;
       case 'warning':
-        return <ExclamationTriangle className="h-5 w-5 text-yellow-500" />;
+        return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
       case 'info':
       default:
-        return <QuestionMarkCircle className="h-5 w-5 text-blue-500" />;
+        return <HelpCircle className="h-5 w-5 text-blue-500" />;
     }
   };
 
